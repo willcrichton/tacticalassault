@@ -1,0 +1,23 @@
+"Gamemode"
+{
+	"name"		"Tactical Assault"
+	"version"	"1"
+
+	"author_name"	"Entoros"
+	"author_email"	""
+	"author_url"	""
+	
+	"icon"		""
+	"info"		""
+	"hide"		"0"
+
+	"fretta_maps"
+	{
+		"1"	"^cs_"
+		"2"	"^ta_"
+		"3"	"^de_"
+	}
+
+	"selectable"	"1"
+	"description"	"Work with your squad to win points and kill enemies!"
+}
