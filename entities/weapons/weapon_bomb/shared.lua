@@ -55,7 +55,7 @@ end
 			prop:SetPos(self.Owner:GetEyeTrace().HitPos)
 			prop:Spawn()
 			prop:Activate()
-			prop:TurnOn()
+			prop:TurnOn(self.Owner)
 			prop:SetNWInt("Team",self.Owner:Team())
 			prop:SetNWEntity("target",tr.Entity)
 			tr.Entity:SetNWEntity("bomb",prop)

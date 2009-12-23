@@ -30,6 +30,7 @@ function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_NONE)
 	
 	self.Activated = false
+	self.Activator = nil
 	self.Timer = 0
 	self.Defuse = {nil,0}
 	self.Defused = false
@@ -38,8 +39,9 @@ function ENT:Initialize()
 	
 end
 
-function ENT:TurnOn()
+function ENT:TurnOn(pl)
 	self.Activated = true
+	self.Activator = pl
 	self.Timer = 30
 	timer.Create("ta_bombtimer"..self.Entity:EntIndex(),1,30,function()
 		if !self.Entity or !self.Entity:IsValid() then return end
@@ -96,10 +98,10 @@ function ENT:OnRemove()
 	if self.Defused then 
 		if self.Defuse[1]:Team() == 1 then 
 			for _,v in ipairs(team.GetPlayers(2)) do v:SendLua("surface.PlaySound(\"common/bugreporterfailed.wav\")") end
-			hook.Call("ta_bombwon",nil,1,false)
+			hook.Call("ta_bombwon",nil,1,false,self.Defuse[1])
 		else 
 			for _,v in ipairs(team.GetPlayers(1)) do v:SendLua("surface.PlaySound(\"common/bugreporterfailed.wav\")") end 
-			hook.Call("ta_bombwon",nil,2,false)
+			hook.Call("ta_bombwon",nil,2,false,self.Defuse[1])
 		end
 		
 		return
@@ -122,7 +124,7 @@ function ENT:OnRemove()
 	
 	self.Entity:GetNWEntity("target"):Remove()
 	
-	hook.Call("ta_bombwon",nil,self.Entity:GetNWInt("Team"),true)
+	hook.Call("ta_bombwon",nil,self.Entity:GetNWInt("Team"),true,self.Activator)
 end
 
 
