@@ -66,7 +66,8 @@ local obj_tex = {
 }
 
 local start,finish = 0,0
-hook.Add("HUDPaint","TA-DrawHud",function()
+
+hook.Add("HUDPaint","TA-DrawHudMain",function()
 		
 	if !LocalPlayer():Alive() then return end
 	
@@ -136,7 +137,7 @@ hook.Add("HUDPaint","TA-DrawHud",function()
 	if obj2 != "" and ValidEntity(objectives[2]) and not objectives[2]:GetNWBool("ObjectiveComplete") then draw.DrawText(obj2,"ObjectiveFontSecondary",30,45,color_white,0) end
 	
 	// Ammo
-	if !LocalPlayer():GetActiveWeapon():IsValid() or !LocalPlayer():Health() then return end
+	/*if !LocalPlayer():GetActiveWeapon():IsValid() or !LocalPlayer():Health() then return end
 	local clip = LocalPlayer():GetActiveWeapon():Clip1()
 	if clip > -1 then
 		draw.DrawText(clip,"AmmoFontPrimary",ScrW() - 120,ScrH() - 80,color_white,0)
@@ -155,7 +156,7 @@ hook.Add("HUDPaint","TA-DrawHud",function()
 	
 	// Health
 	draw.TexturedQuad({texture=surface.GetTextureID("ta/hp"),color=color_white,x=50,y=ScrH()-73,w=25,h=25})
-	draw.DrawText(LocalPlayer():Health(),"AmmoFontPrimary",85,ScrH()-80,color_white,0)
+	draw.DrawText(LocalPlayer():Health(),"AmmoFontPrimary",85,ScrH()-80,color_white,0)*/
 
 	// Objective points
 	surface.SetTexture( "color/white" )
@@ -205,7 +206,7 @@ hook.Add("HUDPaint","TA-DrawHud",function()
 	end
 	
 	// Timer
-	local w,h,diag = 200,40,50
+	/*local w,h,diag = 200,40,50
 	local x,y = ScrW()/2 - w / 2,5
 	
 	if finish - start != round_duration || GetGlobalInt("RoundStartTime") != start then
@@ -218,9 +219,9 @@ hook.Add("HUDPaint","TA-DrawHud",function()
 	if round_timer > 0 and round_timer + round_duration - CurTime() > 0 then draw.DrawText(ta.SecToMin(round_timer + round_duration - CurTime()),"AmmoFontPrimary",ScrW()/2,5,color_black,1)
 	else draw.DrawText("00:00","AmmoFontPrimary",ScrW()/2,5,color_black,1) end
 	
-	start,finish = GetGlobalInt("RoundStartTime"), GetGlobalInt("RoundEndTime")
+	start,finish = GetGlobalInt("RoundStartTime"), GetGlobalInt("RoundEndTime")*/
 	
-	// Team name
+	/* // Team name
 	x = x - w + 30
 	ta.DrawTrapezoid(x,y,w,h,diag,true)
 	draw.DrawText(team.GetName(LocalPlayer():Team()),"ObjectiveFontPrimary",ScrW()/2  - w + 30,13,team.GetColor(LocalPlayer():Team()),1)
@@ -228,7 +229,7 @@ hook.Add("HUDPaint","TA-DrawHud",function()
 	// Game mode
 	x = x + 2 * w - 60
 	ta.DrawTrapezoid(x,y,w,h,diag,true)
-	draw.DrawText(ta.Capitalize(GetGlobalString("ta_mode")),"ObjectiveFontPrimary",ScrW()/2 + w - 30,13,color_black,1)
+	draw.DrawText(ta.Capitalize(GetGlobalString("ta_mode")),"ObjectiveFontPrimary",ScrW()/2 + w - 30,13,color_black,1) */
 	
 	// Draw chevron over primary target
 	if objectives[1] and ValidEntity(objectives[1]) then
@@ -267,85 +268,121 @@ hook.Add("HUDPaint","TA-DrawHud",function()
 	
 end)
 
+hook.Add("HUDPaint","TA-DrawHudSecondary",function()
+	
+	// Ammo
+	if LocalPlayer():Alive() and LocalPlayer():GetActiveWeapon():IsValid() then
+	
+		local x,y,w,h,diag = ScrW() - 290,ScrH() - 48,170,35,20
+
+		surface.SetDrawColor( 100, 100, 100, 120 )
+		ta.DrawParallel(x,y,w,h,diag)
+		
+		// HEALTH
+		surface.SetDrawColor(0,0,0,255)
+		x = x + diag + 14
+		y = y - h + 18
+		w = 130
+		h = 10
+		diag = 5
+		ta.DrawParallel(x,y,w,h,diag)
+		
+		surface.SetDrawColor(255,0,0,255)
+		x = x + 3
+		y = y - 2
+		w = w * LocalPlayer():Health() / LocalPlayer():GetPlayerClass().MaxHealth - 4
+		h = 6
+		diag = 3
+		ta.DrawParallel(x,y,w,h,diag)
+	
+		local wep = LocalPlayer():GetActiveWeapon()
+		local clip = wep:Clip1()
+		
+		x = ScrW() - 125
+		y = ScrH() - 53.5
+		w = 0.75
+		h = 8
+		diag = 3
+		
+		surface.SetDrawColor(255,255,255,255)
+		if wep.Primary and wep.Primary.ClipSize > 60 then
+			local mul = math.floor( wep.Primary.ClipSize / 60) + 1.2
+			for i = 1, clip/mul do
+				x = x -  3
+				ta.DrawParallel(x,y,w,h,diag)
+			end
+			
+		else
+			for i = 1, clip do
+				x = x - 3
+				ta.DrawParallel(x,y,w,h,diag)	
+			end
+		end
+	end
+	
+	// Timer
+	
+	x = ScrW() - 218
+	y = ScrH() - 87
+	w = 120
+	h = 20
+	diag = 10
+	
+	surface.SetDrawColor( 100, 100, 100, 120 )
+	ta.DrawParallel(x,y,w,h,diag)
+	
+	local time = ""
+	if finish - start != round_duration || GetGlobalInt("RoundStartTime") != start then
+		round_duration = finish - start
+		round_timer = CurTime()
+	end
+	if round_timer > 0 and round_timer + round_duration - CurTime() > 0 then time = ta.SecToMin(round_timer + round_duration - CurTime())
+	else time = "00:00" end
+	
+	draw.DrawText(time.." Left","ScoreboardText",x + w/2,y - 18,color_white,1)
+	start,finish = GetGlobalInt("RoundStartTime"), GetGlobalInt("RoundEndTime")
+	
+	// Game type
+	
+	//local x,y,w,h,diag = ScrW() - 290,ScrH() - 48,170,35,20
+	x = ScrW() - 303
+	y = ScrH() - 24
+	w = 120
+	h = 20
+	diag = 11
+	
+	ta.DrawParallel(x,y,w,h,diag)
+	draw.DrawText(ta.Capitalize(GetGlobalString("ta_mode")),"ScoreboardText",x + w / 2,y - 19,color_white,1) 
+	
+	// ICONS (they break the drawpoly?)
+	
+	if !LocalPlayer():Alive() then return end
+	
+	x = ScrW() - 260
+	y = ScrH() - 55
+	
+	draw.TexturedQuad({
+		texture=surface.GetTextureID("ta/hp"),
+		color=color_white,
+		x=x - 12,
+		y = y - 27,
+		w=15,
+		h=15,
+	})
+	
+		
+	draw.TexturedQuad({
+		texture=surface.GetTextureID("ta/ammo"),
+		color=color_white,
+		x=x - 16,
+		y = y - 10,
+		w=10,
+		h=15,
+	})
+
+end)
+
 hook.Add("HUDShouldDraw","RemoveAmmo",function(name)
 	if name == "CHudAmmo" or name == "CHudSecondaryAmmo" or name == "CHudHealth" then return false end
 end)
-
-local commands = {
-	["Airstrike"] = {"ta_airstrike","ta/bomb2-comm"},
-	["Radio"] = {"stopsounds","ta/radio-comm"},
-	["Ammo"] = {"ta_ammodrop","ta/ammo-comm"},
-	["UAV"] = {"uav","ta/binoc-comm"},
-}
-local selected = "Ammo"
-local key_wait  = CurTime()
-
-// Command options
-function CommandOptions()
-	local f = vgui.Create("DFrame")
-	f:SetPos(0,0)
-	f:SetSize(ScrW(),ScrH())
-	f:SetTitle("")
-	f:ShowCloseButton(false)
-	f:MakePopup()
-	f:SetDraggable(false)
-	f:SetScreenLock(true)
-	
-	
-	local key_timer = 0
-	function f:Paint()
-
-		if SysTime() - key_timer > .075 then
-			if input.IsKeyDown(KEY_LEFT) then 
-				selected = ta.PreviousKey(commands,selected)
-			elseif input.IsKeyDown(KEY_RIGHT) then selected = ta.NextKey(commands,selected) 
-			end
-			key_timer = SysTime()
-		end
-	
-		local sel_n = ta.KeyNum(commands,selected)
-			
-		for k,v in pairs(commands) do
-				
-			local v_n = ta.KeyNum(commands,k)
-				
-			if math.abs(v_n - sel_n) <= 1 then	
-				
-				local xpos = (v_n - sel_n) * 100 + ScrW()/2
-				local mx,my = gui.MousePos()
-					
-				if v_n == sel_n then
-					local x,y = xpos + 5,ScrH()-207
-					surface.SetTexture( "color/white")
-					surface.SetDrawColor( 100, 100, 100, 200 )
-					surface.DrawPoly{
-						{ x = x-1; y = y};
-						{ x = x+32; y = y};
-						{ x = x+47; y = y+27};
-						{ x = x+32; y = y+55};
-						{ x = x-2; y = y+55};
-						{ x = x-17; y = y+28};
-					}
-					//draw.DrawText(k,"ScoreboardText",xpos + 20,ScrH() - 185,color_black,1)
-					draw.TexturedQuad({texture=surface.GetTextureID(v[2]),color=color_white,x=xpos,y=ScrH()-198,w=40,h=40})
-					
-					if input.IsKeyDown(KEY_ENTER) then 
-						LocalPlayer():ConCommand(v[1])
-						f:Close() 
-					end
-				else 
-					draw.RoundedBox(0,xpos,ScrH() - 200,40,40,Color(100,100,100,200))
-					//draw.DrawText(k,"ScoreboardText",xpos + 20,ScrH() - 180,color_black,1)
-					draw.TexturedQuad({texture=surface.GetTextureID(v[2]),color=color_white,x=xpos+5,y=ScrH()-195,w=30,h=30})
-
-				end
-			
-			end
-				
-		end
-	end
-	concommand.Add("-command",function() if ValidPanel(f) then f:Close() end end)
-
-end
-concommand.Add("+command",CommandOptions)
 

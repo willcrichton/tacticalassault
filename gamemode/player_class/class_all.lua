@@ -33,7 +33,7 @@ CLASS.StartHealth = 150
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_smg1")
-	pl:Give("kermite_shotgun")
+	pl:Give("weapon_para")
 	pl:Give("weapon_resupply")
 	
 	self.BaseClass.Loadout(self,pl)
@@ -60,35 +60,22 @@ end
 player_class.Register( "Sniper", CLASS )
 
 
-
-// Cavlary Class
-local CLASS = {}
-
-CLASS.Base = "BaseClass"
-CLASS.DisplayName = "Cavalry"
-CLASS.Description = "Attack, defend, support. \nPrimary: Assault Rifle \nSecondary: Pistol"
-
-function CLASS:Loadout( pl )
-	pl:Give("weapon_ar2")
-	pl:Give("weapon_357")
-	
-	self.BaseClass.Loadout(self,pl)
-end
-
-player_class.Register( "Cavalry", CLASS )
-
-
-
 // Artillery Class
 local CLASS = {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Artillery"
 CLASS.Description = "Bring in the big guns. \nPrimary: Bazooka \nSecondary: Shotgun"
+CLASS.WalkSpeed = 230
+CLASS.RunSpeed = 350
+CLASS.MaxHealth = 120
+CLASS.StartHealth = 120
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_shotgun")
-	//pl:Give("weapon_bazooka")
+	pl:Give("weapon_bazooka")
+	pl:Give("weapon_rpg")
+	pl:Give("weapon_grenade")
 	
 	self.BaseClass.Loadout(self,pl)
 end
@@ -106,10 +93,29 @@ CLASS.Description = "Backbone of the team. \nPrimary: Pistol \nSecondary: Medic 
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_pistol")
+	pl:Give("weapon_smg1")
 	//pl:Give("weapon_medkit")
 	
 	self.BaseClass.Loadout(self,pl)
 end
 
 player_class.Register( "Medic", CLASS)
+
+
+
+// Techie class
+local CLASS= {}
+
+CLASS.Base = "BaseClass"
+CLASS.DisplayName = "Techie"
+CLASS.Description = "Build machines, create tech. \nPrimary: Shotgun \nSecondary: Pistol"
+
+function CLASS:Loadout( pl )
+	pl:Give("weapon_pistol")
+	pl:Give("weapon_shotgun")
+	
+	self.BaseClass.Loadout(self,pl)
+end
+
+player_class.Register( "Techie", CLASS)
 

@@ -29,5 +29,8 @@ SWEP.Secondary.DefaultClip	= -1					// Default number of bullets in a clip
 SWEP.Secondary.Automatic	= false				// Automatic/Semi Auto
 SWEP.Secondary.Ammo		= "none"
 
-SWEP.IronSightsPos 		= Vector (0, 0, 0)
+SWEP.IronSightsPos 		= Vector (10, 0, 0)
 SWEP.IronSightsAng 		= Vector (0, 0, 0)
+
+SWEP.RunPos 			= Vector(0,0,5)
+SWEP.RunAng			= Angle(15,0,0)

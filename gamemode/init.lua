@@ -1,6 +1,7 @@
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "cl_ambience.lua" )
 AddCSLuaFile( "cl_hud.lua" )
+AddCSLuaFile( "cl_vgui.lua" )
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "util.lua" )
 
@@ -10,10 +11,8 @@ include( "data.lua")
 include( "util.lua")
 include( "sv_general.lua" )
 
-for _,v in ipairs(file.Find("../sound/ta/*")) do resource.AddFile("sound/ta/"..v) end
-resource.AddFile("materials/ta/player-arrow.vmt")
-resource.AddFile("materials/ta/hp.vmt")
-resource.AddFile("materials/ta/cap-icon.vmt")
+ta.AddFilesRecursive("sound/ta","")
+ta.AddFilesRecursive("materials/ta","")
 resource.AddFile("resource/fonts/Army.ttf")
 
 SetGlobalString("ta_ambience","battle")
@@ -121,6 +120,20 @@ function GM:OnRoundStart( n )
 	//for _,v in ipairs(player.GetAll()) do v:ConCommand("ta_printsquads") end
 	for _,v in ipairs(player.GetAll()) do v:ChatPrint("The round has begun! Get going!") v:UnLock() v:Freeze(false) end
 	for _,v in ipairs(ents.FindByClass("obj_*")) do v:SetNWBool("ObjectiveComplete",false) end
+	
+	umsg.Start("stopRoundSound") umsg.End()
+end
+
+function GM:OnRoundEnd( n )
+	local winner = GetGlobalInt("RoundResult")
+	local rp1,rp2 = RecipientFilter(),RecipientFilter()
+	for _,v in ipairs(player.GetAll()) do if v:Team() == 1 then rp1:AddPlayer(v) elseif v:Team() == 2 then rp2:AddPlayer(v) end end
+	umsg.Start("endRoundSound",rp1)
+		if winner == 1 then umsg.Bool(true) else umsg.Bool(false) end
+	umsg.End()
+	umsg.Start("endRoundSound",rp2)
+		if winner == 2 then umsg.Bool(true) else umsg.Bool(false) end
+	umsg.End()
 end
 
 function GM:CanStartRound( n )
@@ -189,7 +202,7 @@ function CheckSquads( pl )
 						for _,ply in ipairs(v) do
 							ldr = ta.ComparePoints(ldr,ply)
 						end
-						v.leader = pl
+						v.leader = ldr
 					sqd = v
 					break
 				end
@@ -205,9 +218,9 @@ function CheckSquads( pl )
 			if c != "name" and c != "leader" then 
 				v:SetSquad(sqd)
 				umsg.Start("sendSquad",v)
-					umsg.Entity(tbl.leader)
+					umsg.Entity(sqd.leader)
 					umsg.Short(GAMEMODE.SquadMax)
-					for k,q in pairs(tbl) do if k !="name" and k != "leader" and q != tbl.leader then
+					for k,q in pairs(sqd) do if k !="name" and k != "leader" and q != sqd.leader then
 						umsg.Entity(q)
 					end end
 				umsg.End()

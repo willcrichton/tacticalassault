@@ -25,7 +25,7 @@ function Airstrike(pl)
 	if orig.tr.HitPos:Distance(pl:GetPos()) < 2000 then pl:ChatPrint("You're too close to call in an airstrike! You must be at least 2000 units away.") return end
 	
 	local ent = ents.Create("prop_physics")
-	ent:SetModel("models/XQM/jetbody3_s2.mdl")
+	ent:SetModel("models/props_junk/wood_crate001a.mdl")
 	
 	local tr = util.TraceLine(util.GetPlayerTrace( pl , -1 * pl:GetForward()))
 	local pos = pl:GetPos() - pl:GetForward() * 1000 + Vector(800,0,700)
@@ -39,6 +39,7 @@ function Airstrike(pl)
 	
 	local vel_mul = 10000
 	local phys = ent:GetPhysicsObject()
+	if !phys || !phys:IsValid() then ent:Remove() pl:ChatPrint("AIRSTRIKE MALFUNCTION - Contact the Engineer (http://www.facepunch.com/member.php?u=180808)") return end
 	phys:EnableGravity(false) 
 	phys:EnableCollisions(false)
 	

@@ -66,10 +66,16 @@ function CLASS:Loadout( pl )
 	pl:GiveAmmo("smg1",90)
 	pl:GiveAmmo("buckshot",45)
 	pl:GiveAmmo("XBowBolt",30)
+	
 	pl:Give("weapon_crowbar")
+	pl:Give("weapon_binoculars")
 end
 
 player_class.Register( "BaseClass", CLASS )
+
+		
+
+
 
 
 

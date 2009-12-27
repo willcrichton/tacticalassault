@@ -1,5 +1,7 @@
+
+// INGAME AMBIENCE
 local ambience = {
-	["dronescape"] = {
+	/*["dronescape"] = {
 		Sound("ta/ambient1.wav"),
 		Sound("ta/ambient2.wav"),
 		Sound("ta/ambient3.wav"),
@@ -9,7 +11,7 @@ local ambience = {
 		Sound("ta/ambient7.wav"),
 		Sound("ta/ambient8.wav"),
 		Sound("ta/ambient9.wav"),
-	},
+	},*/
 	["battle"] = {
 		Sound("ambient/explosions/battle_loop1.wav"),
 		Sound("ambient/explosions/battle_loop2.wav"),
@@ -47,7 +49,34 @@ function LoopAmbience(snd)
 	timer.Simple(SoundDuration(snd) - 0.5,function() cur_sound:FadeOut(0.5) end)
 	
 	local tab = ""
-	if not ambience[GetGlobalString("ta_ambience")] then tab = "dronescape" else tab = GetGlobalString("ta_ambience") end
+	if not ambience[GetGlobalString("ta_ambience")] then tab = "battle" else tab = GetGlobalString("ta_ambience") end
 	timer.Simple(SoundDuration(snd),function() LoopAmbience(table.Random(ambience[tab])) end)
 end
-timer.Simple(10,function() LoopAmbience(ambience["dronescape"][1]) end)
+timer.Simple(10,function() LoopAmbience(ambience["battle"][1]) end)
+
+
+// ROUND END SOUNDS
+local roundend = {
+	{ "ta/endround/win-loop1.wav",
+	"ta/endround/win-loop2.mp3",
+	},
+	{ "ta/endround/lose-loop1.wav",
+	"ta/endround/lose-riff2.wav",
+	},
+}
+
+usermessage.Hook("endRoundSound",function(um)
+	local snd = ""
+	if um:ReadBool() then snd = table.Random(roundend[1])
+	else snd = table.Random(roundend[2]) end
+	
+	if string.find(snd,"loop") then
+		surface.PlaySound(snd)
+		timer.Create("loopEndSound",SoundDuration(snd),5,function() surface.PlaySound(snd) end)
+	else
+		surface.PlaySound(snd)
+	end
+end)
+
+usermessage.Hook("stopRoundSound",function() timer.Destroy("loopEndSound") end)
+	

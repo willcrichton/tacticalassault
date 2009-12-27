@@ -1,6 +1,7 @@
 include( 'shared.lua' )
 include( 'cl_ambience.lua' )
 include( 'cl_hud.lua' )
+include( 'cl_vgui.lua' )
 
 surface.CreateFont( "HalfLife2", SScale( 20 ), 0, true, true, "HudNumber20" )
 surface.CreateFont( "Army", 25, 400, true, false, "ObjectiveFontPrimary" )
@@ -50,14 +51,13 @@ end
 concommand.Add("ta_store",StoreMenu)
 
 // Sprinting movement 									FIX THIS PLEASE ARRRGH
-/*
 local swing,rising = 0,true
 
-local inc,max = 1.50,9
+local inc,max = 0.2,2.5
 
 timer.Create("changeSwing",0.005,0,function()
 	
-	if LocalPlayer():KeyDown(131072) and LocalPlayer():Alive() and (LocalPlayer():KeyDown(8) or LocalPlayer():KeyDown(16)) then
+	if LocalPlayer():KeyDown(131072) and LocalPlayer():Alive() and (LocalPlayer():KeyDown(8) or LocalPlayer():KeyDown(16))  and LocalPlayer():IsOnGround() then
 		if rising  then 
 			swing = swing + inc
 		else
@@ -90,7 +90,7 @@ function DoSprint( ply, origin, angles, fov )
  
 end
  
-hook.Add("CalcView", "DoSprint", DoSprint) */
+hook.Add("CalcView", "DoSprint", DoSprint) 
 
 // Death view
 local bright,cont,col = 0,1,1

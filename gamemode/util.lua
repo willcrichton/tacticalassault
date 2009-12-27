@@ -40,6 +40,12 @@ if SERVER then
 		return pts1 > pts2 && pl1 || pl2
 	end
 	
+	function ta.AddFilesRecursive(root,path)
+		if file.IsDir(path..root) then
+			for _,v in ipairs(file.Find(path..root.."/*")) do ta.AddFilesRecursive(v,path..root.."/") end
+		else resource.AddFile(path..root) end
+	end
+	
 end
 
 if CLIENT then
@@ -102,6 +108,53 @@ if CLIENT then
 		end
 	end
 	
+	function ta.DrawParallel(x,y,w,h,diag)
+		surface.DrawPoly{
+			{x = x,y=y};
+			{x = x + diag,y = y - h};
+			{x = x + diag + w,y = y - h};
+			{x = x + w;y = y};
+		}
+	end
+	
+	function ta.AngleToPlayer(obj)
+		local vpos = LocalPlayer():GetPos()
+		local apos = obj:GetPos()
+		local eyeang = LocalPlayer():EyeAngles()
+		local eyaw = eyeang.y
+		local bearing
+		if eyaw > 0 then bearing = 360 - eyaw
+		else bearing = math.abs(eyaw)
+		end
+		local distx = vpos.x - apos.x --adj
+		local disty = vpos.y - apos.y -- opp
+		local test = math.atan2(disty, distx)
+		test = math.Rad2Deg( test ) -- the angle from the origin(world)
+		data =  test + bearing --make it relative to the player.
+		data = data - 180 -- for some reason, it's rotated 180 deg.
+		if data < 0 then return 360 + data
+		else return data end
+	end
+	
+	function ta.AddKillStreak(ply,kills)
+		local medals = {
+		[5] = "ta/bronze",
+		[15] = "ta/silver",
+		[25] = "ta/gold",
+		
+		if ( !IsValid( g_DeathNotify ) ) then return end
+
+		local pnl = vgui.Create( "GameNotice", g_DeathNotify )
+		
+		local icon = vgui.Create("DImage",pnl)
+		icon:SetMaterial(medals[kills])
+		icon:SetSize(35,35)
+		pnl:AddItem(icon)
+		
+		pnl:AddText( ply:Name() .. " has a "..kills .. " kill streak!" )
+
+		g_DeathNotify:AddItem( pnl )
+	end
 end
 
 
@@ -133,6 +186,26 @@ function ta.NextKey(t,k)
 		if a == k then ret_next = true end
 	end
 	return k
+end
+
+function ta.SubTableHasValue(t,v)
+	for _,subtable in pairs(t) do
+		if table.HasValue(subtable,v) then return true end
+	end
+	return false
+end
+
+function ta.GetSubTableWithValue(t,v)
+	for _,subtable in pairs(t) do
+		if table.HasValue(subtable,v) then return subtable end
+	end
+	return {}
+end
+
+function ta.RemoveSubtableFromValue(t,v)
+	for k,subtable in pairs(t) do
+		if table.HasValue(subtable,v) then table.remove(t,k) return end
+	end
 end
 
 function ta.SecToMin(sec)

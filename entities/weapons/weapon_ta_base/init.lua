@@ -9,6 +9,22 @@ SWEP.AutoSwitchFrom			= true	// Auto switch from if you pick up a better weapon
 
 SWEP.HoldType				= "pistol"
 
+function SWEP:PrimaryAttack()
+	if not self:CanPrimaryAttack() then return end
+	
+	self.Owner:ChatPrint("USING PRIMARY ATTACK")
+end
+
+function SWEP:SecondaryAttack()
+	self.Weapon:SetNWBool("Ironsights",!self.Weapon:GetNWBool("Ironsights"))
+end
+
+function SWEP:CanPrimaryAttack()
+	if self.Owner:KeyDown(IN_SPEED) then return false end
+	
+	return true
+end
+
 /*---------------------------------------------------------
    Name: SWEP:OnRestore()
    Desc: The game has just been reloaded. This is usually the right place
