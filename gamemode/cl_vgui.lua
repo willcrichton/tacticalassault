@@ -3,7 +3,7 @@ local radar = vgui.Create("DFrame")
 	radar:SetTitle("")
 	radar:ShowCloseButton(false)
 	radar:SetSize(150,150)
-	radar:SetPos(ScrW() - 180,90)
+	radar:SetPos(ScrW() - 180,ScrH() - 570)
 	
 	local on_radar = {}
 	

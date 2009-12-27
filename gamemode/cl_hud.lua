@@ -270,13 +270,15 @@ end)
 
 hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 	
+	local x,y,w,h,diag = ScrW() - 290,ScrH() - 48,170,35,20
+
+	surface.SetDrawColor( 100, 100, 100, 120 )
+	ta.DrawParallel(x,y,w,h,diag)
+	
 	// Ammo
 	if LocalPlayer():Alive() and LocalPlayer():GetActiveWeapon():IsValid() then
 	
-		local x,y,w,h,diag = ScrW() - 290,ScrH() - 48,170,35,20
-
-		surface.SetDrawColor( 100, 100, 100, 120 )
-		ta.DrawParallel(x,y,w,h,diag)
+		
 		
 		// HEALTH
 		surface.SetDrawColor(0,0,0,255)

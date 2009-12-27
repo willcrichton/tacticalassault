@@ -115,3 +115,10 @@ hook.Add("RenderScreenspaceEffects","TestDeath",function()
 	else bright,cont,col = 0,1,1 end
 		
 end)
+
+
+// Recieve killstreak info
+usermessage.Hook("ta-killstreak",function(um) 
+	local killer,kills = um:ReadEntity(),um:ReadShort()
+	timer.Simple(0.05,function() ta.AddKillStreak(killer,kills) end) 
+end)

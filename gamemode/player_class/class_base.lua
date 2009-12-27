@@ -62,10 +62,12 @@ function CLASS:OnSpawn( pl )
 end
 
 function CLASS:Loadout( pl )
-	pl:GiveAmmo("pistol",180)
-	pl:GiveAmmo("smg1",90)
-	pl:GiveAmmo("buckshot",45)
-	pl:GiveAmmo("XBowBolt",30)
+	pl:GiveAmmo("Pistol",180)
+	pl:GiveAmmo("357",30)
+	pl:GiveAmmo("SMG1",90)
+	pl:GiveAmmo("Buckshot",45)
+	pl:GiveAmmo("XBowBolt",20)
+	pl:GiveAmmo("Grenade",3)
 	
 	pl:Give("weapon_crowbar")
 	pl:Give("weapon_binoculars")

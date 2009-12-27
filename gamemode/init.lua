@@ -24,24 +24,36 @@ function GM:PlayerDisconnected(pl)
 	DB.Save()
 end
 
+// GIve people play points
 hook.Add("EndOfGame","AddPlays",function() 
 	for _,v in ipairs(player.GetAll()) do DB.AddPlay(v) end 
 	DB.Save() 
 end)
 
+// Set start time for later reference by disconnect and play points
 function GM:PlayerAuthed(pl)
 	pl:SetNWInt("StartTime",CurTime())
 end
 
 hook.Add("PlayerDeath","SavePoints",function(vic,inf,killer)
 	
+	// Add the points
 	if !killer:IsPlayer() then return end
 
-	local pts = (DB.GetPoints(vic) + vic:Frags())/600
+	local pts = (DB.GetPoints(vic) + vic:Frags())/1000
 	
-	if pts > 1 then killer:AddFrags(math.floor(pts)) end
+	if pts >= 1 then killer:AddFrags(math.floor(pts)) end
 	
 	DB.SetPoints(killer,killer:Frags())
+	
+	// Calculate killstreaks
+	vic:SetNWInt("Killstreak",0)
+	local kills = killer:GetNWInt("Killstreak") + 1
+	killer:SetNWInt("Killstreak",kills)
+	umsg.Start("ta-killstreak")
+		umsg.Entity(killer)
+		umsg.Short(kills)
+	umsg.End()
 end)
 
 function GM:InitPostEntity()
@@ -325,6 +337,13 @@ function SendObjectives(pl,cmd,args)
 end
 concommand.Add("ta_target",SendObjectives)
 
+concommand.Add("ta_aurora",function(pl)
+	if pl:GetNWInt("Killstreak") >= 25 and !pl:GetNWBool("HasCannon") then
+		pl:SetNWBool("HasCannon",true)
+		pl:Give("weapon_ioncannon")
+	end
+end)
+
 concommand.Add("ta_printsquads",function()
 	for _,p in ipairs(player.GetAll()) do
 		p:ChatPrint("And the teams are...")
@@ -342,7 +361,8 @@ concommand.Add("ta_printsquads",function()
 	end
 end)
 
-concommand.Add("ta_save",function()
+concommand.Add("ta_save",function(pl)
+	if !pl:IsAdmin() then return end
 	for _,v in ipairs(player.GetAll()) do
 		if not string.find(string.lower(v:Name()),"bot") then
 			DB.Save()
@@ -355,6 +375,7 @@ concommand.Add("ta_points",function(pl)
 end)
 
 concommand.Add("ta_bots",function(pl)
+	if !pl:IsAdmin() then return end
 	for i=1,11 do pl:ConCommand("bot") end
 end)
 

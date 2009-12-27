@@ -137,21 +137,37 @@ if CLIENT then
 	end
 	
 	function ta.AddKillStreak(ply,kills)
+		local snds = {
+			Sound("ta/killstreak-1.mp3"),
+			Sound("ta/killstreak-2.mp3"),
+		}
+	
 		local medals = {
-		[5] = "ta/bronze",
-		[15] = "ta/silver",
-		[25] = "ta/gold",
+		[5] = {"ta/bronze",function()
+			surface.PlaySound(table.Random(snds))
+			end},
+		[15] = {"ta/silver",function()
+			surface.PlaySound(table.Random(snds))
+			end},
+		[25] = {"ta/gold",function()
+			surface.PlaySound(table.Random(snds))
+			LocalPlayer():ChatPrint("For your valor, you have been given the Aurora Cannon. Use it wisely.")
+			RunConsoleCommand("ta_aurora")
+			end},
+		}
 		
-		if ( !IsValid( g_DeathNotify ) ) then return end
+		if !IsValid( g_DeathNotify )  then return end
+		if not medals[kills] then return end
 
 		local pnl = vgui.Create( "GameNotice", g_DeathNotify )
 		
 		local icon = vgui.Create("DImage",pnl)
-		icon:SetMaterial(medals[kills])
+		icon:SetMaterial(medals[kills][1])
 		icon:SetSize(35,35)
 		pnl:AddItem(icon)
 		
 		pnl:AddText( ply:Name() .. " has a "..kills .. " kill streak!" )
+		medals[kills][2]()
 
 		g_DeathNotify:AddItem( pnl )
 	end
