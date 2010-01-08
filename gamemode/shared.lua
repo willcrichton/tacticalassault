@@ -24,6 +24,7 @@ GM.NoNonPlayerPlayerDamage = false
 GM.TakeFragOnSuicide = true
 GM.AddFragsToTeamScore = true
 GM.RealisticFallDamage = true
+GM.FallSpeedDecrease = 3
 GM.MinimumDeathLength = 5
 
 GM.RoundBased = true
@@ -53,3 +54,49 @@ function GM:CreateTeams()
 	team.SetSpawnPoint( TEAM_SPECTATOR, { "info_player_start", "info_player_terrorist", "info_player_counterterrorist" } ) 
 
 end
+
+// Stole this code from GMDM...
+local LastStrafeRoll = 0
+local WalkTimer = 0
+local VelSmooth = 0
+function GM:CalcView( ply, origin, angle, fov )
+ 
+	if !ply:Alive() then
+		local rag = ply:GetRagdollEntity()
+		if !rag then return end
+		local att = rag:GetAttachment( rag:LookupAttachment("eyes") )
+		if att then
+			att.Pos = att.Pos + att.Ang:Forward() * 1
+			att.Ang = att.Ang
+			
+			origin = att.Pos
+			angle = att.Ang
+		end
+		fov = 55
+	else
+		VelSmooth = math.Clamp( VelSmooth * 0.9 + ply:GetVelocity():Length() * 0.1, 0, 700 )
+		WalkTimer = WalkTimer + VelSmooth * FrameTime() * 0.05
+
+		if ply:IsOnGround() then	
+			angle.roll = angle.roll + math.sin( WalkTimer ) * VelSmooth * 0.001
+			angle.pitch = angle.pitch + math.cos( WalkTimer * 0.5 ) * VelSmooth * 0.003
+			angle.yaw = angle.yaw + math.cos( WalkTimer ) * VelSmooth * 0.003
+		end
+	end
+ 
+	return GAMEMODE:CalcView(ply,origin,angle,fov)
+ 
+end
+
+hook.Add("OnPlayerHitGround","fjkdal",function( pl )
+	local class,div = pl:GetPlayerClass(), GAMEMODE.FallSpeedDecrease
+	local run,walk = class.RunSpeed,class.WalkSpeed
+	pl:SetRunSpeed(run / div)
+	pl:SetWalkSpeed(walk / div)
+	local inc = 0
+	timer.Create(pl:SteamID().."speed",0.2,10,function()
+		inc = inc + 0.1
+		pl:SetRunSpeed(run / div + run * inc / (1 - 1 / div) )
+		pl:SetWalkSpeed(walk / div + walk * inc / (1 - 1 / div) )
+	end)
+end)

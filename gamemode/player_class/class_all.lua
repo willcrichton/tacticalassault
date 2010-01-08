@@ -93,7 +93,7 @@ CLASS.Description = "Backbone of the team. \nPrimary: Pistol \nSecondary: Medic 
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_pistol")
-	pl:Give("weapon_smg1")
+	pl:Give("weapon_m4a1")
 	//pl:Give("weapon_medkit")
 	
 	self.BaseClass.Loadout(self,pl)
@@ -113,6 +113,8 @@ CLASS.Description = "Build machines, create tech. \nPrimary: Shotgun \nSecondary
 function CLASS:Loadout( pl )
 	pl:Give("weapon_pistol")
 	pl:Give("weapon_shotgun")
+	pl:Give("weapon_physcannon")
+	pl:Give("weapon_techie")
 	
 	self.BaseClass.Loadout(self,pl)
 end

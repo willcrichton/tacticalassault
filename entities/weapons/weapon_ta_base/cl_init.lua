@@ -37,8 +37,8 @@ function SWEP:GetViewModelPosition(pos, ang)
 		iron_lerp = math.Approach(iron_lerp,0,4)
 	end
 	
-	pos = LerpVector(iron_lerp / 100,pos,pos + self.IronSightsPos)
-	ang = ang + self.IronSightsAng
+	pos = LerpVector(iron_lerp / 100,pos,pos + self.IronSightsPos) 
+	ang = LerpAngle(iron_lerp / 100,ang,ang + self.IronSightsAng)
 	
 	return pos, ang
 end

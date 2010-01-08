@@ -3,6 +3,12 @@ local TIME_AMMODROP = 300
 
 timer.Simple(20,function() physenv.SetPerformanceSettings({MaxVelocity = 50000 }) end)
 
+local radio_sounds = {
+		Sound("ta/radio/radio1.wav"),
+		Sound("ta/radio/radio2.wav"),
+		Sound("ta/radio/radio3.wav"),
+	}
+
 function Airstrike(pl)
 	
 	if !pl:GetNWBool("General") then return end
@@ -24,6 +30,8 @@ function Airstrike(pl)
 	if orig.tr.HitPos:Distance(pl:GetPos()) > 8000 then pl:ChatPrint("You must be at least 8000 units from the target to use an airstrike.") return end
 	if orig.tr.HitPos:Distance(pl:GetPos()) < 2000 then pl:ChatPrint("You're too close to call in an airstrike! You must be at least 2000 units away.") return end
 	
+	pl:EmitSound(table.Random(radio_sounds))
+	
 	local ent = ents.Create("prop_physics")
 	ent:SetModel("models/props_junk/wood_crate001a.mdl")
 	
@@ -37,19 +45,20 @@ function Airstrike(pl)
 	ent:Spawn()
 	ent:Activate()
 	
-	local vel_mul = 10000
+	local vel_mul = 20000
 	local phys = ent:GetPhysicsObject()
-	if !phys || !phys:IsValid() then ent:Remove() pl:ChatPrint("AIRSTRIKE MALFUNCTION - Contact the Engineer (http://www.facepunch.com/member.php?u=180808)") return end
+	if !phys || !phys:IsValid() then 
+		ent:Remove() 
+		pl:ChatPrint("AIRSTRIKE MALFUNCTION - Contact the Engineer (http://www.facepunch.com/member.php?u=180808)")
+		return 
+	end
 	phys:EnableGravity(false) 
 	phys:EnableCollisions(false)
 	
 	//if not util.IsInWorld(pos) or not util.PointContents(pos) == CONTENTS_EMPTY  then
 		phys:SetVelocity( (pl:GetForward()) * vel_mul )
 		ent:SetAngles( pl:GetForward():Angle() + Angle(0,90,0) )
-		
-		timer.Simple(1,function()
-			phys:SetVelocity( (orig.tr.HitPos - pl:GetPos()):Normalize() * vel_mul )
-		end)
+
 	/* else
 		phys:SetVelocity( (pl:GetForward() + Vector(-0.2,5,0)) * vel_mul )
 		ent:SetAngles( pl:GetForward():Angle() + Angle(0,100,0) )
@@ -66,7 +75,7 @@ function Airstrike(pl)
 	
 		if orig.launched then return end
 		if !ent:IsValid() then 
-			pl:ChatPrint("Airstrike malfunction!") 
+			pl:ChatPrint("AIRSTRIKE MALFUNCTION - Contact the Engineer (http://www.facepunch.com/member.php?u=180808)")
 			hook.Remove("Think","LaunchBombs"..orig.index) return 
 		end
 		if math.abs(orig.tr.HitPos.x - ent:GetPos().x) > 300 or math.abs(orig.tr.HitPos.y - ent:GetPos().y) > 300 then return end
@@ -75,7 +84,7 @@ function Airstrike(pl)
 		local tdr = util.TraceLine(td)
 		orig.to_hit = tdr.HitPos
 	
-		if !ent:IsValid() then pl:ChatPrint("The airstrike malfunctioned!") return end
+		if !ent:IsValid() then pl:ChatPrint("AIRSTRIKE MALFUNCTION - Contact the Engineer (http://www.facepunch.com/member.php?u=180808)") return end
 		for i =1, 3 do
 			local bomb = ents.Create("prop_physics")
 			bomb:SetPos(ent:GetPos() - Vector(20 - i * 20,0,100))
@@ -142,14 +151,16 @@ function AmmoDrop(pl)
 	if !pl:GetNWBool("General") then return end
 	if pl:Team() == 1 then 
 		local a = GAMEMODE.Red.LastAmmo
-		if a and CurTime() - a < TIME_AMMODROP then pl:ChatPrint("You must wait ".. math.ceil(TIME_AMMODROP - (CurTime() - a)) .. " more seconds before using an airstrike.") return end
+		if a and CurTime() - a < TIME_AMMODROP then pl:ChatPrint("You must wait ".. math.ceil(TIME_AMMODROP - (CurTime() - a)) .. " more seconds before using an ammo drop.") return end
 	else 
 		local a = GAMEMODE.Blu.LastAmmo
-		if a and CurTime() - a < TIME_AMMODROP then pl:ChatPrint("You must wait ".. math.ceil(TIME_AMMODROP - (CurTime() - a)) .. " more seconds before using an airstrike.") return end
+		if a and CurTime() - a < TIME_AMMODROP then pl:ChatPrint("You must wait ".. math.ceil(TIME_AMMODROP - (CurTime() - a)) .. " more seconds before using an ammo drop.") return end
 	end
 
 	local up = util.TraceLine({start = pl:GetPos(),endpos = pl:GetPos() + Vector(0,0,1000000000),filter=pl})
 	if up.HitPos:Distance(pl:GetPos()) < 1000 then pl:ChatPrint("You must be in an open area!") return end
+	
+	pl:EmitSound(table.Random(radio_sounds))
 	
 	local crate = ents.Create("ent_ammopack")
 	crate:SetPos(up.HitPos - Vector(0,0,1000))
@@ -172,7 +183,7 @@ end
 concommand.Add("ta_cap",MakeObjective)
 
 function MakeBomb(pl)
-	local obj = ents.Create("obj_explode")
+	local obj = ents.Create("obj_explode_win")
 	obj:SetPos(pl:GetEyeTrace().HitPos)
 	obj:Spawn()
 	obj:Activate()

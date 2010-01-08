@@ -26,6 +26,7 @@ end
    
 SWEP.ViewModel		= "models/weapons/v_binoculars.mdl"
 SWEP.WorldModel		= "models/weapons/w_binoculars.mdl"
+SWEP.AutoSwitchTo = false
 
  SWEP.Primary.ClipSize = -1; 
  SWEP.Primary.DefaultClip = -1; 
@@ -35,7 +36,7 @@ SWEP.WorldModel		= "models/weapons/w_binoculars.mdl"
  
  SWEP.ZoomIn = Sound("ta/binoculars/binoculars_zoomin.wav")
  SWEP.ZoomOut = Sound("ta/binoculars/binoculars_zoomout.wav")
- SWEP.ZoomFOV = 20
+ SWEP.ZoomFOV = 10
  SWEP.DefaultFOV = 75
  SWEP.FOVTime = 1.1
  
@@ -50,7 +51,7 @@ SWEP.WorldModel		= "models/weapons/w_binoculars.mdl"
 	
 	self.Weapon:SetNWEntity("ViewEnt",self.Owner)
 	self.ZoomedMain = false
-	timer.Simple(0.1,function() if self.Owner:IsValid() then self.DefaultFOV = self.Owner:GetFOV()  end end)
+	timer.Simple(0.1,function() if self.Owner and self.Owner:IsValid() then self.DefaultFOV = self.Owner:GetFOV()  end end)
 end
    
 function SWEP:Think()
@@ -70,7 +71,7 @@ function SWEP:Holster()
 		self.Owner:DrawViewModel(true)
 		self.Owner:SetFOV(self.DefaultFOV,self.FOVTime)
 		self:EmitSound( self.ZoomOut )
-		RunConsoleCommand("pp_mat_overlay","0")
+		self.Owner:ConCommand("pp_mat_overlay 0");
 	
 	end
 	
@@ -83,20 +84,20 @@ function SWEP:PrimaryAttack()
 	
 	self.ZoomedMain = !self.ZoomedMain
 	
-	if self.ZoomedMain then
+	if self.ZoomedMain && self.Owner:GetActiveWeapon() == self.Weapon then
 	
 		self.Owner:SetFOV(self.ZoomFOV,self.FOVTime)
 		self.Owner:DrawViewModel(false)
 		self:EmitSound( self.ZoomIn )
-		RunConsoleCommand("pp_mat_overlay_texture", "effects/combine_binocoverlay.vmt");
-		RunConsoleCommand("pp_mat_overlay", "1");
+		self.Owner:ConCommand("pp_mat_overlay_texture effects/combine_binocoverlay.vmt");
+		self.Owner:ConCommand("pp_mat_overlay 1");
 		
 	else
 	
 		self.Owner:DrawViewModel(true)
 		self.Owner:SetFOV(self.DefaultFOV,self.FOVTime)
 		self:EmitSound( self.ZoomOut )
-		RunConsoleCommand("pp_mat_overlay","0")
+		self.Owner:ConCommand("pp_mat_overlay 0");
 		
 	end
 	

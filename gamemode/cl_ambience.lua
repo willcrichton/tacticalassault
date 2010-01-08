@@ -72,7 +72,7 @@ usermessage.Hook("endRoundSound",function(um)
 	
 	if string.find(snd,"loop") then
 		surface.PlaySound(snd)
-		timer.Create("loopEndSound",SoundDuration(snd),5,function() surface.PlaySound(snd) end)
+		timer.Create("loopEndSound",SoundDuration(snd),3,function() surface.PlaySound(snd) end)
 	else
 		surface.PlaySound(snd)
 	end

@@ -64,7 +64,7 @@ function SWEP:AddAmmo(pl,primary)
 		pl:GiveAmmo(45,"buckshot",true)
 	end
 	timer.Simple(self.Delay,function()
-		self.Weapon:SendWeaponAnim( ACT_VM_DRAW )
+		if self.Owner and self.Weapon and self.Weapon:IsValid() and self.Owner:Alive() and self.Owner:GetActiveWeapon() == self.Weapon then self.Weapon:SendWeaponAnim( ACT_VM_DRAW ) end
 	end)
 end
 

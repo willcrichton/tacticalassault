@@ -62,15 +62,17 @@ function CLASS:OnSpawn( pl )
 end
 
 function CLASS:Loadout( pl )
-	pl:GiveAmmo("Pistol",180)
-	pl:GiveAmmo("357",30)
-	pl:GiveAmmo("SMG1",90)
-	pl:GiveAmmo("Buckshot",45)
-	pl:GiveAmmo("XBowBolt",20)
-	pl:GiveAmmo("Grenade",3)
+	pl:GiveAmmo(90,"Pistol")
+	pl:GiveAmmo(15,"357")
+	pl:GiveAmmo(90,"SMG1")
+	pl:GiveAmmo(30,"Buckshot")
+	pl:GiveAmmo(20,"XBowBolt")
+	pl:GiveAmmo(3,"Grenade")
 	
 	pl:Give("weapon_crowbar")
 	pl:Give("weapon_binoculars")
+	
+	if GetGlobalString("ta_mode") == "bomb" then pl:Give("weapon_bomb") end
 end
 
 player_class.Register( "BaseClass", CLASS )

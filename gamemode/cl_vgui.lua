@@ -1,4 +1,7 @@
+include( 'util.lua' )
+
 // RADAR
+
 local radar = vgui.Create("DFrame")
 	radar:SetTitle("")
 	radar:ShowCloseButton(false)
@@ -18,11 +21,13 @@ local radar = vgui.Create("DFrame")
 		draw.RoundedBox(8,0,0,radar:GetWide(),radar:GetTall(),Color(0,0,0,200))
 		draw.RoundedBox(0,cx - 5,cy-5,10,10,team.GetColor(LocalPlayer():Team()))
 		
+		local mul = -25
+		
 		for _,v in ipairs(ents.FindByClass("player")) do 
 		
 			if v:Team() != LocalPlayer():Team() and v:Alive() then
 		
-				local rdr,see = ta.SubTableHasValue(on_radar,v),CanSee(v)
+				local rdr,see = ta.SubTableHasValue(on_radar,v),ta.CanSee(v)
 			
 				if rdr || see then
 					
@@ -35,7 +40,7 @@ local radar = vgui.Create("DFrame")
 						ta.GetSubTableWithValue(on_radar,v)[2] = v:GetPos()
 					end
 				
-					local mul = -35
+
 					local dist,ang = LocalPlayer():GetPos():Distance(v:GetPos()), ta.AngleToPlayer(v)
 
 					if !see then 
@@ -50,6 +55,16 @@ local radar = vgui.Create("DFrame")
 							
 				end
 				
+			elseif v:Alive() and v:Team() == LocalPlayer():Team() then
+			
+				
+				local dist,ang = LocalPlayer():GetPos():Distance(v:GetPos()), ta.AngleToPlayer(v)
+				
+				local y = math.cos(math.rad(ang)) * dist / mul
+				local x = math.sin(math.rad(ang)) * dist / mul
+				
+				draw.RoundedBox(0,cx + x,cy + y,5,5,team.GetColor(v:Team()))
+			
 			end
 			
 		end

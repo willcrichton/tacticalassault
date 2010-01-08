@@ -2,6 +2,7 @@ include( 'shared.lua' )
 include( 'cl_ambience.lua' )
 include( 'cl_hud.lua' )
 include( 'cl_vgui.lua' )
+include( 'util.lua' )
 
 surface.CreateFont( "HalfLife2", SScale( 20 ), 0, true, true, "HudNumber20" )
 surface.CreateFont( "Army", 25, 400, true, false, "ObjectiveFontPrimary" )
@@ -18,7 +19,7 @@ end
 function GM:UpdateHUD_Alive()
 end
 
-function OptionsMenu()
+/*function OptionsMenu()
 	local frame = vgui.Create("DFrame")
 	frame:SetSize(150,300)
 	frame:Center()
@@ -43,54 +44,7 @@ function GeneralMenu()
 		draw.DrawText("General's Menu","ScoreboardText",frame:GetWide()/2,2,color_white,1)
 	end
 end
-concommand.Add("ta_general",GeneralMenu)
-
-function StoreMenu()
-
-end
-concommand.Add("ta_store",StoreMenu)
-
-// Sprinting movement 									FIX THIS PLEASE ARRRGH
-local swing,rising = 0,true
-
-local inc,max = 0.2,2.5
-
-timer.Create("changeSwing",0.005,0,function()
-	
-	if LocalPlayer():KeyDown(131072) and LocalPlayer():Alive() and (LocalPlayer():KeyDown(8) or LocalPlayer():KeyDown(16))  and LocalPlayer():IsOnGround() then
-		if rising  then 
-			swing = swing + inc
-		else
-			swing = swing - inc
-		end
-		
-		if swing > max then 
-			swing,rising = max,false
-		elseif swing < max*-1 then 
-			swing,rising= max*-1,true
-		end
-		
-	elseif LocalPlayer():Alive() then
-		
-		if swing > 0 then
-			swing = math.Approach(swing,0,inc * -1)
-		elseif swing < 0 then
-			swing = math.Approach(swing,0,inc)
-		end
-		
-	end
-end)
-	
-function DoSprint( ply, origin, angles, fov )
- 
-	angles = angles + Angle(0,0,swing)
-	origin = origin + LocalPlayer():GetRight() * swing * 4	
- 
-	return GAMEMODE:CalcView(ply,origin,angles,fov)
- 
-end
- 
-hook.Add("CalcView", "DoSprint", DoSprint) 
+concommand.Add("ta_general",GeneralMenu)*/
 
 // Death view
 local bright,cont,col = 0,1,1
@@ -115,7 +69,6 @@ hook.Add("RenderScreenspaceEffects","TestDeath",function()
 	else bright,cont,col = 0,1,1 end
 		
 end)
-
 
 // Recieve killstreak info
 usermessage.Hook("ta-killstreak",function(um) 

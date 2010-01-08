@@ -10,13 +10,16 @@ include( "shared.lua" )
 include( "data.lua")
 include( "util.lua")
 include( "sv_general.lua" )
+include( "sv_techie.lua" )
 
 ta.AddFilesRecursive("sound/ta","")
 ta.AddFilesRecursive("materials/ta","")
+resource.AddFile("models/weapons/w_binoculars.mdl")
+resource.AddFile("models/weapons/v_binoculars.mdl")
 resource.AddFile("resource/fonts/Army.ttf")
 
 SetGlobalString("ta_ambience","battle")
-SetGlobalString("ta_mode","capture")
+SetGlobalString("ta_mode","capture") -- other options: bomb
 
 // Load a player's points
 function GM:PlayerDisconnected(pl)
@@ -24,10 +27,13 @@ function GM:PlayerDisconnected(pl)
 	DB.Save()
 end
 
-// GIve people play points
+// GIve people play points and talk about maps
 hook.Add("EndOfGame","AddPlays",function() 
-	for _,v in ipairs(player.GetAll()) do DB.AddPlay(v) end 
+	for _,v in ipairs(player.GetAll()) do 
+		DB.AddPlay(v) 
+	end 
 	DB.Save() 
+	
 end)
 
 // Set start time for later reference by disconnect and play points
@@ -56,12 +62,6 @@ hook.Add("PlayerDeath","SavePoints",function(vic,inf,killer)
 	umsg.End()
 end)
 
-function GM:InitPostEntity()
-	if #ents.FindByClass("obj_explode_win") > 0 then
-		SetGlobalString("ta_mode","bomb")
-	end
-end
-
 // Create Squads func
 GM.Squads = {red = {}, blu = {}}
 GM.Red, GM.Blu = {Spawns = {}}, {Spawns = {}}
@@ -88,7 +88,7 @@ function CreateSquads(sqd,tm)
 			table.remove(availplys,num)
 		end
 		local pts = {-1,nil}
-		for _,v in pairs(tbl) do 
+		/*for _,v in pairs(tbl) do 
 			if DB.GetPoints(v) + DB.GetPlays(v) * 5 > pts[1] then 
 				pts[1] = DB.GetPoints(v)
 				pts[2] = v
@@ -101,7 +101,10 @@ function CreateSquads(sqd,tm)
 			else 
 				v:RemoveLeader() 
 			end 
-		end
+		end*/
+		local ldr = tbl[1]
+		for _,v in ipairs(tbl) do ldr = ta.ComparePoints(v,ldr) end
+		tbl.leader = ldr
 		tbl.name = "Squad "..i
 		table.insert(sqd,tbl)
 		
@@ -123,6 +126,8 @@ function CreateSquads(sqd,tm)
 end
 
 function GM:OnRoundStart( n )
+
+	ta.SpawnEntities()
 	if not GAMEMODE.Squads.red[1] or not GAMEMODE.Squads.blu[1] then
 		CreateSquads(GAMEMODE.Squads.red,1)
 		CreateSquads(GAMEMODE.Squads.blu,2)
@@ -149,7 +154,7 @@ function GM:OnRoundEnd( n )
 end
 
 function GM:CanStartRound( n )
-	if ta.Players() >= 12 then return true else return false end
+	return ta.Players() >= 6
 end
 
 /* HOW IT WORKS:
@@ -340,7 +345,7 @@ concommand.Add("ta_target",SendObjectives)
 concommand.Add("ta_aurora",function(pl)
 	if pl:GetNWInt("Killstreak") >= 25 and !pl:GetNWBool("HasCannon") then
 		pl:SetNWBool("HasCannon",true)
-		pl:Give("weapon_ioncannon")
+		pl:Give("weapon_auroracannon")
 	end
 end)
 

@@ -42,8 +42,8 @@ end
 function ENT:TurnOn(pl)
 	self.Activated = true
 	self.Activator = pl
-	self.Timer = 30
-	timer.Create("ta_bombtimer"..self.Entity:EntIndex(),1,30,function()
+	self.Timer = 5
+	timer.Create("ta_bombtimer"..self.Entity:EntIndex(),1,self.Timer,function()
 		if !self.Entity or !self.Entity:IsValid() then return end
 		
 		self.Timer = self.Timer - 1
@@ -107,15 +107,18 @@ function ENT:OnRemove()
 		return
 	end
 	
-	local effectdata = EffectData()
-	effectdata:SetOrigin( self.Entity:GetPos() )
-	effectdata:SetNormal( self.Entity:GetPos():GetNormalized() )
-	effectdata:SetEntity( self.Entity )
-	util.Effect( "super_explosion", effectdata )
+	local p_info = ents.Create("prop_physics")
+	p_info:SetModel( "models/props_junk/PopCan01a.mdl" )
+	p_info:SetPos(self.Entity:GetPos())
+	p_info:Spawn()
+	p_info:Activate()
+	p_info:EmitSound("ambient/levels/outland/OL12_BaseExplosion.wav")
+	ParticleEffect( "explosion_silo",self.Entity:GetPos(),Angle(0,0,0),p_info) 
+	timer.Simple(15,function() p_info:StopParticles() end)
 	
 	local explosion = ents.Create( "env_explosion" )
 	explosion:SetPos(self.Entity:GetPos())
-	explosion:SetKeyValue( "iMagnitude" , "500" )
+	explosion:SetKeyValue( "iMagnitude" , "700" )
 	explosion:SetPhysicsAttacker(self.Owner)
 	explosion:SetOwner(self.Owner)
 	explosion:Spawn()

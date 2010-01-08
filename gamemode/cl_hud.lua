@@ -77,7 +77,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 	surface.SetDrawColor(0,0,0,200)
 	surface.DrawTexturedRectRotated(ScrW()-150,ScrH()-275,200,150,180)
 	
-	for k,v in pairs(squad) do if k != "name" && k != "leader" && v != LocalPlayer() && v:IsPlayer() then
+	for k,v in pairs(squad) do if k != "name" && k != "leader" && v != LocalPlayer() && v:IsPlayer() && ValidEntity(v) then
 	
 		// Above their head info
 		local pos = (v:GetPos() + Vector(0,0,80 - LocalPlayer():GetPos():Distance(v:GetPos()) / 100)):ToScreen()

@@ -35,6 +35,9 @@ if SERVER then
 	
 	function ta.ComparePoints(pl1,pl2)
 		
+		if pl1:IsBot() || !pl1:IsValid() || !pl1:IsConnected() then return pl2
+		elseif pl2:IsBot() || !pl2:IsValid() || !pl2:IsConnected() then return pl1 end
+		
 		local pts1,pts2 = DB.GetPoints(pl1) + DB.GetPlays(pl1) * 5, DB.GetPoints(pl2) + DB.GetPlays(pl2) * 5
 		
 		return pts1 > pts2 && pl1 || pl2
@@ -44,6 +47,36 @@ if SERVER then
 		if file.IsDir(path..root) then
 			for _,v in ipairs(file.Find(path..root.."/*")) do ta.AddFilesRecursive(v,path..root.."/") end
 		else resource.AddFile(path..root) end
+	end
+	
+	function ta.SpawnEntities()
+		for _,v in ipairs( ents.FindByClass( "info_target" ) ) do
+			local name = v:GetName()
+			if name == "obj_capture" then
+				local obj = ents.Create("obj_capture")
+				obj:SetPos(v:GetPos())
+				obj:Spawn()
+				obj:Activate()
+			elseif name == "ent_pickup_health" then
+				local hp = ents.Create("ent_pickup")
+				hp:SetPos(v:GetPos())
+				hp:SetType(1)
+				hp:Spawn()
+				hp:Activate()
+			elseif name == "ent_pickup_ammo" then
+				local ammo = ents.Create("ent_pickup")
+				ammo:SetPos(v:GetPos())
+				ammo:SetType(2)
+				ammo:Spawn()
+				ammo:Activate()
+			end
+		end
+
+		if #ents.FindByClass("obj_explode_win") > 0 then
+			SetGlobalString("ta_mode","bomb")
+		else
+			SetGlobalString("ta_mode","capture")
+		end
 	end
 	
 end
@@ -167,9 +200,22 @@ if CLIENT then
 		pnl:AddItem(icon)
 		
 		pnl:AddText( ply:Name() .. " has a "..kills .. " kill streak!" )
-		medals[kills][2]()
+		if ply == LocalPlayer() then medals[kills][2]() end
 
 		g_DeathNotify:AddItem( pnl )
+	end
+	
+	function ta.ClearTooltips()
+		local f = vgui.Create("DFrame")
+		f:SetPos(0,0)
+		f:SetSize(1,1)
+		f:MakePopup()
+		timer.Simple(0.2,function() f:Close() end)
+	end
+	
+	function ta.CanSee(obj)
+		local pos = obj:GetPos():ToScreen()
+		return util.TraceLine({start = LocalPlayer():GetShootPos(),endpos = obj:GetPos() + obj:OBBCenter(),filter= LocalPlayer()}).Entity == obj and pos.x <= ScrW() and pos.x >=0 and pos.y <= ScrH() and pos.y >= 0
 	end
 end
 
@@ -232,3 +278,5 @@ function ta.SecToMin(sec)
 end
 
 function ta.Capitalize(str) return string.upper(string.Left(str,1)) .. string.Right(str,string.len(str) - 1) end
+
+

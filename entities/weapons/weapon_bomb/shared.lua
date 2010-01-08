@@ -39,7 +39,7 @@ end
  function SWEP:PrimaryAttack()
 
 	local tr = self.Owner:GetEyeTrace()
-	if !tr.HitNonWorld || tr.Entity:GetClass() != "obj_explode" || tr.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then 
+	if !tr.HitNonWorld || tr.Entity:GetClass() != "obj_explode_win" || tr.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then 
 		if SERVER then self.Owner:SendLua("surface.PlaySound(\"common/wpn_denyselect.wav\")") end
 		return
 	end
@@ -53,6 +53,7 @@ end
 		timer.Simple(3.8,function()
 			local prop = ents.Create("ent_bomb")
 			prop:SetPos(self.Owner:GetEyeTrace().HitPos)
+			prop:SetAngles(self.Owner:GetEyeTrace().HitNormal:Angle())
 			prop:Spawn()
 			prop:Activate()
 			prop:TurnOn(self.Owner)
