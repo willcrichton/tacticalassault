@@ -67,14 +67,14 @@ function GM:CalcView( ply, origin, angle, fov )
 		local att = rag:GetAttachment( rag:LookupAttachment("eyes") )
 		if att then
 			att.Pos = att.Pos + att.Ang:Forward() * 1
-			att.Ang = att.Ang
 			
 			origin = att.Pos
 			angle = att.Ang
 		end
 		fov = 55
 	else
-		VelSmooth = math.Clamp( VelSmooth * 0.9 + ply:GetVelocity():Length() * 0.1, 0, 700 )
+		VelSmooth = math.Clamp( VelSmooth * 0.9 + ply:GetVelocity():Length() * 0.08, 0, 700 )
+		if ply:GetPlayerClassName() == "Runner" then VelSmooth = VelSmooth / 1.2 end
 		WalkTimer = WalkTimer + VelSmooth * FrameTime() * 0.05
 
 		if ply:IsOnGround() then	
@@ -84,19 +84,20 @@ function GM:CalcView( ply, origin, angle, fov )
 		end
 	end
  
-	return GAMEMODE:CalcView(ply,origin,angle,fov)
+	return self.BaseClass:CalcView(ply,origin,angle,fov)
  
 end
 
-hook.Add("OnPlayerHitGround","fjkdal",function( pl )
-	local class,div = pl:GetPlayerClass(), GAMEMODE.FallSpeedDecrease
+hook.Add("OnPlayerHitGround","SlowEmDown",function( pl )
+	local class,div = pl:GetPlayerClass(), math.Clamp((pl:GetVelocity():Length() - 630) / 70,1,10)
 	local run,walk = class.RunSpeed,class.WalkSpeed
 	pl:SetRunSpeed(run / div)
 	pl:SetWalkSpeed(walk / div)
 	local inc = 0
 	timer.Create(pl:SteamID().."speed",0.2,10,function()
 		inc = inc + 0.1
-		pl:SetRunSpeed(run / div + run * inc / (1 - 1 / div) )
-		pl:SetWalkSpeed(walk / div + walk * inc / (1 - 1 / div) )
+		pl:SetRunSpeed(run / div + run * inc * (1 - 1 / div) )
+		pl:SetWalkSpeed(walk / div + walk * inc * (1 - 1 / div) )
 	end)
 end)
+

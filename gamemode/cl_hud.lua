@@ -234,7 +234,18 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 	// Draw chevron over primary target
 	if objectives[1] and ValidEntity(objectives[1]) then
 		local pos = objectives[1]:GetPos():ToScreen()
-		ta.DrawChevron(pos.x,pos.y - 30,55,30,15,false,Color(0,120,255,200))
+			
+		if pos.x < 0 || pos.y < 0 || pos.x > ScrW() || pos.y > ScrH() then 
+			
+			if pos.x < 0 then
+				ta.DrawChevronRight(10,ScrH()/2 - 200,20,40,10,false,Color(0,120,255,200))
+			else
+				ta.DrawChevronRight(ScrW() - 10 - 30,ScrH()/2 - 200,20,40,10,true,Color(0,120,255,200))
+			end
+			
+		else
+			ta.DrawChevron(pos.x,pos.y - 30,55,30,15,false,Color(0,120,255,200))
+		end
 	end
 	
 	// Target selection

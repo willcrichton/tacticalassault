@@ -46,7 +46,9 @@ if SERVER then
 	function ta.AddFilesRecursive(root,path)
 		if file.IsDir(path..root) then
 			for _,v in ipairs(file.Find(path..root.."/*")) do ta.AddFilesRecursive(v,path..root.."/") end
-		else resource.AddFile(path..root) end
+		else
+			resource.AddFile(path..root) 
+		end
 	end
 	
 	function ta.SpawnEntities()
@@ -138,6 +140,26 @@ if CLIENT then
 				{x = x - w/2,y = y - h};
 			}
 		else
+		end
+	end
+	
+	function ta.DrawChevronRight(x,y,w,h,chev,point_right,col)
+		if col then surface.SetDrawColor(col) end
+	
+		if point_right then
+			surface.DrawPoly{
+				{x=x,y=y};
+				{x=x - w,y=y+h/2};
+				{x = x - chev;y = y};
+				{x = x - w;y=y-h/2};
+			}
+		else
+			surface.DrawPoly{
+				{x=x,y=y};
+				{x=x + w,y=y+h/2};
+				{x = x + chev;y = y};
+				{x = x + w;y=y-h/2}
+			}
 		end
 	end
 	

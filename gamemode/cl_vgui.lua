@@ -14,18 +14,21 @@ local radar = vgui.Create("DFrame")
 	
 	function radar:Paint()
 
-		if !LocalPlayer():IsValid() or !LocalPlayer():Alive() then return end
+		if !LocalPlayer():IsValid() or !LocalPlayer():Alive() || !table.HasValue({1,2},LocalPlayer():Team()) then return end
 	
 		local cx,cy = radar:GetWide()/2,radar:GetTall()/2
 			
 		draw.RoundedBox(8,0,0,radar:GetWide(),radar:GetTall(),Color(0,0,0,200))
-		draw.RoundedBox(0,cx - 5,cy-5,10,10,team.GetColor(LocalPlayer():Team()))
+		surface.SetTexture(surface.GetTextureID("ta/radar-beacon3"))
+		surface.SetDrawColor(255,255,255,255)
+		surface.DrawTexturedRect(cx -5,cy -5,10,10)
 		
 		local mul = -25
 		
 		for _,v in ipairs(ents.FindByClass("player")) do 
-		
-			if v:Team() != LocalPlayer():Team() and v:Alive() then
+			
+			surface.SetTexture(surface.GetTextureID("ta/radar-beacon"..v:Team()))
+			if v:Team() != LocalPlayer():Team() and v:Alive() and v != LocalPlayer() then
 		
 				local rdr,see = ta.SubTableHasValue(on_radar,v),ta.CanSee(v)
 			
@@ -51,19 +54,22 @@ local radar = vgui.Create("DFrame")
 					local y = math.cos(math.rad(ang)) * dist / mul
 					local x = math.sin(math.rad(ang)) * dist / mul
 					
-					draw.RoundedBox(0,cx + x,cy + y,5,5,team.GetColor(v:Team()))
+					local eyeang = LocalPlayer():GetForward():Angle().yaw + v:GetForward():Angle().yaw
+				
+					surface.DrawTexturedRectRotated(cx + x,cy + y,10,10,eyeang)
 							
 				end
 				
-			elseif v:Alive() and v:Team() == LocalPlayer():Team() then
-			
+			elseif v:Alive() and v:Team() == LocalPlayer():Team() and v != LocalPlayer() then
 				
 				local dist,ang = LocalPlayer():GetPos():Distance(v:GetPos()), ta.AngleToPlayer(v)
 				
 				local y = math.cos(math.rad(ang)) * dist / mul
 				local x = math.sin(math.rad(ang)) * dist / mul
 				
-				draw.RoundedBox(0,cx + x,cy + y,5,5,team.GetColor(v:Team()))
+				local eyeang = LocalPlayer():GetForward():Angle().yaw + v:GetForward():Angle().yaw
+				
+				surface.DrawTexturedRectRotated(cx + x,cy + y,10,10,eyeang)
 			
 			end
 			

@@ -11,11 +11,14 @@
 	"info"		""
 	"hide"		"0"
 
+	"mappatern"
+	{
+		"1"	"^ta_"
+	}
+
 	"fretta_maps"
 	{
-		"1"	"^cs_"
-		"2"	"^ta_"
-		"3"	"^de_"
+		"1"	"^ta_"
 	}
 
 	"selectable"	"1"
