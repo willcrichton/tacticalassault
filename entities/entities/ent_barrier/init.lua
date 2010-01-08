@@ -88,9 +88,9 @@ function ENT:SetType( n, pl, raise )
 end
 
 function ENT:OnTakeDamage( dmg )
-	//if dmg:GetAttacker():Team() == self.Entity:GetNWInt("Team") then return end
+	if dmg:GetAttacker():Team() == self.Entity:GetNWInt("Team") then return end
 
-	if self.Entity:GetNWInt("BuildTime") > 0.1 then self.HealthPts = self.HealthPts - dmg:GetDamage() * 2
+	if self.Entity:GetNWInt("BuildTime") > 0.2 then self.HealthPts = self.HealthPts - dmg:GetDamage() * 5
 	else self.HealthPts = self.HealthPts - dmg:GetDamage() / 2 end
 	
 	self.Entity:SetNWInt("Health",self.HealthPts)
