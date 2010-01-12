@@ -69,16 +69,12 @@ GM.SquadMax = 3
 function CreateSquads(sqd,tm)
 	local availplys = team.GetPlayers(tm)
 	
-	local top_points = {-1,nil,nil}
+	local ldr = availplys[1]
 	for k,v in ipairs(availplys) do
-		if DB.GetPoints(v) * 0.6 + DB.GetPlays(v) * 0.4 > top_points[1] then 
-			top_points[1] = DB.GetPoints(v)
-			top_points[2] = k
-			top_points[3] = v
-		end
+		ldr = ta.ComparePoints(ldr,v)
 	end
-	ta.Message("You've been selected to become General!",false,{top_points[3]})
-	top_points[3]:SetNWBool("General",true)
+	ta.Message("You've been selected to become General!",false,{ldr})
+	ldr:SetNWBool("General",true)
 
 	for i = 1, math.max(math.ceil(team.NumPlayers(tm)/3),1) do
 		local tbl = {}
@@ -250,6 +246,13 @@ function CheckSquads( pl )
 end
 hook.Add("PlayerSpawn","CheckSquads",CheckSquads)
 
+function CheckSquadsOnTeamChange(pl)
+	pl:SetSquad(nil)
+	
+	CheckSquads(pl)
+end
+hook.Add("OnPlayerChangedTeam","CheckSquadsOnTeamChange",CheckSquadsOnTeamChange)
+
 function CaptureRound(ent,t,cappers)
 	ta.Message(team.GetName(t).." has captured a control point!")
 	local objs = ents.FindByClass("obj_capture")
@@ -318,10 +321,24 @@ function BombRound(t,detonated,boomer)
 	boomer:AddFrags(15)
 	GAMEMODE.Red.Spawns = {}
 	GAMEMODE.Blu.Spawns = {}
-	GAMEMODE:RoundEndWithResult(t,"Winner!")
+	
+	if t == 2 then GAMEMODE:RoundEndWithResult(t,"Blue Team Wins!")
+	elseif t== 1 then GAMEMODE:RoundEndWithResult(t,"Red Team Wins!") end
 	DB.Save()
+	
+	GAMEMODE:SwitchTeams()
 end
 hook.Add("ta_bombwon","BombRound",BombRound)
+
+function GM:SwitchTeams()
+	local t1,t2 = team.GetPlayers(1),team.GetPlayers(2)
+	for _,v in ipairs(t1) do v:SetTeam(2) end
+	for _,v in ipairs(t2) do v:SetTeam(1) end
+end
+
+hook.Add("ShouldCollide","NoCollideTeams",function(e1,e2)
+	if e1:IsPlayer() and e2:IsPlayer() and e1:Team() == e2:Team() then return false end
+end)
 
 
 /*function GM:PlayerJoinClass(pl,class)

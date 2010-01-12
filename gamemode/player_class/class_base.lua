@@ -72,7 +72,7 @@ function CLASS:Loadout( pl )
 	pl:Give("weapon_crowbar")
 	pl:Give("weapon_binoculars")
 	
-	if GetGlobalString("ta_mode") == "bomb" then pl:Give("weapon_bomb") end
+	if GetGlobalString("ta_mode") == "bomb" && pl:Team() == 1 then pl:Give("weapon_bomb") end
 end
 
 player_class.Register( "BaseClass", CLASS )

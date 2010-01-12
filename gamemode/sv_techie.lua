@@ -6,6 +6,14 @@ local build_sounds = {
 	Sound('ta/build/build2.wav'),
 }
 
+concommand.Add("techie_barrier",function(pl,cmd,args)
+	if pl:GetPlayerClassName() != "Techie" then return end
+	
+	if pl:GetActiveWeapon():GetClass() == "weapon_techie" then
+		pl:GetActiveWeapon():MakeGhost(tonumber(args[1]))
+	end
+end)
+
 concommand.Add("techie_manhacks",function(pl)
 	if pl:GetPlayerClassName() != "Techie" then return end
 	local last = pl:GetNWInt("ta-lasthack")

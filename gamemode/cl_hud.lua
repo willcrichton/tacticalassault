@@ -192,17 +192,6 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 			draw.DrawText(text,"ScoreboardText",xpos,ScrH() - 57,color_white,1)
 			
 		end
-	elseif GetGlobalString("ta_mode") == "bomb" then
-		local bomb = ents.FindByClass("ent_bomb")[1]
-		if bomb then
-			local w,h,diag = 200,40,50
-			local x,y = ScrW()/2 - w / 2,15 + h
-			surface.SetTexture("color/white")
-			surface.SetDrawColor( 200, 200, 200, 150 )
-			ta.DrawTrapezoid(x,y,w,h,diag,true)
-			draw.DrawText("bomb","ObjectiveFontSecondary",ScrW()/2 - 24,31 + h,color_black,1)
-			draw.DrawText(bomb:GetNWInt("bomb_timer"),"AmmoFontPrimary",ScrW()/2 + 20,17 + h,color_black,1)
-		end
 	end
 	
 	// Timer
@@ -356,7 +345,6 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 	start,finish = GetGlobalInt("RoundStartTime"), GetGlobalInt("RoundEndTime")
 	
 	// Game type
-	
 	//local x,y,w,h,diag = ScrW() - 290,ScrH() - 48,170,35,20
 	x = ScrW() - 303
 	y = ScrH() - 24
@@ -366,6 +354,17 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 	
 	ta.DrawParallel(x,y,w,h,diag)
 	draw.DrawText(ta.Capitalize(GetGlobalString("ta_mode")),"ScoreboardText",x + w / 2,y - 19,color_white,1) 
+	
+	// Bomb counter
+	if GetGlobalString("ta_mode") == "bomb" then
+		local bomb = ents.FindByClass("ent_bomb")[1]
+		if bomb then
+			x = x + w + 5
+			w = 45
+			ta.DrawParallel(x,y,w,h,diag)
+			draw.DrawText(bomb:GetNWInt("bomb_timer"),"ScoreboardText",x + w/2 + 5,y-19,color_white,1)
+		end
+	end
 	
 	// ICONS (they break the drawpoly?)
 	
