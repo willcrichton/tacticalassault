@@ -239,6 +239,24 @@ if CLIENT then
 		local pos = obj:GetPos():ToScreen()
 		return util.TraceLine({start = LocalPlayer():GetShootPos(),endpos = obj:GetPos() + obj:OBBCenter(),filter= LocalPlayer()}).Entity == obj and pos.x <= ScrW() and pos.x >=0 and pos.y <= ScrH() and pos.y >= 0
 	end
+	
+	function ta.LowHealth()
+		local breathe = Sound("player/breathe1.wav")
+		local heart = Sound("player/heartbeat1.wav")
+		surface.PlaySound(breathe)
+		surface.PlaySound(heart)
+		timer.Create("ta-breathe",SoundDuration("../../hl2/sound/"..breathe),0,function() surface.PlaySound(breathe) end)
+		timer.Create("ta-heart",SoundDuration("../../hl2/sound/"..heart),0,function() surface.PlaySound(heart) end)
+	end
+	
+	function ta.StopLowHealth()
+		if timer.IsTimer("ta-breathe") then
+			timer.Destroy("ta-breathe")
+			timer.Destroy("ta-heart")
+			RunConsoleCommand("stopsounds")
+			LocalPlayer():SetDSP(1,false)
+		end
+	end
 end
 
 

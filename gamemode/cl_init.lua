@@ -9,6 +9,8 @@ surface.CreateFont( "Army", 25, 400, true, false, "ObjectiveFontPrimary" )
 surface.CreateFont( "Army", 18, 400, true, false, "ObjectiveFontSecondary" )
 surface.CreateFont( "Army",  40, 400, true, false, "AmmoFontPrimary" )
 
+language.Add("sent_sakarishelicopter","Helicopter")
+
 function GM:PositionScoreboard( ScoreBoard )
 
 	ScoreBoard:SetSize( 700, ScrH() - 100 )
@@ -66,7 +68,17 @@ hook.Add("RenderScreenspaceEffects","TestDeath",function()
 		ScrColTab[ "$pp_colour_mulg" ] 		= 0
 		ScrColTab[ "$pp_colour_mulb" ] 		= 0
 		DrawColorModify(ScrColTab)
-	else bright,cont,col = 0,1,1 end
+		
+		ta.StopLowHealth()
+		
+	elseif LocalPlayer():Health() < 20 then
+	
+		DrawMotionBlur( 0.25, 0.7, 0)
+		
+	else 
+		bright,cont,col = 0,1,1	
+		ta.StopLowHealth()
+	end
 		
 end)
 
@@ -74,4 +86,10 @@ end)
 usermessage.Hook("ta-killstreak",function(um) 
 	local killer,kills = um:ReadEntity(),um:ReadShort()
 	timer.Simple(0.05,function() ta.AddKillStreak(killer,kills) end) 
+end)
+
+// Stop death sounds
+usermessage.Hook("ta-death",function(u) 
+	local b = u:ReadBool()
+	if b then ta.StopLowHealth() else ta.LowHealth() end
 end)

@@ -11,6 +11,8 @@ include( "data.lua")
 include( "util.lua")
 include( "sv_general.lua" )
 include( "sv_techie.lua" )
+include( "sv_squads.lua" )
+include( "sv_round.lua" )
 
 ta.AddFilesRecursive("../sound/ta","")
 ta.AddFilesRecursive("../materials/ta","")
@@ -26,15 +28,6 @@ function GM:PlayerDisconnected(pl)
 	if CurTime() - pl:GetNWInt("StartTime") > 300 then DB.AddPlay(pl) end
 	DB.Save()
 end
-
-// GIve people play points and talk about maps
-hook.Add("EndOfGame","AddPlays",function() 
-	for _,v in ipairs(player.GetAll()) do 
-		DB.AddPlay(v) 
-	end 
-	DB.Save() 
-	
-end)
 
 // Set start time for later reference by disconnect and play points
 function GM:PlayerAuthed(pl)
@@ -60,284 +53,31 @@ hook.Add("PlayerDeath","SavePoints",function(vic,inf,killer)
 		umsg.Entity(killer)
 		umsg.Short(kills)
 	umsg.End()
+	
 end)
-
-// Create Squads func
-GM.Squads = {red = {}, blu = {}}
-GM.Red, GM.Blu = {Spawns = {}}, {Spawns = {}}
-GM.SquadMax = 3
-function CreateSquads(sqd,tm)
-	local availplys = team.GetPlayers(tm)
-	
-	local ldr = availplys[1]
-	for k,v in ipairs(availplys) do
-		ldr = ta.ComparePoints(ldr,v)
-	end
-	ta.Message("You've been selected to become General!",false,{ldr})
-	ldr:SetNWBool("General",true)
-
-	for i = 1, math.max(math.ceil(team.NumPlayers(tm)/3),1) do
-		local tbl = {}
-		for n = 1, math.min(table.Count(availplys),3) do
-			local num = math.random(1,table.Count(availplys))
-			table.insert(tbl,availplys[num])
-			table.remove(availplys,num)
-		end
-		local pts = {-1,nil}
-		/*for _,v in pairs(tbl) do 
-			if DB.GetPoints(v) + DB.GetPlays(v) * 5 > pts[1] then 
-				pts[1] = DB.GetPoints(v)
-				pts[2] = v
-			end
-		end
-		for _,v in pairs(tbl) do 
-			if v == pts[2] then 
-				v:SetLeader()  
-				tbl.leader = v
-			else 
-				v:RemoveLeader() 
-			end 
-		end*/
-		local ldr = tbl[1]
-		for _,v in ipairs(tbl) do ldr = ta.ComparePoints(v,ldr) end
-		tbl.leader = ldr
-		tbl.name = "Squad "..i
-		table.insert(sqd,tbl)
-		
-		for c,v in pairs(tbl) do	
-			if c != "name" and c != "leader" then 
-				v:SetSquad(tbl)
-				umsg.Start("sendSquad",v)
-					umsg.Entity(tbl.leader)
-					umsg.Short(GAMEMODE.SquadMax)
-					for k,q in pairs(tbl) do if k !="name" and k != "leader" and q != tbl.leader then
-						umsg.Entity(q)
-					end end
-				umsg.End()
-			end
-		end
-		
-	end
-	
-end
-
-function GM:OnRoundStart( n )
-
-	ta.SpawnEntities()
-	if not GAMEMODE.Squads.red[1] or not GAMEMODE.Squads.blu[1] then
-		CreateSquads(GAMEMODE.Squads.red,1)
-		CreateSquads(GAMEMODE.Squads.blu,2)
-	end
-	GAMEMODE.Red.Spawns = {}
-	GAMEMODE.Blu.Spawns = {}
-	//for _,v in ipairs(player.GetAll()) do v:ConCommand("ta_printsquads") end
-	for _,v in ipairs(player.GetAll()) do v:ChatPrint("The round has begun! Get going!") v:UnLock() v:Freeze(false) end
-	for _,v in ipairs(ents.FindByClass("obj_*")) do v:SetNWBool("ObjectiveComplete",false) end
-	
-	umsg.Start("stopRoundSound") umsg.End()
-end
-
-function GM:OnRoundEnd( n )
-	local winner = GetGlobalInt("RoundResult")
-	local rp1,rp2 = RecipientFilter(),RecipientFilter()
-	for _,v in ipairs(player.GetAll()) do if v:Team() == 1 then rp1:AddPlayer(v) elseif v:Team() == 2 then rp2:AddPlayer(v) end end
-	umsg.Start("endRoundSound",rp1)
-		if winner == 1 then umsg.Bool(true) else umsg.Bool(false) end
-	umsg.End()
-	umsg.Start("endRoundSound",rp2)
-		if winner == 2 then umsg.Bool(true) else umsg.Bool(false) end
-	umsg.End()
-end
-
-function GM:CanStartRound( n )
-	return ta.Players() >= 6
-end
-
-/* HOW IT WORKS:
-	< 16 players = 3 person squads
-	16 - 29 players = 4 person squads
-	30 - 47 = 5 player squads
-	> 48 = 6 player squad
-*/ 
-
-function CheckSquads( pl )
-
-	if ta.Players() == 16 and GAMEMODE.SquadMax != 4 then 
-		GAMEMODE.SquadMax = 4
-		ta.Message("Squads are now 4 people.",true)
-	elseif ta.Players() == 30 and GAMEMODE.SquadMax != 5 then 
-		GAMEMODE.SquadMax = 5
-		ta.Message("Squads are now 5 people!",true)
-	elseif ta.Players()  >= 48 and GAMEMODE.SquadMax != 6 then 
-		GAMEMODE.SquadMax = 6
-		ta.Message("Squads are now 6 people!",true)
-	elseif ta.Players() < 16 and GAMEMODE.SquadMax != 3 then
-		GAMEMODE.SquadMax = 3 
-		ta.Message("Squads are now 3 people!",true)
-	end
-
-	/*print("Attempting to place ".. pl:Name() .. " in a squad...")
-	print("	"..tostring(pl:GetSquad()))
-	print("	"..tostring(GAMEMODE:InRound()))
-	print("	"..pl:Team())*/
-	
-	
-	// Put them in a squad if not already done
-	if not pl:GetSquad() and GAMEMODE:InRound() and pl:Team() != 0 and pl:Team() != 1001 then
-		local in_squad = false
-		local sqd = {}
-		if pl:Team() == 1 then
-			for _,v in pairs(GAMEMODE.Squads.red) do
-				if not v[GAMEMODE.SquadMax] then 
-					table.insert(v,pl)
-					in_squad = true
-					// DETERMINE IF HE'S A BETTER LEADER
-						local ldr = pl
-						for _,ply in ipairs(v) do
-							ldr = ta.ComparePoints(ldr,ply)
-						end
-						v.leader = pl
-					sqd = v
-					break
-				end
-			end
-			if not in_squad then
-				sqd = {name = "Squad " ..table.Count(GAMEMODE.Squads.blu), pl, leader = pl}
-				table.insert(GAMEMODE.Squads.red, sqd)
-			end
-		elseif pl:Team() == 2 then
-			for _,v in pairs(GAMEMODE.Squads.blu) do
-				if not v[GAMEMODE.SquadMax] then 
-					table.insert(v,pl)
-					in_squad = true
-					// DETERMINE IF HE'S A BETTER LEADER
-						local ldr = pl
-						for _,ply in ipairs(v) do
-							ldr = ta.ComparePoints(ldr,ply)
-						end
-						v.leader = ldr
-					sqd = v
-					break
-				end
-			end
-			if not in_squad then
-				sqd = {name = "Squad " ..table.Count(GAMEMODE.Squads.blu), pl, leader = pl}
-				table.insert(GAMEMODE.Squads.blu, sqd)
-			end
-		end
-		pl:SetSquad(sqd)
-			
-		for c,v in pairs(sqd) do	
-			if c != "name" and c != "leader" then 
-				v:SetSquad(sqd)
-				umsg.Start("sendSquad",v)
-					umsg.Entity(sqd.leader)
-					umsg.Short(GAMEMODE.SquadMax)
-					for k,q in pairs(sqd) do if k !="name" and k != "leader" and q != sqd.leader then
-						umsg.Entity(q)
-					end end
-				umsg.End()
-			end
-		end
-	end
-	
-	
-	
-end
-hook.Add("PlayerSpawn","CheckSquads",CheckSquads)
-
-function CheckSquadsOnTeamChange(pl)
-	pl:SetSquad(nil)
-	
-	CheckSquads(pl)
-end
-hook.Add("OnPlayerChangedTeam","CheckSquadsOnTeamChange",CheckSquadsOnTeamChange)
-
-function CaptureRound(ent,t,cappers)
-	ta.Message(team.GetName(t).." has captured a control point!")
-	local objs = ents.FindByClass("obj_capture")
-		
-	if t == 1 then
-		local spawns = {}
-		for i = 1,3 do
-			local newspawn = ents.Create("info_player_terrorist")
-			newspawn:SetPos(ent:GetPos() + Vector(i * 5 - 5, i * 5 - 5,10))
-			newspawn:Spawn()
-			newspawn:Activate()
-			table.insert(spawns,newspawn)
-		end
-		table.insert(GAMEMODE.Red.Spawns,spawns)
-	else
-		local spawns = {}
-		for i = 1,3 do
-			local newspawn = ents.Create("info_player_counterterrorist")
-			newspawn:SetPos(ent:GetPos() + Vector(i * 5 - 5, i * 5 - 5,10))
-			newspawn:Spawn()
-			newspawn:Activate()
-			table.insert(spawns,newspawn)
-		end
-		table.insert(GAMEMODE.Blu.Spawns,spawns)
-	end
-	
-	if GetGlobalString("ta_mode") == "capture" then
-	
-		local capped = 0
-		for _,v in ipairs(objs) do
-			if v:GetNWInt("HasCapped") == 1 then capped = capped + 1
-			elseif v:GetNWInt("HasCapped") == 2 then capped = capped - 1
-			end
-		end
-		
-		local pts_added = {}
-		for _,v in ipairs(cappers) do
-			if !table.HasValue(pts_added,v) then 
-				v:AddFrags(10)
-				table.insert(pts_added,v)
-			end
-		end
-		
-		if capped == #objs then GAMEMODE:RoundEndWithResult(1,"Team Red wins!")
-			GAMEMODE.Red.Spawns = {}
-			GAMEMODE.Blu.Spawns = {}
-		elseif capped == #objs * -1 then GAMEMODE:RoundEndWithResult(2,"Team Blue wins!")
-			GAMEMODE.Red.Spawns = {}
-			GAMEMODE.Blu.Spawns = {}
-		end
-		
-		for _,v in ipairs(objs) do v:SetNWBool("ObjectiveComplete",true) end
-		
-	end
-	DB.Save()
-end
-hook.Add("ta_capwon","CaptureRound",CaptureRound)
-
-function BombRound(t,detonated,boomer)
-	if detonated then
-		ta.Message(team.GetName(t).." detonated the bomb!")
-	else
-		ta.Message(team.GetName(t).." has defused the bomb!")
-	end
-	
-	boomer:AddFrags(15)
-	GAMEMODE.Red.Spawns = {}
-	GAMEMODE.Blu.Spawns = {}
-	
-	if t == 2 then GAMEMODE:RoundEndWithResult(t,"Blue Team Wins!")
-	elseif t== 1 then GAMEMODE:RoundEndWithResult(t,"Red Team Wins!") end
-	DB.Save()
-	
-	GAMEMODE:SwitchTeams()
-end
-hook.Add("ta_bombwon","BombRound",BombRound)
-
-function GM:SwitchTeams()
-	local t1,t2 = team.GetPlayers(1),team.GetPlayers(2)
-	for _,v in ipairs(t1) do v:SetTeam(2) end
-	for _,v in ipairs(t2) do v:SetTeam(1) end
-end
 
 hook.Add("ShouldCollide","NoCollideTeams",function(e1,e2)
 	if e1:IsPlayer() and e2:IsPlayer() and e1:Team() == e2:Team() then return false end
+end)
+
+hook.Add("EntityTakeDamage","DyingSounds",function(pl,inf,attacker,amt,dmg)
+	if !pl:IsPlayer() then return end
+	
+	timer.Simple(0.2,function()
+		if pl:Health() < 20 and pl:Health() > 0 and pl:Alive() then
+			pl:SetDSP(15,false)
+			umsg.Start("ta-death",pl) umsg.Bool(false) umsg.End()
+		end
+	end)
+end)
+
+// GIve people play points and talk about maps
+hook.Add("EndOfGame","AddPlays",function() 
+	for _,v in ipairs(player.GetAll()) do 
+		DB.AddPlay(v) 
+	end 
+	DB.Save() 
+	
 end)
 
 
