@@ -69,7 +69,7 @@ function CLASS:Loadout( pl )
 	pl:GiveAmmo(20,"XBowBolt")
 	pl:GiveAmmo(3,"Grenade")
 	
-	pl:Give("weapon_crowbar")
+	pl:Give("weapon_mad_hands")
 	pl:Give("weapon_binoculars")
 	
 	if GetGlobalString("ta_mode") == "bomb" && pl:Team() == 1 then pl:Give("weapon_bomb") end

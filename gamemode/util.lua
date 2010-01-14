@@ -62,15 +62,15 @@ if SERVER then
 			elseif name == "ent_pickup_health" then
 				local hp = ents.Create("ent_pickup")
 				hp:SetPos(v:GetPos())
-				hp:SetType(1)
 				hp:Spawn()
 				hp:Activate()
+				hp:SetType(1)
 			elseif name == "ent_pickup_ammo" then
 				local ammo = ents.Create("ent_pickup")
 				ammo:SetPos(v:GetPos())
-				ammo:SetType(2)
 				ammo:Spawn()
 				ammo:Activate()
+				ammo:SetType(2)
 			end
 		end
 

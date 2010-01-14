@@ -10,8 +10,10 @@ CLASS.MaxHealth = 75
 CLASS.StartHealth = 75
 
 function CLASS:Loadout( pl )
-	pl:Give("weapon_smg1")
-	pl:Give("weapon_pistol")
+	pl:Give("weapon_mad_mp7")
+	pl:Give("weapon_mad_usp_match")
+	pl:Give("weapon_mad_flash")
+	pl:Give("weapon_mad_smoke")
 	
 	self.BaseClass.Loadout(self,pl)
 end
@@ -32,7 +34,7 @@ CLASS.MaxHealth = 150
 CLASS.StartHealth = 150
 
 function CLASS:Loadout( pl )
-	pl:Give("weapon_smg1")
+	pl:Give("weapon_mad_mp7")
 	pl:Give("weapon_para")
 	pl:Give("weapon_resupply")
 	
@@ -51,8 +53,8 @@ CLASS.DisplayName = "Sniper"
 CLASS.Description = "Get 'em long range! \nPrimary: Sniper \nSecondary: Pistol"
 
 function CLASS:Loadout( pl )
-	pl:Give("weapon_crossbow")
-	pl:Give("weapon_pistol")
+	pl:Give("weapon_mad_crossbow")
+	pl:Give("weapon_mad_usp_match")
 	
 	self.BaseClass.Loadout(self,pl)
 end
@@ -72,10 +74,9 @@ CLASS.MaxHealth = 120
 CLASS.StartHealth = 120
 
 function CLASS:Loadout( pl )
-	pl:Give("weapon_shotgun")
-	pl:Give("weapon_bazooka")
-	pl:Give("weapon_rpg")
-	pl:Give("weapon_grenade")
+	pl:Give("weapon_mad_spas")
+	pl:Give("weapon_mad_rpg")
+	pl:Give("weapon_mad_magnade")
 	
 	self.BaseClass.Loadout(self,pl)
 end
@@ -92,9 +93,9 @@ CLASS.DisplayName = "Medic"
 CLASS.Description = "Backbone of the team. \nPrimary: Pistol \nSecondary: Medic Kit"
 
 function CLASS:Loadout( pl )
-	pl:Give("weapon_pistol")
-	pl:Give("weapon_m4a1")
-	//pl:Give("weapon_medkit")
+	pl:Give("weapon_mad_usp_match")
+	pl:Give("weapon_mad_mp7")
+	pl:Give("weapon_medigun")
 	
 	self.BaseClass.Loadout(self,pl)
 end
@@ -111,8 +112,9 @@ CLASS.DisplayName = "Techie"
 CLASS.Description = "Build machines, create tech. \nPrimary: Shotgun \nSecondary: Pistol"
 
 function CLASS:Loadout( pl )
-	pl:Give("weapon_pistol")
-	pl:Give("weapon_shotgun")
+	pl:Give("weapon_mad_usp_match")
+	pl:Give("weapon_mad_spas")
+	pl:Give("weapon_slam")
 	pl:Give("weapon_physcannon")
 	pl:Give("weapon_techie")
 	
