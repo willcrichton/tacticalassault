@@ -47,7 +47,7 @@ if SERVER then
 		if file.IsDir(path..root) then
 			for _,v in ipairs(file.Find(path..root.."/*")) do ta.AddFilesRecursive(v,path..root.."/") end
 		else
-			resource.AddFile(path..root) 
+			resource.AddFile(string.gsub(path..root,"%.%./","")) 
 		end
 	end
 	
@@ -61,13 +61,13 @@ if SERVER then
 				obj:Activate()
 			elseif name == "ent_pickup_health" then
 				local hp = ents.Create("ent_pickup")
-				hp:SetPos(v:GetPos())
+				hp:SetPos(v:GetPos() + Vector(0,0,17))
 				hp:Spawn()
 				hp:Activate()
 				hp:SetType(1)
 			elseif name == "ent_pickup_ammo" then
 				local ammo = ents.Create("ent_pickup")
-				ammo:SetPos(v:GetPos())
+				ammo:SetPos(v:GetPos() + Vector(0,0,10))
 				ammo:Spawn()
 				ammo:Activate()
 				ammo:SetType(2)
@@ -243,16 +243,27 @@ if CLIENT then
 	function ta.LowHealth()
 		local breathe = Sound("player/breathe1.wav")
 		local heart = Sound("player/heartbeat1.wav")
+		local coughs = {
+			Sound("ambient/voices/cough1.wav"),
+			Sound("ambient/voices/cough2.wav"),
+			Sound("ambient/voices/cough3.wav"),
+			Sound("ambient/voices/cough4.wav"),
+		}
+		
 		surface.PlaySound(breathe)
 		surface.PlaySound(heart)
 		timer.Create("ta-breathe",SoundDuration("../../hl2/sound/"..breathe),0,function() surface.PlaySound(breathe) end)
 		timer.Create("ta-heart",SoundDuration("../../hl2/sound/"..heart),0,function() surface.PlaySound(heart) end)
+		function Cough()
+			timer.Create("ta-cough",math.random(4,15),0,function() surface.PlaySound(table.Random(coughs)) Cough() end)
+		end
 	end
 	
 	function ta.StopLowHealth()
 		if timer.IsTimer("ta-breathe") then
 			timer.Destroy("ta-breathe")
 			timer.Destroy("ta-heart")
+			timer.Destroy("ta-cough")
 			RunConsoleCommand("stopsounds")
 			LocalPlayer():SetDSP(1,false)
 		end

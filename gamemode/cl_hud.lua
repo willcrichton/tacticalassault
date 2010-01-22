@@ -69,7 +69,7 @@ local start,finish = 0,0
 
 hook.Add("HUDPaint","TA-DrawHudMain",function()
 		
-	if !LocalPlayer():Alive() then return end
+	if !LocalPlayer():Alive() || !squad[1] then return end
 	
 	local k_pos = 0
 	
@@ -298,7 +298,15 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 		ta.DrawParallel(x,y,w,h,diag)
 	
 		local wep = LocalPlayer():GetActiveWeapon()
+		local ammotype = wep:GetPrimaryAmmoType()
+		local types = {
+			[1] = "slam",
+			[10] = "Grenade",
+			[8] = "RPG_Round"
+		}
+		
 		local clip = wep:Clip1()
+		if ammotype == 8 || ammotype == 10 || wep:GetClass() == "weapon_slam" then clip = LocalPlayer():GetAmmoCount( types[math.abs(ammotype)] ) end
 		
 		x = ScrW() - 125
 		y = ScrH() - 53.5

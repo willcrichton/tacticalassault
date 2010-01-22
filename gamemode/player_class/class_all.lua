@@ -35,7 +35,7 @@ CLASS.StartHealth = 150
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_mad_mp7")
-	pl:Give("weapon_para")
+	pl:Give("weapon_mad_m249")
 	pl:Give("weapon_resupply")
 	
 	self.BaseClass.Loadout(self,pl)
@@ -50,10 +50,10 @@ local CLASS = {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Sniper"
-CLASS.Description = "Get 'em long range! \nPrimary: Sniper \nSecondary: Pistol"
+CLASS.Description = "Get 'em long range!\nPrimary: Sniper\nSecondary: Pistol"
 
 function CLASS:Loadout( pl )
-	pl:Give("weapon_mad_crossbow")
+	pl:Give("weapon_mad_awp")
 	pl:Give("weapon_mad_usp_match")
 	
 	self.BaseClass.Loadout(self,pl)
@@ -67,7 +67,7 @@ local CLASS = {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Artillery"
-CLASS.Description = "Bring in the big guns. \nPrimary: Bazooka \nSecondary: Shotgun"
+CLASS.Description = "Bring in the big guns.\nPrimary: Bazooka\nSecondary: Shotgun"
 CLASS.WalkSpeed = 230
 CLASS.RunSpeed = 350
 CLASS.MaxHealth = 120
@@ -90,11 +90,11 @@ local CLASS= {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Medic"
-CLASS.Description = "Backbone of the team. \nPrimary: Pistol \nSecondary: Medic Kit"
+CLASS.Description = "Heal 'em up \nPrimary: AR2\nSecondary: Pistol\Tertiary: Medic Kit"
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_mad_usp_match")
-	pl:Give("weapon_mad_mp7")
+	pl:Give("weapon_mad_ar2")
 	pl:Give("weapon_medigun")
 	
 	self.BaseClass.Loadout(self,pl)
@@ -109,7 +109,7 @@ local CLASS= {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Techie"
-CLASS.Description = "Build machines, create tech. \nPrimary: Shotgun \nSecondary: Pistol"
+CLASS.Description = "Build machines, create tech.\nPrimary: Shotgun\nSecondary: Pistol"
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_mad_usp_match")

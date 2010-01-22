@@ -254,7 +254,7 @@ end
 ---------------------------------------------------------*/
 function SWEP:SetIronsights(b)
 
-	if (self.Owner) then
+	if ValidEntity(self.Owner) then
 		if (b) then
 			if (SERVER) then
 				self.Owner:SetFOV(65, 0.2)

@@ -14,10 +14,10 @@ function DrawViews(ViewOrigin,ViewAngles)
 			timer.Simple(FrameTime() * 70,function() changing = false end)
 		end
 		
-		/*if curent != wep:GetNWEntity("ViewEnt") then 
+		if curent != wep:GetNWEntity("ViewEnt") then 
 			curent = wep:GetNWEntity("ViewEnt")
 			lastent = curent
-		end*/
+		end
 		
 		render.Clear( 0, 0, 0, 255 )
 		

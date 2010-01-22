@@ -16,13 +16,15 @@ if (CLIENT) then
 	if (file.Exists("../materials/weapons/weapon_mad_medic.vmt")) then
 		SWEP.WepSelectIcon	= surface.GetTextureID("weapons/weapon_mad_medic")
 	end
+	
+	language.Add("npc_cscanner","Medibot")
 
 end
 
  SWEP.Author = "Entoros"; 
  SWEP.Contact = ""; 
  SWEP.Purpose = "Create healbots"; 
- SWEP.Instructions = "Primary: Lay down health packss\nSecondary: Spawn/direct healbot\nSecondary+Reload: Remove healbot"
+ SWEP.Instructions = "Primary: Lay down health packs\nSecondary: Spawn/direct healbot\nSecondary+Reload: Remove healbot"
  SWEP.Base = "weapon_ta_base";
  
  SWEP.Spawnable = false
@@ -70,7 +72,7 @@ SWEP.ScannerDelay = 30
 end
 
 function SWEP:Holster()
-	self.Owner:GetViewModel():SetPlaybackRate(1)
+	if ValidEntity(self.Owner) and self.Owner:GetViewModel():IsValid() then self.Owner:GetViewModel():SetPlaybackRate(1) end
 	return true
 end
  

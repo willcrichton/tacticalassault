@@ -277,7 +277,7 @@ end
 ---------------------------------------------------------*/
 function SWEP:SetScope(b, player)
 
-	if CLIENT then return end
+	if CLIENT || !ValidEntity(self.Weapon) then return end
 
 	local PlaySound = b ~= self.Weapon:GetDTBool(2) // Only play zoom sounds when chaning in/out of scope mode
 	self.CurScopeZoom = 1 // Just in case

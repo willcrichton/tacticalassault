@@ -23,10 +23,10 @@ SWEP.Primary.DefaultClip	= 6					// Default number of bullets in a clip
 SWEP.Primary.Automatic		= false				// Automatic/Semi Auto
 SWEP.Primary.Ammo			= "Buckshot"
 
-SWEP.Secondary.ClipSize		= -1					// Size of a clip
-SWEP.Secondary.DefaultClip	= -1					// Default number of bullets in a clip
+SWEP.Secondary.ClipSize		= 1				// Size of a clip
+SWEP.Secondary.DefaultClip	= 1				// Default number of bullets in a clip
 SWEP.Secondary.Automatic	= false				// Automatic/Semi Auto
-SWEP.Secondary.Ammo		= "none"
+SWEP.Secondary.Ammo		= "Gravity"
 
 SWEP.IronSightsPos 		= Vector (-8.9203, -4.7091, 1.7697)
 SWEP.IronSightsAng 		= Vector (3.0659, 0.0913, 0)

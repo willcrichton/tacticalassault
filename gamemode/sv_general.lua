@@ -174,18 +174,267 @@ function AmmoDrop(pl)
 end
 concommand.Add("ta_ammodrop",AmmoDrop)
 
-function MakeObjective(pl)
-	local obj = ents.Create("obj_capture")
-	obj:SetPos(pl:GetEyeTrace().HitPos)
-	obj:Spawn()
-	obj:Activate()
-end
-concommand.Add("ta_cap",MakeObjective)
+concommand.Add("ta_obj",function() pl:Give("weapon_ta_objspawn") end)
 
-function MakeBomb(pl)
-	local obj = ents.Create("obj_explode_win")
-	obj:SetPos(pl:GetEyeTrace().HitPos)
-	obj:Spawn()
-	obj:Activate()
+concommand.Add("ta_chopper",function(pl)
+	local e = ents.Create("sent_sakariashelicopter")
+	e:SetPos(pl:GetEyeTrace().HitPos + Vector(0,0,3000))
+	e.UserOne = pl
+	e:Spawn()
+	e:Activate()
+end)
+
+concommand.Add("ta_fighter",function(pl)
+	local e = ents.Create("sent_sakariasjet")
+	e:SetPos(pl:GetEyeTrace().HitPos + Vector(0,0,3000))
+	e.UserOne = pl
+	e:Spawn()
+	e:Activate()
+end)
+	
+// CODE FOR THE HELI
+function CustomHeliVehicleExits(ply, vehicle)
+//I know this code sucks but this will probably be the last thing i upload so...WHATEVAH! xD
+	if vehicle.SeatNum then
+	local Num = vehicle.SeatNum
+	local LoopNum = 0
+	local Dont = 0
+	
+	
+		if Num == 1 then 
+				while LoopNum < 4 do
+				
+					LoopNum = LoopNum + 1
+					
+					if LoopNum == 1 and Dont == 0 then
+
+						local trace = {}
+						trace.start = vehicle:GetPos()
+						trace.endpos = trace.start + ( (vehicle:GetRight() * -100) + (vehicle:GetUp() * - 20) )
+						trace.filter = { vehicle, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1								
+							end						
+					end
+					
+					if LoopNum == 2 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatTwo:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatTwo:GetRight() * 100) + (vehicle.EntOwner.SeatTwo:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatTwo, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)	
+								Dont = 1									
+							end						
+					end
+
+					if LoopNum == 3 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatThree:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatThree:GetRight() * 100) + (vehicle.EntOwner.SeatThree:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatThree, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+	
+					if LoopNum == 4 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatFour:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatFour:GetRight() * -100) + (vehicle.EntOwner.SeatFour:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatFour, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+				end
+		end	
+--------------	
+
+		if Num == 2 then 
+				while LoopNum < 4 do
+				
+					LoopNum = LoopNum + 1
+					
+					if LoopNum == 1 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle:GetPos()
+						trace.endpos = trace.start + ( (vehicle:GetRight() * 100) + (vehicle:GetUp() * - 20) )
+						trace.filter = { vehicle, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)	
+								Dont = 1									
+							end						
+					end
+
+					if LoopNum == 2 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatThree:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatThree:GetRight() * 100) + (vehicle.EntOwner.SeatThree:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatThree, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+	
+					if LoopNum == 3 and Dont == 0 then
+
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatFour:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatFour:GetRight() * -100) + (vehicle.EntOwner.SeatFour:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatFour, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+					
+					
+					if LoopNum == 4 and Dont == 0 then
+
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatOne:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatOne:GetRight() * -100) + (vehicle.EntOwner.SeatOne:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatOne, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+				end	
+	
+		end	
+--------------	
+
+		if Num == 3 then 
+				while LoopNum < 4 do
+				
+					LoopNum = LoopNum + 1
+					
+					if LoopNum == 1 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle:GetPos()
+						trace.endpos = trace.start + ( (vehicle:GetRight() * 100) + (vehicle:GetUp() * - 20) )
+						trace.filter = { vehicle, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+
+					if LoopNum == 2 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatFour:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatFour:GetRight() * -100) + (vehicle.EntOwner.SeatFour:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatFour, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+					
+					
+					if LoopNum == 3 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatOne:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatOne:GetRight() * -100) + (vehicle.EntOwner.SeatOne:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatOne, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)	
+								Dont = 1									
+							end						
+					end
+					
+					
+					if LoopNum == 4 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatTwo:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatTwo:GetRight() * 100) + (vehicle.EntOwner.SeatTwo:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatTwo, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+				end
+		end	
+--------------	
+
+		if Num == 4 then 
+				while LoopNum < 4 do
+				
+					LoopNum = LoopNum + 1
+					
+					if LoopNum == 1 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle:GetPos()
+						trace.endpos = trace.start + ( (vehicle:GetRight() * -100) + (vehicle:GetUp() * - 20) )
+						trace.filter = { vehicle, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+
+					
+					if LoopNum == 2 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatOne:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatOne:GetRight() * -100) + (vehicle.EntOwner.SeatOne:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatOne, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+					
+					
+					if LoopNum == 3 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatTwo:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatTwo:GetRight() * 100) + (vehicle.EntOwner.SeatTwo:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatTwo, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)
+								Dont = 1									
+							end						
+					end
+
+					if LoopNum == 4 and Dont == 0 then
+						local trace = {}
+						trace.start = vehicle.EntOwner.SeatThree:GetPos()
+						trace.endpos = trace.start + ( (vehicle.EntOwner.SeatThree:GetRight() * 100) + (vehicle.EntOwner.SeatThree:GetUp() * - 20) )
+						trace.filter = { vehicle.EntOwner.SeatThree, vehicle.EntOwner }
+						local tr = util.TraceLine( trace )
+							if not(tr.Hit) then
+								ply:SetPos(trace.endpos)	
+								Dont = 1									
+							end						
+					end
+				end
+					
+		end	
+--------------	
+	
+	end
 end
-concommand.Add("ta_bomb",MakeBomb)
+hook.Add("PlayerLeaveVehicle", "CustomHeliVehicleExits", CustomHeliVehicleExits)

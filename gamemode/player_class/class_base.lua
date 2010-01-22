@@ -65,19 +65,20 @@ function CLASS:Loadout( pl )
 	pl:GiveAmmo(90,"Pistol")
 	pl:GiveAmmo(15,"357")
 	pl:GiveAmmo(90,"SMG1")
+	pl:GiveAmmo(75,"AR2")
 	pl:GiveAmmo(30,"Buckshot")
 	pl:GiveAmmo(20,"XBowBolt")
 	pl:GiveAmmo(3,"Grenade")
+	pl:GiveAmmo(3,"RPG_Round")
 	
-	pl:Give("weapon_mad_hands")
 	pl:Give("weapon_binoculars")
+	pl:Give("weapon_mad_fists")
 	
 	if GetGlobalString("ta_mode") == "bomb" && pl:Team() == 1 then pl:Give("weapon_bomb") end
 end
 
 player_class.Register( "BaseClass", CLASS )
 
-		
 
 
 

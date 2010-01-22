@@ -48,26 +48,59 @@ end
 	self.Owner:SetAnimation( PLAYER_ATTACK1 )
 	self.Owner:Freeze(true)
 	
-	if SERVER then
-	
 		timer.Simple(3.8,function()
-			local prop = ents.Create("ent_bomb")
-			prop:SetPos(self.Owner:GetEyeTrace().HitPos)
-			prop:SetAngles(self.Owner:GetEyeTrace().HitNormal:Angle())
-			prop:Spawn()
-			prop:Activate()
-			prop:TurnOn(self.Owner)
-			prop:SetNWInt("Team",self.Owner:Team())
-			prop:SetNWEntity("target",tr.Entity)
-			tr.Entity:SetNWEntity("bomb",prop)
-			tr.Entity:SetNWInt("bomb_team",self.Owner:Team())
+			
+			local tr = {}
+			tr.start = self.Owner:GetShootPos()
+			tr.endpos = self.Owner:GetShootPos() + 100 * self.Owner:GetAimVector()
+			tr.filter = {self.Owner}
+			local trace = util.TraceLine(tr)
+
+			if not trace.Hit then
+				timer.Simple(0.6, function()
+					if self.Owner:GetAmmoCount(self.Primary.Ammo) > 0 then
+						self.Weapon:SendWeaponAnim(ACT_VM_DRAW)
+					else
+						self.Weapon:Remove()
+						self.Owner:ConCommand("lastinv")
+					end
+				end)
+
+				return 
+			end
+
+			self.Owner:SetAnimation(PLAYER_ATTACK1)
+			self:TakePrimaryAmmo(1)
+
+			if (CLIENT) then return end
+			local C4 = ents.Create("ent_bomb")
+
+			C4:SetPos(trace.HitPos + trace.HitNormal)
+
+			trace.HitNormal.z = -trace.HitNormal.z
+
+			C4:SetAngles(trace.HitNormal:Angle() - Angle(90, 180))
+
+			C4:Spawn()
+
+			if trace.Entity and trace.Entity:IsValid() then
+				if not trace.Entity:IsNPC() and not trace.Entity:IsPlayer() and trace.Entity:GetPhysicsObject():IsValid() then
+					constraint.Weld(C4, trace.Entity)
+				end
+			else
+				C4:SetMoveType(MOVETYPE_NONE)
+			end
+
+			C4:TurnOn(self.Owner)
+			C4:SetNWInt("Team",self.Owner:Team())
+			C4:SetNWEntity("target",tr.Entity)
+			trace.Entity:SetNWEntity("bomb",prop)
+			trace.Entity:SetNWInt("bomb_team",self.Owner:Team())
 			
 			self.Owner:Freeze(false)
 			self.Owner:SelectWeapon(self.Owner:GetWeapons()[1]:GetClass())
-			self.Weapon:Remove()
 		end)
-		
-	end
+
 		
 end
 

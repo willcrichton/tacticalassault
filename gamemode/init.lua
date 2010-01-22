@@ -138,7 +138,7 @@ end)
 
 concommand.Add("ta_bots",function(pl)
 	if !pl:IsAdmin() then return end
-	for i=1,11 do pl:ConCommand("bot") end
+	for i=1,5 do pl:ConCommand("bot") end
 end)
 
 concommand.Add("ta_send",function(pl)

@@ -28,6 +28,8 @@ local ambience = {
 		Sound("ambient/wind/windgust_med1.wav"),
 		Sound("ambient/wind/windgust_snippet5.wav"),
 		Sound("ambient/wind/wasteland_wind.wav"),
+		Sound("ambient/levels/canals/tunnel_wind_loop1.wav"),
+		Sound("ambient/levels/canals/windmill_wind_loop1.wav"),
 	},
 	["lake"] = {
 		Sound("ambient/water/lake_water.wav"),
@@ -72,7 +74,7 @@ usermessage.Hook("endRoundSound",function(um)
 	
 	if string.find(snd,"loop") then
 		surface.PlaySound(snd)
-		timer.Create("loopEndSound",SoundDuration(snd),3,function() surface.PlaySound(snd) end)
+		timer.Create("loopEndSound",SoundDuration(snd),2,function() surface.PlaySound(snd) end)
 	else
 		surface.PlaySound(snd)
 	end

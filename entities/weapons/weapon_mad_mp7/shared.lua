@@ -19,12 +19,12 @@ SWEP.Primary.Delay 		= 0.075
 SWEP.Primary.ClipSize		= 40					// Size of a clip
 SWEP.Primary.DefaultClip	= 40					// Default number of bullets in a clip
 SWEP.Primary.Automatic		= true				// Automatic/Semi Auto
-SWEP.Primary.Ammo			= "Gravity"
+SWEP.Primary.Ammo			= "SMG1"
 
-SWEP.Secondary.ClipSize		= -1					// Size of a clip
-SWEP.Secondary.DefaultClip	= -1					// Default number of bullets in a clip
+SWEP.Secondary.ClipSize		= 1				// Size of a clip
+SWEP.Secondary.DefaultClip	= 1				// Default number of bullets in a clip
 SWEP.Secondary.Automatic	= false				// Automatic/Semi Auto
-SWEP.Secondary.Ammo		= "none"
+SWEP.Secondary.Ammo		= "Gravity"
 
 SWEP.ShellEffect			= "none"	// "none" or "effect_mad_shell_pistol" or "effect_mad_shell_rifle" or "effect_mad_shell_shotgun"
 SWEP.ShellDelay			= 0

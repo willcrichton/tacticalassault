@@ -9,7 +9,22 @@ surface.CreateFont( "Army", 25, 400, true, false, "ObjectiveFontPrimary" )
 surface.CreateFont( "Army", 18, 400, true, false, "ObjectiveFontSecondary" )
 surface.CreateFont( "Army",  40, 400, true, false, "AmmoFontPrimary" )
 
-language.Add("sent_sakarishelicopter","Helicopter")
+language.Add("sent_sakariashelicopter","Helicopter")
+language.Add("sent_sakariasjet","Fighter")
+
+local Color_Icon = Color( 255, 80, 0, 255 )
+killicon.AddFont( "weapon_mad_mp7",                "HL2MPTypeDeath",       "/",    Color_Icon )
+killicon.AddFont( "weapon_mad_ar2",                 "HL2MPTypeDeath",       "2",    Color_Icon )
+killicon.AddFont( "weapon_mad_awp",              "HL2MPTypeDeath",       "1",    Color_Icon )
+killicon.AddFont( "weapon_mad_spas",     "HL2MPTypeDeath",       "0",    Color_Icon )
+killicon.AddFont( "weapon_mad_rpg",                "HL2MPTypeDeath",       "3",    Color_Icon )
+killicon.AddFont( "weapon_mad_grenade",   "HL2MPTypeDeath",       "4",    Color_Icon )
+killicon.AddFont( "weapon_mad_usp_match",              "HL2MPTypeDeath",       "-",    Color_Icon )
+
+killicon.Add( "weapon_mad_fists", "HUD/killicons/fists_killicon", color_white )
+killicon.Add( "npc_satchel", "HUD/killicons/slam_killicon", color_white )
+killicon.Add( "npc_tripmine", "HUD/killicons/slam_killicon", color_white )
+killicon.Add( "env_explosion", "HUD/killicons/slam_killicon", color_white )
 
 function GM:PositionScoreboard( ScoreBoard )
 

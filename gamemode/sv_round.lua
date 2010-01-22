@@ -1,6 +1,12 @@
+include( "util.lua" )
+
+function GM:OnPreRoundStart( n )
+	self.BaseClass:OnPreRoundStart( n )
+	ta.SpawnEntities()
+end
+
 function GM:OnRoundStart( n )
 
-	ta.SpawnEntities()
 	if not GAMEMODE.Squads.red[1] or not GAMEMODE.Squads.blu[1] then
 		CreateSquads(GAMEMODE.Squads.red,1)
 		CreateSquads(GAMEMODE.Squads.blu,2)
@@ -29,8 +35,6 @@ end
 function GM:CanStartRound( n )
 	return ta.Players() >= 6
 end
-
-
 
 function CaptureRound(ent,t,cappers)
 	ta.Message(team.GetName(t).." has captured a control point!")

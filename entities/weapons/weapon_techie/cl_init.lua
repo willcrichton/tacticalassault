@@ -1,5 +1,14 @@
 include('shared.lua')
 
+function ClearTips()
+	local fr = vgui.Create("DFrame")
+	fr:SetPos(0,0)
+	fr:SetSize(1,1)
+	fr:MakePopup()
+	fr.Paint = function() end
+	timer.Simple(0.1,function() fr:Remove() end)
+end
+	
 usermessage.Hook("Techie-ShowMenu",function()
 	
 	local f = vgui.Create("DFrame")
@@ -23,7 +32,7 @@ usermessage.Hook("Techie-ShowMenu",function()
 	local buildings = {
 		{"vgui/swepicon","techie_manhacks","Manhacks"},
 		{"vgui/swepicon","techie_turret","Turret",},
-		{"vgui/swepicon","","Barricades",function() ShowBarriersMenu() f:Close() end},
+		{"vgui/swepicon","","Barricades",function() ShowBarriersMenu() end},
 	}
 	
 	for _,v in ipairs(buildings) do
@@ -32,8 +41,10 @@ usermessage.Hook("Techie-ShowMenu",function()
 		img:SetImage(v[1])
 		img:SetToolTip(v[3])
 		img.DoClick = function() 
-			if v[4] then v[4]() return end
+			if v[4] then v[4]() end
 			RunConsoleCommand(v[2]) 
+			f:Close()
+			ClearTips()
 		end
 		
 		
@@ -66,18 +77,22 @@ function ShowBarriersMenu()
 	local types = {
 	[1] = { 
 		model = "models/props_lab/blastdoor001b.mdl",
-		health = 150,
+		health = 250,
 		buildtime = 5,
+		height = 106.146,
 		},
 	[2] = {
 		model = "models/props_lab/blastdoor001c.mdl",
-		health = 250,
+		health = 500,
 		buildtime = 10,
+		height = 106.146,
 		},
 	[3]  = {
 		model = "models/props_wasteland/cargo_container01b.mdl",
-		health = 500,
-		buildtime = 20,
+		health = 1000,
+		buildtime = 15,
+		height = 127.290,
+		raiseup = 55,
 		}
 	}
 	
@@ -87,10 +102,8 @@ function ShowBarriersMenu()
 		icon:SetToolTip("Health: "..v.health.."\nBuildtime: "..v.buildtime)
 		icon.OnMousePressed = function()
 			RunConsoleCommand("techie_barrier",k)
-			icon:KillFocus()
-			f:KillFocus()
-			gui.EnableScreenClicker(false)
 			f:Close() 
+			ClearTips()
 		end
 		build_list:AddItem(icon)
 	end

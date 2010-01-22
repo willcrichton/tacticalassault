@@ -44,18 +44,19 @@ function ENT:Use(pl,call)
 			// Spawn ammo crates
 			local crate = ents.Create("item_ammo_crate")
 			crate:SetPos(self.Entity:GetPos())
-			crate:SetAngles(pl:GetForward():Angle() * -1)
+			crate:SetAngles(Angle(0,pl:GetForward():Angle().yaw,0))
 			crate:SetKeyValue("AmmoType","1")
 			crate:Spawn()
 			crate:Activate()
 			
 			local crate2 = ents.Create("item_ammo_crate")
 			crate2:SetPos(self.Entity:GetPos() + crate:GetRight() * 100)
-			crate2:SetAngles( pl:GetForward():Angle() * -1)
+			crate:SetAngles(Angle(0,pl:GetForward():Angle().yaw,0))
 			crate2:SetKeyValue("AmmoType","4")
 			crate2:Spawn()
 			crate2:Activate()
 			
+
 			timer.Simple(20,function() 
 				crate2:Remove()
 				crate:Remove()

@@ -55,9 +55,15 @@ SWEP.WorldModel		= "models/weapons/w_toolgun.mdl"
 		raiseup = 55,
 		}
 }
+
+SWEP.build_sounds = {
+	Sound("ta/build/build1.mp3"),
+	Sound('ta/build/build2.wav'),
+}
  
  function SWEP:Initialize()
 	self.Yaw = 0
+	self.GhostEntity = nil
 end
 
 function SWEP:Holster()
@@ -70,20 +76,10 @@ function SWEP:Holster()
 	return true
 end
 
-function SWEP:Deploy()
-	
-	umsg.Start("Techie-ShowMenu",self.Owner) umsg.End()
-	
-	concommand.Add("techie_barrier",function(pl,cmd,args)
-		self:MakeGhost(tonumber(args[1]))
-	end)
-
-end
-
 function SWEP:PrimaryAttack()
 	
-	if !self:CanPrimaryAttack() then return end
-
+	if !self:CanPrimaryAttack() || CLIENT then return end
+	
 	if self.GhostEntity then
 	
 		local barrier_count = self.Owner:GetNWInt("ta-barriercount")
@@ -94,7 +90,7 @@ function SWEP:PrimaryAttack()
 			
 			self.Owner:ChatPrint("You already have four barriers!")
 			
-		elseif dist > 300 || tr.HitNonWorld then
+		elseif dist > 300 || tr.HitNonWorld || math.abs(tr.HitPos.z - self.Owner:GetPos().z) > 30 then
 			
 			self.Owner:ChatPrint("That is not a valid location.")
 			
@@ -107,15 +103,16 @@ function SWEP:PrimaryAttack()
 		
 			barr:Spawn()
 			barr:Activate()
+			barr:SetNWEntity("ta-owner",self.Owner)
 			
 			self.Owner:SetNWInt("ta-barriercount",barrier_count + 1)
+			self.Owner:EmitSound(table.Random(self.build_sounds))
 			
 		end
 		
 		self.GhostEntity:Remove()
 		self.GhostEntity = nil
 		self.Yaw = 0
-		
 		
 	else
 		umsg.Start("Techie-ShowMenu",self.Owner) umsg.End()
@@ -125,7 +122,7 @@ end
 	
 function SWEP:SecondaryAttack()
 
-	if !self:CanPrimaryAttack() then return end
+	if !self:CanPrimaryAttack() || CLIENT then return end
 	
 	local tr = self.Owner:GetEyeTrace()
 	local ent = tr.Entity
@@ -141,6 +138,8 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Think()
+	
+	if CLIENT then return end
 	
 	self:UpdateGhost()
 	
@@ -178,7 +177,7 @@ function SWEP:UpdateGhost()
 	local dist =tr.HitPos:Distance(self.Owner:GetPos())
 	local cent,min,max = self.GhostEntity:OBBCenter(),self.GhostEntity:OBBMins(),self.GhostEntity:OBBMaxs()
 	
-	if dist < 300 && !tr.HitNonWorld then
+	if dist < 300 && !tr.HitNonWorld && math.abs(tr.HitPos.z - self.Owner:GetPos().z) < 30 then
 		self.GhostEntity:SetColor( 50, 255, 50, 200 )
 	else
 		self.GhostEntity:SetColor( 255, 50, 50, 200 )

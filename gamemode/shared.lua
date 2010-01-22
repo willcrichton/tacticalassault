@@ -59,6 +59,7 @@ end
 local LastStrafeRoll = 0
 local WalkTimer = 0
 local VelSmooth = 0
+local DeathSmooth = 0
 function GM:CalcView( ply, origin, angle, fov )
  
 	if !ply:Alive() then
@@ -70,6 +71,9 @@ function GM:CalcView( ply, origin, angle, fov )
 			
 			origin = att.Pos
 			angle = att.Ang
+			
+			local tr = util.TraceLine({start = origin,endpos = origin + angle:Forward() * 100000,filter = rag})
+			if tr.HitPos:Distance(origin) < 50 then end
 		end
 		fov = 55
 	else
