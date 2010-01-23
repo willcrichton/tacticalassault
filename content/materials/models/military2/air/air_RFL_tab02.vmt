@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	"$baseTexture" "models/military2/air/air_rfl_tab02"
-
-	"$alphatest" 1
-}
