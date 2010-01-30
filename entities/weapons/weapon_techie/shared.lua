@@ -27,8 +27,8 @@ end
  SWEP.Spawnable = false
  SWEP.AdminSpawnable = true;
    
-SWEP.ViewModel		= "models/weapons/v_toolgun.mdl"
-SWEP.WorldModel		= "models/weapons/w_toolgun.mdl"
+SWEP.ViewModel		= "models/weapons/v_wrench.mdl"
+SWEP.WorldModel		= "models/weapons/w_wrench.mdl"
 
  SWEP.Primary.ClipSize = -1; 
  SWEP.Primary.DefaultClip = -1; 
@@ -40,19 +40,19 @@ SWEP.WorldModel		= "models/weapons/w_toolgun.mdl"
  SWEP.RunPos = Vector(0,0,4)
  SWEP.types = {
 	[1] = { 
-		model = "models/props_lab/blastdoor001b.mdl",
+		model = "models/devin/barricade_small.mdl",
 		health = 250,
 		buildtime = 5,
 		height = 106.146,
 		},
 	[2] = {
-		model = "models/props_lab/blastdoor001c.mdl",
+		model = "models/devin/barricade_medium.mdl",
 		health = 500,
 		buildtime = 10,
 		height = 106.146,
 		},
 	[3]  = {
-		model = "models/props_wasteland/cargo_container01b.mdl",
+		model = "models/devin/barricade_medium.mdl",
 		health = 1000,
 		buildtime = 15,
 		height = 127.290,
@@ -83,6 +83,11 @@ end
 function SWEP:PrimaryAttack()
 	
 	if !self:CanPrimaryAttack() || CLIENT then return end
+	
+	local closest = ents.FindByClass("ent_barrier")[1]
+	for _,v in ipairs(ents.FindByClass("ent_barrier")) do
+		if v:GetPos():Distance(self.Owner:GetPos()) < closest:GetPos():Distance(self.Owner:GetPos()) then closest = v
+	end
 	
 	if self.GhostEntity then
 	
@@ -118,6 +123,8 @@ function SWEP:PrimaryAttack()
 		self.GhostEntity = nil
 		self.Yaw = 0
 		
+	elseif self.Owner:GetPos():Distance(closest:GetPos()) < 50 then
+	
 	else
 		umsg.Start("Techie-ShowMenu",self.Owner) umsg.End()
 	end

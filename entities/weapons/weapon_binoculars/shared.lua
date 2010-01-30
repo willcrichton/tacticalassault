@@ -8,10 +8,14 @@ end
 
 if (CLIENT) then
 
-	SWEP.PrintName = "Binoculars"
+	SWEP.PrintName = "BINOCULARS"
 	SWEP.Slot = 0
 	SWEP.SlotPos = 3
 	SWEP.DrawAmmo = false
+	
+	if (file.Exists("../materials/weapons/weapon_binoculars.vmt")) then
+		SWEP.WepSelectIcon	= surface.GetTextureID("weapons/weapon_binoculars")
+	end
 
 end
 
