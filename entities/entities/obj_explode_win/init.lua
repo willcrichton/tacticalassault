@@ -18,8 +18,7 @@ end
 
 function ENT:Initialize()	
 
-	self:SetModel( "models/props/metal_box.mdl" )
-	self:SetSkin(1)
+	self:SetModel( "models/props_junk/wood_crate001a.mdl" )
 	
 	self:PhysicsInit( SOLID_VPHYSICS )
 

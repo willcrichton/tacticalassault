@@ -7,10 +7,14 @@ end
 
 if (CLIENT) then
 
-	SWEP.PrintName = "Tech Constructor"
-	SWEP.Slot = 1
+	SWEP.PrintName = "TECH CONSTRUCTOR"
+	SWEP.Slot = 3
 	SWEP.SlotPos = 2
 	SWEP.DrawAmmo = false
+	
+	if (file.Exists("../materials/weapons/weapon_techie.vmt")) then
+		SWEP.WepSelectIcon	= surface.GetTextureID("weapons/weapon_techie")
+	end
 
 end
 

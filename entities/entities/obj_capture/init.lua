@@ -39,6 +39,8 @@ end
 
 function ENT:Think()
 	
+	if !GAMEMODE:InRound() then return end
+	
 	local on_point = {}
 	local old_progress = self.Progress
 	

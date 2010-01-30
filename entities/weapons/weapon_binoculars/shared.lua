@@ -1,4 +1,4 @@
-`if (SERVER) then
+if (SERVER) then
 	AddCSLuaFile("shared.lua")
 	AddCSLuaFile("cl_init.lua")
 	

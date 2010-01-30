@@ -10,7 +10,7 @@ end
 
 if (CLIENT) then
 
-	SWEP.PrintName = "Medigun"
+	SWEP.PrintName = "MEDIGUN"
 	SWEP.Slot = 3
 	SWEP.SlotPos = 2
 	if (file.Exists("../materials/weapons/weapon_mad_medic.vmt")) then

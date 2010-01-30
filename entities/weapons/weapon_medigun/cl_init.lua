@@ -3,6 +3,11 @@ include('shared.lua')
 local matLight 		= Material( "sprites/light_ignorez" )
 local matBeam		= Material( "effects/lamp_beam" )
 
+// Override this in your SWEP to set the icon in the weapon selection
+if (file.Exists("../materials/weapons/weapon_mad_medic.vmt")) then
+	SWEP.WepSelectIcon	= surface.GetTextureID("weapons/weapon_mad_medic")
+end
+
 function SWEP:Initialize()
 
 	self.PixVis = util.GetPixelVisibleHandle()

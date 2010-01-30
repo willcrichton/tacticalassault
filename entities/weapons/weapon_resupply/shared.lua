@@ -7,10 +7,16 @@ end
 
 if (CLIENT) then
 
-	SWEP.PrintName = "Resupply"
-	SWEP.Slot = 2
+	SWEP.PrintName = "RESUPPLY"
+	SWEP.Slot = 1
 	SWEP.SlotPos = 2
 	SWEP.DrawAmmo = false
+	SWEP.BounceWeaponIcon   	= false
+	
+	// Override this in your SWEP to set the icon in the weapon selection
+	if (file.Exists("../materials/weapons/weapon_resupply.vmt")) then
+		SWEP.WepSelectIcon	= surface.GetTextureID("weapons/weapon_resupply")
+	end
 
 end
 

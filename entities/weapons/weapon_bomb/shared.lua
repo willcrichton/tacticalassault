@@ -10,10 +10,13 @@ if (CLIENT) then
 	SWEP.ViewModelFOV		= 75
 	SWEP.ViewModelFlip		= false
 	
-	SWEP.PrintName = "C4 Explosive"
+	SWEP.PrintName = "C4 EXPLOSIVE"
 	SWEP.IconLetter = "H"
 	SWEP.Slot = 5
-	SWEP.Slotpos = 2
+	
+	if (file.Exists("../materials/weapons/weapon_mad_c4.vmt")) then
+		SWEP.WepSelectIcon	= surface.GetTextureID("weapons/weapon_mad_c4")
+	end
 
 end
 
