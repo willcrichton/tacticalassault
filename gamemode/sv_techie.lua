@@ -17,7 +17,7 @@ end)
 concommand.Add("techie_manhacks",function(pl)
 	if pl:GetPlayerClassName() != "Techie" then return end
 	local last = pl:GetNWInt("ta-lasthack")
-	if CurTime() - last < TIME_MANHACKS && last != 0 then pl:ChatPrint("You have "..math.ceil(tostring(TIME_MANHACKS - CurTime() - last)).." more seconds til your next manhack strike.") return end
+	if CurTime() - last < TIME_MANHACKS && last != 0 then pl:ChatPrint("You have "..math.ceil(tostring(TIME_MANHACKS - (CurTime() - last))).." more seconds til your next manhack strike.") return end
 	
 	for i = 1,5 do
 		local npc = ents.Create("npc_manhack")
@@ -46,7 +46,7 @@ end)
 concommand.Add("techie_turret",function(pl)
 	if pl:GetPlayerClassName() != "Techie" then return end
 	local last = pl:GetNWInt("ta-lastturret")
-	if CurTime() - last < TIME_TURRET && last != 0 then pl:ChatPrint("You have "..math.ceil(tostring(TIME_TURRET - CurTime() - last)).." more seconds before spawning another turret.") return end
+	if CurTime() - last < TIME_TURRET && last != 0 then pl:ChatPrint("You have "..math.ceil(tostring(TIME_TURRET - (CurTime() - last))).." more seconds before spawning another turret.") return end
 
 	local prev_ent = pl:GetNWEntity("ta-turret")
 	if prev_ent and prev_ent:IsValid() and prev_ent:GetClass() == "npc_turret_floor" then pl:ChatPrint("You already have a turret!") return end
