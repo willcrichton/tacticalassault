@@ -22,9 +22,9 @@ SWEP.Primary.Automatic		= false				// Automatic/Semi Auto
 SWEP.Primary.Ammo			= "Pistol"
 
 SWEP.Secondary.ClipSize		= 1				// Size of a clip
-SWEP.Secondary.DefaultClip	= 1				// Default number of bullets in a clip
+SWEP.Secondary.DefaultClip	= 1					// Default number of bullets in a clip
 SWEP.Secondary.Automatic	= false				// Automatic/Semi Auto
-SWEP.Secondary.Ammo		= "Gravity"
+SWEP.Secondary.Ammo		="Gravity"
 
 SWEP.ShellEffect			= "effect_mad_shell_pistol"	// "effect_mad_shell_pistol" or "effect_mad_shell_rifle" or "effect_mad_shell_shotgun"
 SWEP.ShellDelay			= 0

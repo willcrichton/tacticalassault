@@ -54,6 +54,11 @@ hook.Add("PlayerDeath","SavePoints",function(vic,inf,killer)
 		umsg.Short(kills)
 	umsg.End()
 	
+	local index = vic:EntIndex()
+	for _,v in ipairs(ents.FindByClass("npc_tripmine")) do
+		//if v:GetNWInt("Owner") == index then v:Fire("Kill","",0) end
+	end
+	
 end)
 
 hook.Add("PlayerSpawn","StopTilting!",function( pl )
@@ -82,6 +87,17 @@ hook.Add("EndOfGame","AddPlays",function()
 	end 
 	DB.Save() 
 	
+end)
+
+hook.Add("KeyPress","CheckForSlams",function(pl,k)
+	if !ValidEntity(pl) || !ValidEntity(pl:GetActiveWeapon()) then return end
+	if k == IN_ATTACK and pl:GetActiveWeapon():GetClass() == "weapon_slam" then
+		timer.Simple(0.5,function()
+			local e = ta.FindClosestEntity(pl,"npc_tripmine")
+			print(e)
+			e:SetNWInt("Owner",pl:EntIndex())
+		end)
+	end
 end)
 
 

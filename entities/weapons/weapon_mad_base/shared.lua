@@ -168,7 +168,6 @@ end
 ---------------------------------------------------------*/
 function SWEP:PrimaryAttack()
 
-	print("HI")
 	// Holst/Deploy your fucking weapon
 	if (not self.Owner:IsNPC() and self.Owner:KeyDown(IN_USE)) then
 		bHolsted = !self.Weapon:GetDTBool(0)
@@ -254,7 +253,7 @@ end
    Name: SWEP:SetIronsights()
 ---------------------------------------------------------*/
 function SWEP:SetIronsights(b)
-	print("IRONSIGHTS")
+
 	if ValidEntity(self.Owner) then
 		if (b) then
 			if (SERVER) then
@@ -304,7 +303,7 @@ function SWEP:SetMode(b)
 				self.Weapon:SendWeaponAnim(ACT_VM_ATTACH_SILENCER)
 				self.Primary.Sound = Sound(self.Primary.SuppressorSound)
 
-				print("SETMODE")
+	
 				if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 					self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 				end
@@ -323,7 +322,7 @@ function SWEP:SetMode(b)
 				self.Weapon:SendWeaponAnim(ACT_VM_DETACH_SILENCER)
 				self.Primary.Sound = Sound(self.Primary.NoSuppressorSound)
 				
-				print("SETMODE 2")
+
 				if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 					self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 				end
@@ -380,7 +379,7 @@ function SWEP:ReloadAnimation()
 		self.Weapon:DefaultReload(ACT_VM_RELOAD)
 	end
 	
-	print("RELOADANIM")
+
 	if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 		self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 	end
@@ -483,7 +482,7 @@ function SWEP:Deploy()
 
 	self:DeployAnimation()
 
-	print("DEPLOY")
+
 	if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 		self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 	end
@@ -642,7 +641,7 @@ function SWEP:ShootEffects()
 		self:ShootAnimation()
 	end
 
-	print("SHOOTEFFECTS")
+
 	if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 		self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 	end

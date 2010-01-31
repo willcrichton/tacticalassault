@@ -330,4 +330,22 @@ end
 
 function ta.Capitalize(str) return string.upper(string.Left(str,1)) .. string.Right(str,string.len(str) - 1) end
 
+function ta.FindClosestEntity(pl,class)
+	local c_ent,c_dist
+	local pos = pl:GetPos()
+	for _,v in ipairs(ents.FindByClass(class)) do
+		if c_ent then
+			local v_dist = v:GetPos():Distance(pos)
+			if v_dist < c_dist then
+				c_ent = v
+				c_dist = v_dist
+			end
+		else
+			c_ent = v
+			c_dist = v:GetPos():Distance(pos)
+		end
+	end
+	return c_ent
+end
+
 
