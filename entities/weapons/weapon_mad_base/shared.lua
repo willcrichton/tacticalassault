@@ -168,6 +168,7 @@ end
 ---------------------------------------------------------*/
 function SWEP:PrimaryAttack()
 
+	print("HI")
 	// Holst/Deploy your fucking weapon
 	if (not self.Owner:IsNPC() and self.Owner:KeyDown(IN_USE)) then
 		bHolsted = !self.Weapon:GetDTBool(0)
@@ -253,7 +254,7 @@ end
    Name: SWEP:SetIronsights()
 ---------------------------------------------------------*/
 function SWEP:SetIronsights(b)
-
+	print("IRONSIGHTS")
 	if ValidEntity(self.Owner) then
 		if (b) then
 			if (SERVER) then
@@ -303,7 +304,8 @@ function SWEP:SetMode(b)
 				self.Weapon:SendWeaponAnim(ACT_VM_ATTACH_SILENCER)
 				self.Primary.Sound = Sound(self.Primary.SuppressorSound)
 
-				if (IsValid(self.Owner) and self.Owner:GetViewModel()) then
+				print("SETMODE")
+				if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 					self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 				end
 			elseif self.Type == 3 then
@@ -320,8 +322,9 @@ function SWEP:SetMode(b)
 			elseif self.Type == 2 then
 				self.Weapon:SendWeaponAnim(ACT_VM_DETACH_SILENCER)
 				self.Primary.Sound = Sound(self.Primary.NoSuppressorSound)
-
-				if (IsValid(self.Owner) and self.Owner:GetViewModel()) then
+				
+				print("SETMODE 2")
+				if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 					self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 				end
 			elseif self.Type == 3 then
@@ -376,8 +379,9 @@ function SWEP:ReloadAnimation()
 	else
 		self.Weapon:DefaultReload(ACT_VM_RELOAD)
 	end
-
-	if (IsValid(self.Owner) and self.Owner:GetViewModel()) then
+	
+	print("RELOADANIM")
+	if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 		self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 	end
 end
@@ -479,7 +483,8 @@ function SWEP:Deploy()
 
 	self:DeployAnimation()
 
-	if (IsValid(self.Owner) and self.Owner:GetViewModel()) then
+	print("DEPLOY")
+	if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 		self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 	end
 
@@ -637,7 +642,8 @@ function SWEP:ShootEffects()
 		self:ShootAnimation()
 	end
 
-	if (IsValid(self.Owner) and self.Owner:GetViewModel()) then
+	print("SHOOTEFFECTS")
+	if (ValidEntity(self.Owner) and self.Owner:GetViewModel()) then
 		self:IdleAnimation(self.Owner:GetViewModel():SequenceDuration())
 	end
 

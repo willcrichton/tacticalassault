@@ -20,6 +20,7 @@ EFFECT.Sounds[8] = {Pitch = 100, Wavs = {"player/pl_shell1.wav", "player/pl_shel
 
 function EFFECT:Init(data)
 	
+	print("EFFECTDATA")
 	if not ValidEntity(data:GetEntity()) then 
 		self.Entity:SetModel("models/shells/shell_9mm.mdl")
 		self.RemoveMe = true
@@ -42,6 +43,7 @@ function EFFECT:Init(data)
 	
 	local phys = self.Entity:GetPhysicsObject()
 	
+	print("EFFECTPHYS")
 	if ValidEntity(phys) then
 		phys:Wake()
 		phys:SetDamping(0, 15)

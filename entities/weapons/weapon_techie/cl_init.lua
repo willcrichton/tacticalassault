@@ -76,21 +76,21 @@ function ShowBarriersMenu()
 	
 	local types = {
 	[1] = { 
-		model = "models/props_lab/blastdoor001b.mdl",
+		model = "models/devin/barricade_small.mdl",
 		health = 250,
-		buildtime = 5,
-		height = 106.146,
-		},
-	[2] = {
-		model = "models/props_lab/blastdoor001c.mdl",
-		health = 500,
 		buildtime = 10,
 		height = 106.146,
 		},
+	[2] = {
+		model = "models/devin/barricade_medium.mdl",
+		health = 500,
+		buildtime = 20,
+		height = 106.146,
+		},
 	[3]  = {
-		model = "models/props_wasteland/cargo_container01b.mdl",
+		model = "models/devin/barricade_large.mdl",
 		health = 1000,
-		buildtime = 15,
+		buildtime = 30,
 		height = 127.290,
 		raiseup = 55,
 		}

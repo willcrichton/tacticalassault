@@ -56,6 +56,10 @@ hook.Add("PlayerDeath","SavePoints",function(vic,inf,killer)
 	
 end)
 
+hook.Add("PlayerSpawn","StopTilting!",function( pl )
+	pl:SetAllowFullRotation(false)
+end)
+
 hook.Add("ShouldCollide","NoCollideTeams",function(e1,e2)
 	if e1:IsPlayer() and e2:IsPlayer() and e1:Team() == e2:Team() then return false end
 end)
@@ -156,3 +160,4 @@ concommand.Add("ta_ambience",function(pl,cmd,args)
 	if !pl:IsAdmin() then return end
 	SetGlobalString("ta_ambience",args[1])
 end)
+

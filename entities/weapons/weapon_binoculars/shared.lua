@@ -9,7 +9,7 @@ end
 if (CLIENT) then
 
 	SWEP.PrintName = "BINOCULARS"
-	SWEP.Slot = 0
+	SWEP.Slot = 5
 	SWEP.SlotPos = 3
 	SWEP.DrawAmmo = false
 	

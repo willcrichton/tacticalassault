@@ -11,6 +11,7 @@ if (CLIENT) then
 	SWEP.Slot = 3
 	SWEP.SlotPos = 2
 	SWEP.DrawAmmo = false
+	SWEP.ViewModelFOV = 70
 	
 	if (file.Exists("../materials/weapons/weapon_techie.vmt")) then
 		SWEP.WepSelectIcon	= surface.GetTextureID("weapons/weapon_techie")
@@ -27,13 +28,13 @@ end
  SWEP.Spawnable = false
  SWEP.AdminSpawnable = true;
    
-SWEP.ViewModel		= "models/weapons/v_wrench.mdl"
-SWEP.WorldModel		= "models/weapons/w_wrench.mdl"
+SWEP.ViewModel		= "models/weapons/devin/v_wrench.mdl"
+SWEP.WorldModel		= "models/weapons/devin/w_wrench.mdl"
 
- SWEP.Primary.ClipSize = -1; 
- SWEP.Primary.DefaultClip = -1; 
+ SWEP.Primary.ClipSize = 100; 
+ SWEP.Primary.DefaultClip = 100; 
  SWEP.Primary.Automatic = false; 
- SWEP.Primary.Ammo = "none";
+ SWEP.Primary.Ammo = "CombineCannon";
  SWEP.Secondary.Ammo = "none";
  
  SWEP.RunAng = Angle(20,0,0)
@@ -42,21 +43,21 @@ SWEP.WorldModel		= "models/weapons/w_wrench.mdl"
 	[1] = { 
 		model = "models/devin/barricade_small.mdl",
 		health = 250,
-		buildtime = 5,
-		height = 106.146,
+		buildtime = 10,
+		height = 102.780,
 		},
 	[2] = {
 		model = "models/devin/barricade_medium.mdl",
 		health = 500,
-		buildtime = 10,
-		height = 106.146,
+		buildtime = 20,
+		height =102.780,
 		},
 	[3]  = {
-		model = "models/devin/barricade_medium.mdl",
+		model = "models/devin/barricade_large.mdl",
 		health = 1000,
-		buildtime = 15,
-		height = 127.290,
-		raiseup = 55,
+		buildtime = 30,
+		height =102.780,
+		raiseup = 0,
 		}
 }
 
@@ -66,7 +67,7 @@ SWEP.build_sounds = {
 }
  
  function SWEP:Initialize()
-	self.Yaw = 0
+	self.Yaw = 90
 	self.GhostEntity = nil
 end
 
@@ -80,14 +81,20 @@ function SWEP:Holster()
 	return true
 end
 
+function SWEP:OnRemove()
+	if self.GhostEntity then
+		self.GhostEntity:Remove()
+		self.GhostEntity = nil
+	end
+
+	return true
+end
+
 function SWEP:PrimaryAttack()
 	
 	if !self:CanPrimaryAttack() || CLIENT then return end
 	
-	local closest = ents.FindByClass("ent_barrier")[1]
-	for _,v in ipairs(ents.FindByClass("ent_barrier")) do
-		if v:GetPos():Distance(self.Owner:GetPos()) < closest:GetPos():Distance(self.Owner:GetPos()) then closest = v
-	end
+	local tr = self.Owner:GetEyeTrace()
 	
 	if self.GhostEntity then
 	
@@ -123,8 +130,16 @@ function SWEP:PrimaryAttack()
 		self.GhostEntity = nil
 		self.Yaw = 0
 		
-	elseif self.Owner:GetPos():Distance(closest:GetPos()) < 50 then
-	
+	elseif ValidEntity(tr.Entity) and tr.Entity:GetClass() == "ent_barrier" and self.Owner:GetPos():Distance(tr.HitPos) < 100 then
+		
+		self.Owner:SetAnimation(PLAYER_ATTACK1)
+		self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
+		timer.Simple(0.001,function() self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK) end)
+		
+		self.Owner:Freeze(true)
+		self.Owner:SetVelocity( Vector(0,0,0) )
+		timer.Simple(2,function() self.Owner:Freeze(false) end)
+		
 	else
 		umsg.Start("Techie-ShowMenu",self.Owner) umsg.End()
 	end
@@ -133,18 +148,38 @@ end
 	
 function SWEP:SecondaryAttack()
 
-	if !self:CanPrimaryAttack() || CLIENT then return end
+	if !self:CanPrimaryAttack() || CLIENT || self:GetNextPrimaryFire() > CurTime() then return end
 	
 	local tr = self.Owner:GetEyeTrace()
 	local ent = tr.Entity
 	
-	if ent:GetClass() == "ent_barrier" then
-		self.Owner:SetNWInt("ta-barriercount",self.Owner:GetNWInt("ta-barriercount") - 1)
-		ent:Remove()
-	elseif ent == self.Owner:GetNWEntity("ta-turret") then
-		ent:Remove()
-		self.Owner:SetNWEntity("ta-turret",nil)
+	if self.Owner:GetShootPos():Distance(tr.HitPos) < 80 then
+		timer.Simple(0.15,function()
+			if ent:GetClass() == "ent_barrier" then
+				self.Owner:SetNWInt("ta-barriercount",self.Owner:GetNWInt("ta-barriercount") - 1)
+				ent:Remove()
+			elseif ent == self.Owner:GetNWEntity("ta-turret") then
+				ent:Remove()
+				self.Owner:SetNWEntity("ta-turret",nil)
+			else
+				local bullet = {};
+				bullet.Num = 1
+				bullet.Src = self.Owner:GetShootPos();
+				bullet.Dir = self.Owner:GetAimVector();
+				bullet.Spread = Vector( 0.01,0.01,0.01);
+				bullet.Tracer = 1
+				bullet.Force = 100
+				bullet.Damage = 45;
+				self.Owner:FireBullets( bullet );
+			end
+			self.Weapon:EmitSound("weapons/crowbar/crowbar_impact"..math.random(1,2)..".wav")
+		end)
+	else
+		timer.Simple(0.15,function() self.Weapon:EmitSound("weapons/iceaxe/iceaxe_swing1.wav") end)
 	end
+	self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+	timer.Simple(0.0001,function() self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK) end)
+	self:SetNextPrimaryFire( CurTime() + 0.8 )
 	
 end
 

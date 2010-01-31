@@ -55,43 +55,6 @@ function GM:CreateTeams()
 
 end
 
-// Stole this code from GMDM...
-local LastStrafeRoll = 0
-local WalkTimer = 0
-local VelSmooth = 0
-local DeathSmooth = 0
-function GM:CalcView( ply, origin, angle, fov )
- 
-	if !ply:Alive() then
-		local rag = ply:GetRagdollEntity()
-		if !rag then return end
-		local att = rag:GetAttachment( rag:LookupAttachment("eyes") )
-		if att then
-			att.Pos = att.Pos + att.Ang:Forward() * 1
-			
-			origin = att.Pos
-			angle = att.Ang
-			
-			local tr = util.TraceLine({start = origin,endpos = origin + angle:Forward() * 100000,filter = rag})
-			if tr.HitPos:Distance(origin) < 50 then end
-		end
-		fov = 55
-	else
-		VelSmooth = math.Clamp( VelSmooth * 0.9 + ply:GetVelocity():Length() * 0.08, 0, 700 )
-		if ply:GetPlayerClassName() == "Runner" then VelSmooth = VelSmooth / 1.2 end
-		WalkTimer = WalkTimer + VelSmooth * FrameTime() * 0.05
-
-		if ply:IsOnGround() then	
-			angle.roll = angle.roll + math.sin( WalkTimer ) * VelSmooth * 0.001
-			angle.pitch = angle.pitch + math.cos( WalkTimer * 0.5 ) * VelSmooth * 0.003
-			angle.yaw = angle.yaw + math.cos( WalkTimer ) * VelSmooth * 0.003
-		end
-	end
- 
-	return self.BaseClass:CalcView(ply,origin,angle,fov)
- 
-end
-
 hook.Add("OnPlayerHitGround","SlowEmDown",function( pl )
 	local class,div = pl:GetPlayerClass(), math.Clamp((pl:GetVelocity():Length() - 630) / 70,1,10)
 	local run,walk = class.RunSpeed,class.WalkSpeed
