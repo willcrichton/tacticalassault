@@ -32,24 +32,25 @@ end
 function ENT:SetType( n, pl, raise )
 
 	local types = {
-	[1] = { 
-		model = "models/devin/barricade_small.mdl",
-		health = 250,
-		buildtime = 5,
-		height = 106.146,
+		[1] = { 
+			model = "models/devin/barricade_small.mdl",
+			health = 250,
+			buildtime = 10,
+			height = 102.780,
+			},
+		[2] = {
+			model = "models/devin/barricade_medium.mdl",
+			health = 500,
+			buildtime = 20,
+			height = 102.780,
+			},
+		[3]  = {
+			model = "models/devin/barricade_large.mdl",
+			health = 1000,
+			buildtime = 30,
+			height = 102.780,
+			raiseup = 0,
 		},
-	[2] = {
-		model = "models/devin/barricade_medium.mdl",
-		health = 500,
-		buildtime = 10,
-		height = 106.146,
-		},
-	[3]  = {
-		model = "models/devin/barricade_medium.mdl",
-		health = 1000,
-		buildtime = 15,
-		height = 127.290,
-		raiseup = 55,
 	}
 	
 	if !types[n] then return end
@@ -71,7 +72,7 @@ function ENT:SetType( n, pl, raise )
 	end)
 			
 	// ERROR: HEALTH UPDATING IS FAIL?
-	local rate = 0.1
+	local rate = self.BuildTime / to_set.height 
 	timer.Create("updateBarrier"..self.Entity:EntIndex(),rate,self.BuildTime / rate,function()
 		if self.Entity && self.Entity:IsValid() then
 			local n = self.Entity:GetNWInt("BuildTime") - rate
