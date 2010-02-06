@@ -67,8 +67,11 @@ SWEP.build_sounds = {
 }
  
  function SWEP:Initialize()
-	self.Yaw = 90
 	self.GhostEntity = nil
+end
+
+function SWEP:Deploy()
+	self.Yaw = 90
 end
 
 function SWEP:Holster()
@@ -128,7 +131,7 @@ function SWEP:PrimaryAttack()
 		
 		self.GhostEntity:Remove()
 		self.GhostEntity = nil
-		self.Yaw = 0
+		self.Yaw = 90
 		
 	elseif ValidEntity(tr.Entity) and tr.Entity:GetClass() == "ent_barrier" and self.Owner:GetPos():Distance(tr.HitPos) < 100 then
 		

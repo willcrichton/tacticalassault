@@ -1,7 +1,7 @@
 include( 'util.lua' )
+include("cl_hud.lua")
 
 // RADAR
-
 local radar = vgui.Create("DFrame")
 	radar:SetTitle("")
 	radar:ShowCloseButton(false)
@@ -156,3 +156,46 @@ function CommandOptions()
 
 end
 concommand.Add("+command",CommandOptions)
+
+// Squad box
+local avatars = {}
+local function UpdateAvatars( parent )
+	for _,v in ipairs(avatars) do v:SetVisible(false) end
+	avatars = {}
+	for k,v in ipairs(squad) do if ValidEntity(v) then
+		local icon = vgui.Create("AvatarImage",parent)
+		icon:SetPlayer(v)
+		icon:SetPos(10,30 + (k - 1) * 35)
+		icon:SetSize(30,30)
+		table.insert(avatars,icon)
+	end end
+end
+
+local last_squad = {}
+local squadbox = vgui.Create("DPanel")
+squadbox:SetPos(ScrW() - 250,ScrH() - 360)
+squadbox:SetSize(220,200)
+squadbox.Paint = function()
+	
+	if !ValidEntity(LocalPlayer()) || !LocalPlayer():Alive() || !squad[1] then return end
+
+	surface.SetTexture(surface.GetTextureID("VGUI/gradient-l"))
+	surface.SetDrawColor(0,0,0,200)
+	surface.DrawTexturedRect( 0,20,squadbox:GetWide(),squadbox:GetTall()-20)
+	
+	draw.DrawText("Squad Members","ObjectiveFontPrimary",squadbox:GetWide()/2,0,color_white,1)
+	
+	for k,v in ipairs(squad) do if ValidEntity(v) then
+
+		local suffix = ""
+		if v == squad.leader then prefix = "(L)" end
+		
+		draw.DrawText(v:Name() .. " " .. suffix,"MenuLarge",55,35 + (k - 1) * 35,color_white,0)
+		
+	end end
+	
+	if last_squad != squad then UpdateAvatars(squadbox) end
+end
+last_squad = squad
+
+

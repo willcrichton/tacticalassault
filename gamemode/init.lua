@@ -61,8 +61,10 @@ hook.Add("PlayerDeath","SavePoints",function(vic,inf,killer)
 	
 end)
 
-hook.Add("PlayerSpawn","StopTilting!",function( pl )
-	pl:SetAllowFullRotation(false)
+hook.Add("Think","StopTilting!",function( )
+	for _,pl in ipairs(player.GetAll()) do
+		if pl:GetAllowFullRotation() then pl:SetAllowFullRotation(false) end
+	end
 end)
 
 hook.Add("ShouldCollide","NoCollideTeams",function(e1,e2)
@@ -94,7 +96,7 @@ hook.Add("KeyPress","CheckForSlams",function(pl,k)
 	if k == IN_ATTACK and pl:GetActiveWeapon():GetClass() == "weapon_slam" then
 		timer.Simple(0.5,function()
 			local e = ta.FindClosestEntity(pl,"npc_tripmine")
-			print(e)
+			if !ValidEntity(e) then return end
 			e:SetNWInt("Owner",pl:EntIndex())
 		end)
 	end
@@ -177,3 +179,5 @@ concommand.Add("ta_ambience",function(pl,cmd,args)
 	SetGlobalString("ta_ambience",args[1])
 end)
 
+
+		

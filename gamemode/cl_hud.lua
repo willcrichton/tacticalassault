@@ -1,7 +1,7 @@
 include("util.lua")
 include("shared.lua")
 
-local squad = {}
+squad = {}
 local obj1,obj2 = "", ""
 usermessage.Hook("sendSquad",function(u)
 	local ldr = u:ReadEntity()
@@ -68,16 +68,16 @@ local obj_tex = {
 local start,finish = 0,0
 
 hook.Add("HUDPaint","TA-DrawHudMain",function()
-		
+	
 	if !LocalPlayer():Alive() || !squad[1] then return end
 	
 	local k_pos = 0
 	
-	surface.SetTexture(surface.GetTextureID("VGUI/gradient-r"))
-	surface.SetDrawColor(0,0,0,200)
-	surface.DrawTexturedRectRotated(ScrW()-150,ScrH()-275,200,150,180)
+	//surface.SetTexture(surface.GetTextureID("VGUI/gradient-r"))
+	//surface.SetDrawColor(0,0,0,200)
+	//surface.DrawTexturedRectRotated(ScrW()-150,ScrH()-275,200,150,180)
 	
-	for k,v in pairs(squad) do if k != "name" && k != "leader" && v != LocalPlayer() && v:IsPlayer() && ValidEntity(v) then
+	for k,v in pairs(squad) do if k != "name" && k != "leader" && v != LocalPlayer() &&  ValidEntity(v) && v:IsPlayer()  then
 	
 		// Above their head info
 		local pos = (v:GetPos() + Vector(0,0,80 - LocalPlayer():GetPos():Distance(v:GetPos()) / 100)):ToScreen()
@@ -114,7 +114,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 	end end
 	
 	// Squad box
-	draw.DrawText("Squad Members","ObjectiveFontPrimary",ScrW() - 150,ScrH() - 380,color_white,1)
+	/*draw.DrawText("Squad Members","ObjectiveFontPrimary",ScrW() - 150,ScrH() - 380,color_white,1)
 	for k,v in ipairs(squad) do if v:IsValid() then
 
 		local prefix = ""
@@ -122,7 +122,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 	
 		draw.DrawText(v:Name() .. " " .. prefix,"MenuLarge",ScrW()-240,ScrH()-340 + (k - 1) * 20,color_white,0)
 		
-	end end
+	end end*/
 	
 	
 	
