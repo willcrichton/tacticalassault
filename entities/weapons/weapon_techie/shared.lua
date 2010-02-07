@@ -136,8 +136,7 @@ function SWEP:PrimaryAttack()
 	elseif ValidEntity(tr.Entity) and tr.Entity:GetClass() == "ent_barrier" and self.Owner:GetPos():Distance(tr.HitPos) < 100 then
 		
 		self.Owner:SetAnimation(PLAYER_ATTACK1)
-		self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
-		timer.Simple(0.001,function() self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK) end)
+		self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 		
 		self.Owner:Freeze(true)
 		self.Owner:SetVelocity( Vector(0,0,0) )
@@ -158,7 +157,8 @@ function SWEP:SecondaryAttack()
 	
 	if self.Owner:GetShootPos():Distance(tr.HitPos) < 80 then
 		timer.Simple(0.15,function()
-			if ent:GetClass() == "ent_barrier" then
+			local owner = ent:GetNWEntity("ta-owner")
+			if ent:GetClass() == "ent_barrier" and owner == self.Owner then
 				self.Owner:SetNWInt("ta-barriercount",self.Owner:GetNWInt("ta-barriercount") - 1)
 				ent:Remove()
 			elseif ent == self.Owner:GetNWEntity("ta-turret") then
@@ -180,8 +180,7 @@ function SWEP:SecondaryAttack()
 	else
 		timer.Simple(0.15,function() self.Weapon:EmitSound("weapons/iceaxe/iceaxe_swing1.wav") end)
 	end
-	self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
-	timer.Simple(0.0001,function() self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK) end)
+	self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
 	self:SetNextPrimaryFire( CurTime() + 0.8 )
 	
 end

@@ -4,8 +4,8 @@ local CLASS = {}
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Runner"
 CLASS.Description = "Run twice as fast! \nPrimary: SMG \nSecondary: Pistol"
-CLASS.WalkSpeed = 400
-CLASS.RunSpeed = 600
+CLASS.WalkSpeed = 100
+CLASS.RunSpeed = 400
 CLASS.MaxHealth = 75
 CLASS.StartHealth = 75
 
@@ -27,8 +27,8 @@ local CLASS = {}
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Assault"
 CLASS.Description = "Outlast your enemies! \nPrimary: Heavy Machine Gun \nSecondary: Shotgun \nTertiary: Resupply"
-CLASS.WalkSpeed = 200
-CLASS.RunSpeed = 320
+CLASS.WalkSpeed = 100
+CLASS.RunSpeed = 220
 CLASS.MaxHealth = 150
 CLASS.StartHealth = 150
 
@@ -67,8 +67,8 @@ local CLASS = {}
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Artillery"
 CLASS.Description = "Bring in the big guns.\nPrimary: Bazooka\nSecondary: Shotgun"
-CLASS.WalkSpeed = 230
-CLASS.RunSpeed = 350
+CLASS.WalkSpeed = 130
+CLASS.RunSpeed = 250
 CLASS.MaxHealth = 120
 CLASS.StartHealth = 120
 
