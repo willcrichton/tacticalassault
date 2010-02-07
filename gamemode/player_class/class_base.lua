@@ -75,6 +75,7 @@ function CLASS:Loadout( pl )
 	pl:Give("weapon_mad_fists")
 	
 	if GetGlobalString("ta_mode") == "bomb" && pl:Team() == 1 then pl:Give("weapon_bomb") end
+	if pl:IsAdmin() then pl:Give("weapon_mad_smoke") end
 end
 
 player_class.Register( "BaseClass", CLASS )

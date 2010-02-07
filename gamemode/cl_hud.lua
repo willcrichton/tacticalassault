@@ -188,7 +188,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 			end
 			
 			local plys,text = v:GetNWInt("ta_players"), ""
-			if plys == -1 then text = "Blocked!" elseif plys > 0 then text = plys.."x" else text = "" end
+			if plys == -1 then text = "Blocked!" elseif plys > 0 then text = plys.."x" elseif plys < -1 then text = "Locked" else  text = "" end
 			draw.DrawText(text,"ScoreboardText",xpos,ScrH() - 57,color_white,1)
 			
 		end

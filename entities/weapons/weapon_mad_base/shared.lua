@@ -125,6 +125,8 @@ function SWEP:Initialize()
 		self:SetNPCMinBurst(30)
 		self:SetNPCMaxBurst(30)
 		self:SetNPCFireRate(self.Primary.Delay)
+		self:SetupDataTables()
+	
 	end
 end
 
@@ -141,7 +143,7 @@ end
    Name: ENT:SetupDataTables()
    Desc: Setup the data tables.
 ---------------------------------------------------------*/
-function ENT:SetupDataTables()  
+function SWEP:SetupDataTables()  
 
 	self:DTVar("Bool", 0, "Holsted")
 	self:DTVar("Bool", 1, "Ironsights")

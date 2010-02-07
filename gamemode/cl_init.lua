@@ -11,6 +11,7 @@ surface.CreateFont( "Army",  40, 400, true, false, "AmmoFontPrimary" )
 
 language.Add("sent_sakariashelicopter","Helicopter")
 language.Add("sent_sakariasjet","Fighter")
+language.Add("sent_notargetmissile","Missile")
 
 local Color_Icon = Color( 255, 80, 0, 255 )
 killicon.AddFont( "weapon_mad_mp7",                "HL2MPTypeDeath",       "/",    Color_Icon )

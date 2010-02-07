@@ -13,7 +13,6 @@ function CLASS:Loadout( pl )
 	pl:Give("weapon_mad_mp7")
 	pl:Give("weapon_mad_usp_match")
 	pl:Give("weapon_mad_flash")
-	pl:Give("weapon_mad_smoke")
 	
 	self.BaseClass.Loadout(self,pl)
 end

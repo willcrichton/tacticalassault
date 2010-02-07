@@ -257,6 +257,7 @@ if CLIENT then
 		function Cough()
 			timer.Create("ta-cough",math.random(4,15),0,function() surface.PlaySound(table.Random(coughs)) Cough() end)
 		end
+		Cough()
 	end
 	
 	function ta.StopLowHealth()

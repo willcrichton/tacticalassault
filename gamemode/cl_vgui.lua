@@ -172,12 +172,19 @@ local function UpdateAvatars( parent )
 end
 
 local last_squad = {}
+local last_alive = LocalPlayer():Alive()
 local squadbox = vgui.Create("DPanel")
-squadbox:SetPos(ScrW() - 250,ScrH() - 360)
+squadbox:SetPos(ScrW() - 250,ScrH() - 350)
 squadbox:SetSize(220,200)
 squadbox.Paint = function()
 	
-	if !ValidEntity(LocalPlayer()) || !LocalPlayer():Alive() || !squad[1] then return end
+	if !ValidEntity(LocalPlayer()) || !LocalPlayer():Alive() || !squad[1] then 
+		for k,v in ipairs(avatars) do 
+			v:SetVisible(false) 
+			table.remove(avatars,k)  
+		end
+		return 
+	end
 
 	surface.SetTexture(surface.GetTextureID("VGUI/gradient-l"))
 	surface.SetDrawColor(0,0,0,200)
@@ -188,14 +195,16 @@ squadbox.Paint = function()
 	for k,v in ipairs(squad) do if ValidEntity(v) then
 
 		local suffix = ""
-		if v == squad.leader then prefix = "(L)" end
+		if v == squad.leader then suffix = "(L)" end
 		
 		draw.DrawText(v:Name() .. " " .. suffix,"MenuLarge",55,35 + (k - 1) * 35,color_white,0)
 		
 	end end
 	
-	if last_squad != squad then UpdateAvatars(squadbox) end
+	if last_squad != squad || last_alive != LocalPlayer():Alive() then UpdateAvatars(squadbox) end
+	last_squad = squad
+	last_alive=  LocalPlayer():Alive()
 end
-last_squad = squad
+
 
 

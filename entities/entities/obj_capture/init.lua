@@ -18,7 +18,7 @@ end
 
 function ENT:Initialize()	
 
-	self:SetModel( "models/props_gameplay/cap_point_base.mdl" )
+	self:SetModel( "models/devin/capturepoint.mdl" )
 	self:SetSkin(0)
 	
 	self:PhysicsInit( SOLID_VPHYSICS )
@@ -33,13 +33,21 @@ function ENT:Initialize()
 	
 	self.Progress = 0
 	self.HasCapped = 0
+	self.Locked = false
+
+	self.BaseProp = ents.Create("prop_physics")
+	self.BaseProp:SetPos(self:GetPos())
+	self.BaseProp:SetModel("models/devin/capturepointglass.mdl")
+	self.BaseProp:SetMoveType(MOVETYPE_NONE)
+	self.BaseProp:Spawn()
+	self.BaseProp:Activate()
 	
 end
 
 
 function ENT:Think()
 	
-	if !GAMEMODE:InRound() then return end
+	if !GAMEMODE:InRound() || self.Locked then return end
 	
 	local on_point = {}
 	local old_progress = self.Progress
@@ -93,13 +101,14 @@ function ENT:Think()
 		self.Entity:SetNWInt("HasCapped",1)
 		hook.Call("ta_capwon",nil,self.Entity,1,on_point)
 		self.HasCapped = 1
+		if GetGlobalString("ta_mode") == "bomb" then self.Locked = true end
 	elseif self.Progress == -100 and self.HasCapped != 2 then 
 		self.Entity:SetSkin(2) 
 		for k,v in ipairs(on_point) do if v:Team() != 2 then table.remove(on_point,k) end end
 		self.Entity:SetNWInt("HasCapped",2)
 		hook.Call("ta_capwon",nil,self.Entity,2,on_point)
 		self.HasCapped = 2
-		
+		if GetGlobalString("ta_mode") == "bomb" then self.Locked = true end
 	end
 	
 	self:UpdateProgress(#on_point)
@@ -115,6 +124,8 @@ function ENT:UpdateProgress( numplayers )
 		umsg.Short(numplayers)
 		umsg.String("Not blocked!")
 	umsg.End() */
+	
+	if self.Locked then self.Entity:SetNWInt("ta_players",-2) end
 	
 	self.Entity:SetNWInt("ta_progress",self.Progress)
 	self.Entity:SetNWInt("ta_players",numplayers)
