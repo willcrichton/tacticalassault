@@ -71,6 +71,11 @@ if SERVER then
 				ammo:Spawn()
 				ammo:Activate()
 				ammo:SetType(2)
+			elseif name == "sent_striderturret" then
+				local turret = ents.Create("sent_striderturret")
+				turret:SetPos(v:GetPos() + Vector(0,0,5))
+				turret:Spawn()
+				turret:Activate()
 			end
 		end
 

@@ -18,7 +18,7 @@ ta.AddFilesRecursive("../sound/ta","")
 ta.AddFilesRecursive("../materials/ta","")
 ta.AddFilesRecursive("../models/devin","")
 ta.AddFilesRecursive("../materials/HUD/killicons","")
-resource.AddFile("maps/ta_testing.bsp")
+
 resource.AddFile("models/weapons/w_binoculars.mdl")
 resource.AddFile("models/weapons/v_binoculars.mdl")
 resource.AddFile("models/weapons/devin/w_wrench.mdl")
