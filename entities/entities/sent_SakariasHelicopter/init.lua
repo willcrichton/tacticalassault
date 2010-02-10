@@ -158,7 +158,7 @@ function ENT:SpawnFunction( ply, tr )
  	ent:Activate() 
  	ent.Owner = ply
 	self.PlyUsers[1] = ply	
-	ent.UserOne = ply	
+	ent.UserOne = NULL
 	return ent 
 	
 end

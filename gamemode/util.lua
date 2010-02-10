@@ -52,22 +52,26 @@ if SERVER then
 	end
 	
 	function ta.SpawnEntities()
+		local capname = "A"
 		for _,v in ipairs( ents.FindByClass( "info_target" ) ) do
 			local name = v:GetName()
 			if name == "obj_capture" then
 				local obj = ents.Create("obj_capture")
-				obj:SetPos(v:GetPos())
+				obj:SetPos(v:GetPos() - Vector(0,0,10))
 				obj:Spawn()
 				obj:Activate()
+				obj:SetNWString("ta-capname",capname)
+				if capname == "A" then capname = "B"
+				elseif capname == "B" then capname = "C" end
 			elseif name == "ent_pickup_health" then
 				local hp = ents.Create("ent_pickup")
-				hp:SetPos(v:GetPos() + Vector(0,0,17))
+				hp:SetPos(v:GetPos() + Vector(0,0,10))
 				hp:Spawn()
 				hp:Activate()
 				hp:SetType(1)
 			elseif name == "ent_pickup_ammo" then
 				local ammo = ents.Create("ent_pickup")
-				ammo:SetPos(v:GetPos() + Vector(0,0,10))
+				ammo:SetPos(v:GetPos() + Vector(0,0,3))
 				ammo:Spawn()
 				ammo:Activate()
 				ammo:SetType(2)

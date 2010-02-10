@@ -61,8 +61,8 @@ local key_wait = CurTime()
 local objectives = {}
 
 local obj_tex = {
-["explode"] = "gui/silkicons/bomb",
-["capture"] = "ta/cap-icon",
+	["explode"] = "gui/silkicons/bomb",
+	["capture"] = "ta/cap-icon",
 }
 
 local start,finish = 0,0
@@ -175,7 +175,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 			if plys > 0 then draw.DrawText(plys.."x","ScoreboardText",xpos,ScrH() - 58,color_white,1) end */
 			
 			local xpos = ScrW()/2 + (k - #objs/1.8) * 200 - 125
-			draw.DrawText("Objective "..k,"ScoreboardText", xpos,ScrH() - 80,color_white,1)
+			draw.DrawText("Point "..v:GetNWString("ta-capname"),"ScoreboardText", xpos,ScrH() - 80,color_white,1)
 			local prog = v:GetNWInt("ta_progress")
 			if k%2 == 0 then 
 				ta.DrawTrapezoid(xpos - 75,ScrH()-60,150,20,20,false,color_black)
@@ -238,30 +238,46 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 	end
 	
 	// Target selection
-	if not squad || squad.leader != LocalPlayer() then return end
 	local selected = 0
 	for k,v in ipairs(ents.FindByClass("obj_*")) do
 		local pos = v:GetPos():ToScreen()
 		local str = string.Explode("_",v:GetClass())[2]
 		if pos.visible then
-			local vec = LocalPlayer():GetEyeTrace().HitPos:ToScreen()
-			local x,y = vec.x,vec.y
-			if x > pos.x - mul/2 and x < pos.x + mul/2 and y > pos.y - mul/2 and y < pos.y + mul/2 then
-				mul = math.Clamp(mul + 1.3,30,50)
-				selected = k
-				if input.IsKeyDown(KEY_T) and CurTime() - key_wait > .2 then
-					key_wait = CurTime()
-					if objectives[1] then objectives[2] = objectives[1] end
-					objectives[1] = v
-					RunConsoleCommand("ta_target",str,k)
+			if squad && squad.leader == LocalPlayer() then
+			 	local vec = LocalPlayer():GetEyeTrace().HitPos:ToScreen()
+				local x,y = vec.x,vec.y
+				if x > pos.x - mul/2 and x < pos.x + mul/2 and y > pos.y - mul/2 and y < pos.y + mul/2 then
+					mul = math.Clamp(mul + 1.3,30,50)
+					selected = k
+					if input.IsKeyDown(KEY_T) and CurTime() - key_wait > .2 then
+						key_wait = CurTime()
+						if objectives[1] then objectives[2] = objectives[1] end
+						objectives[1] = v
+						RunConsoleCommand("ta_target",str,k)
+					end
+					if table.HasValue(objectives,v) then ta.RoundedBoxOutlined(4,pos.x - mul/2,pos.y - mul/2,mul,mul,Color(0,0,0,0),Color(255,0,0))
+					else ta.RoundedBoxOutlined(4,pos.x - mul/2,pos.y - mul/2,mul,mul,Color(0,0,0,0),color_white) end
+				else
+					if table.HasValue(objectives,v) then ta.RoundedBoxOutlined(4,pos.x - 15,pos.y - 15,30,30,Color(0,0,0,0),Color(255,0,0))
+					else ta.RoundedBoxOutlined(4,pos.x - 15,pos.y - 15,30,30,Color(0,0,0,0),color_white) end
 				end
-				if table.HasValue(objectives,v) then ta.RoundedBoxOutlined(4,pos.x - mul/2,pos.y - mul/2,mul,mul,Color(0,0,0,0),Color(255,0,0))
-				else ta.RoundedBoxOutlined(4,pos.x - mul/2,pos.y - mul/2,mul,mul,Color(0,0,0,0),color_white) end
+				draw.TexturedQuad({texture=surface.GetTextureID(obj_tex[str]),color=color_white,x=pos.x-10,y=pos.y-10,w=20,h=20})
+				
+				local letter = string.lower(v:GetNWString("ta-capname"))
+				if letter == "" then letter = "a" end
+				local cap = v:GetNWInt("HasCapped")
+				local suffix = "none"
+				if cap == 1 then suffix = "red" elseif cap == 2 then suffix = "blue" end
+				draw.TexturedQuad({texture=surface.GetTextureID("ta/"..letter.."-"..suffix),color=color_white,x=pos.x-15,y=pos.y-50,w=30,h=30})
 			else
-				if table.HasValue(objectives,v) then ta.RoundedBoxOutlined(4,pos.x - 15,pos.y - 15,30,30,Color(0,0,0,0),Color(255,0,0))
-				else ta.RoundedBoxOutlined(4,pos.x - 15,pos.y - 15,30,30,Color(0,0,0,0),color_white) end
+				local letter = string.lower(v:GetNWString("ta-capname"))
+				if letter == "" then letter = "a" end
+				local cap = v:GetNWInt("HasCapped")
+				local suffix = "none"
+				if cap == 1 then suffix = "red" elseif cap == 2 then suffix = "blue" end
+				draw.TexturedQuad({texture=surface.GetTextureID("ta/"..letter.."-"..suffix),color=color_white,x=pos.x-15,y=pos.y-15,w=30,h=30})
 			end
-			draw.TexturedQuad({texture=surface.GetTextureID(obj_tex[str]),color=color_white,x=pos.x-10,y=pos.y-10,w=20,h=20})
+		
 		end
 	end
 	if selected == 0 then mul = 30 end

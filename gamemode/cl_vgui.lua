@@ -5,6 +5,7 @@ include("cl_hud.lua")
 local radar = vgui.Create("DFrame")
 	radar:SetTitle("")
 	radar:ShowCloseButton(false)
+	radar:SetDraggable(false)
 	radar:SetSize(150,150)
 	radar:SetPos(ScrW() - 180,ScrH() - 570)
 	
@@ -172,10 +173,11 @@ local function UpdateAvatars( parent )
 end
 
 local last_squad = {}
-local last_alive = LocalPlayer():Alive()
+local last_alive = false
 local squadbox = vgui.Create("DPanel")
-squadbox:SetPos(ScrW() - 250,ScrH() - 350)
+squadbox:SetPos(ScrW() - 250,ScrH() - 380)
 squadbox:SetSize(220,200)
+squadbox:SetDraggable(false)
 squadbox.Paint = function()
 	
 	if !ValidEntity(LocalPlayer()) || !LocalPlayer():Alive() || !squad[1] then 
@@ -188,7 +190,7 @@ squadbox.Paint = function()
 
 	surface.SetTexture(surface.GetTextureID("VGUI/gradient-l"))
 	surface.SetDrawColor(0,0,0,200)
-	surface.DrawTexturedRect( 0,20,squadbox:GetWide(),squadbox:GetTall()-20)
+	surface.DrawTexturedRect( 0,30,squadbox:GetWide(),squadbox:GetTall()-30)
 	
 	draw.DrawText("Squad Members","ObjectiveFontPrimary",squadbox:GetWide()/2,0,color_white,1)
 	
