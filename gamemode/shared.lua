@@ -43,11 +43,11 @@ TEAM_BLUE = 2
 function GM:CreateTeams()
 	
 	team.SetUp( TEAM_RED, "Team Red", Color( 255, 40, 40 ), true )
-	team.SetSpawnPoint( TEAM_RED, "info_player_terrorist", "info_player_rebel"  )
+	team.SetSpawnPoint( TEAM_RED, {"info_player_terrorist", "info_player_rebel" } )
 	team.SetClass( TEAM_RED , { "Runner",  "Assault", "Sniper", "Artillery", "Medic","Techie"} )
 	
 	team.SetUp( TEAM_BLUE, "Team Blue", Color( 50, 50, 255 ), true )
-	team.SetSpawnPoint( TEAM_BLUE, "info_player_counterterrorist", "info_player_combine" )
+	team.SetSpawnPoint( TEAM_BLUE, {"info_player_counterterrorist", "info_player_combine" })
 	team.SetClass( TEAM_BLUE, { "Runner", "Assault", "Sniper", "Artillery", "Medic", "Techie"} )
 	
 	team.SetUp( TEAM_SPECTATOR, "Spectators", Color( 200, 200, 200 ), true )

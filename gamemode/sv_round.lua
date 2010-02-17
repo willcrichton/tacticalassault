@@ -1,12 +1,10 @@
 include( "util.lua" )
 
 function GM:OnPreRoundStart( n )
-	self.BaseClass:OnPreRoundStart( n )
 	ta.SpawnEntities()
 end
 
 function GM:OnRoundStart( n )
-
 	if not GAMEMODE.Squads.red[1] or not GAMEMODE.Squads.blu[1] then
 		CreateSquads(GAMEMODE.Squads.red,1)
 		CreateSquads(GAMEMODE.Squads.blu,2)
@@ -30,6 +28,7 @@ function GM:OnRoundEnd( n )
 	umsg.Start("endRoundSound",rp2)
 		if winner == 2 then umsg.Bool(true) else umsg.Bool(false) end
 	umsg.End()
+	
 end
 
 function GM:CanStartRound( n )
@@ -62,7 +61,7 @@ function CaptureRound(ent,t,cappers)
 		table.insert(GAMEMODE.Blu.Spawns,spawns)
 	end
 	
-	if GetGlobalString("ta_mode") == "capture" then
+	if GAMEMODE.Mode == "capture" then
 	
 		local capped = 0
 		for _,v in ipairs(objs) do

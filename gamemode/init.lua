@@ -29,8 +29,11 @@ resource.AddFile("models/items/v_medkit.mdl")
 resource.AddFile("models/items/w_medkit.mdl")
 resource.AddFile("resource/fonts/Army.ttf")
 
+-- Stupid hack because global strings/gamemode fnctions liketo fail
 SetGlobalString("ta_ambience","battle")
 SetGlobalString("ta_mode","capture") -- other options: bomb
+GM.Mode = "capture"
+GM.InRound = false
 
 // Load a player's points
 function GM:PlayerDisconnected(pl)
@@ -187,6 +190,3 @@ concommand.Add("ta_ambience",function(pl,cmd,args)
 	if !pl:IsAdmin() then return end
 	SetGlobalString("ta_ambience",args[1])
 end)
-
-
-		

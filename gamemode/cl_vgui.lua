@@ -7,7 +7,7 @@ local radar = vgui.Create("DFrame")
 	radar:ShowCloseButton(false)
 	radar:SetDraggable(false)
 	radar:SetSize(150,150)
-	radar:SetPos(ScrW() - 180,ScrH() - 570)
+	radar:SetPos(ScrW() - 180,ScrH() - 550)
 	
 	local on_radar = {}
 	
@@ -19,7 +19,8 @@ local radar = vgui.Create("DFrame")
 	
 		local cx,cy = radar:GetWide()/2,radar:GetTall()/2
 			
-		draw.RoundedBox(8,0,0,radar:GetWide(),radar:GetTall(),Color(0,0,0,200))
+		draw.RoundedBox(0,0,0,radar:GetWide(),radar:GetTall(),Color(0,0,0,220))
+		draw.RoundedBox(0,2,2,radar:GetWide() - 4,radar:GetTall() - 4,Color(50,50,50,2000))
 		surface.SetTexture(surface.GetTextureID("ta/radar-beacon3"))
 		surface.SetDrawColor(255,255,255,255)
 		surface.DrawTexturedRect(cx -5,cy -5,10,10)
@@ -166,7 +167,7 @@ local function UpdateAvatars( parent )
 	for k,v in ipairs(squad) do if ValidEntity(v) then
 		local icon = vgui.Create("AvatarImage",parent)
 		icon:SetPlayer(v)
-		icon:SetPos(10,30 + (k - 1) * 35)
+		icon:SetPos(10,40 + (k - 1) * 35)
 		icon:SetSize(30,30)
 		table.insert(avatars,icon)
 	end end
@@ -175,9 +176,8 @@ end
 local last_squad = {}
 local last_alive = false
 local squadbox = vgui.Create("DPanel")
-squadbox:SetPos(ScrW() - 250,ScrH() - 380)
+squadbox:SetPos(ScrW() - 250,ScrH() - 360)
 squadbox:SetSize(220,200)
-squadbox:SetDraggable(false)
 squadbox.Paint = function()
 	
 	if !ValidEntity(LocalPlayer()) || !LocalPlayer():Alive() || !squad[1] then 
@@ -188,9 +188,9 @@ squadbox.Paint = function()
 		return 
 	end
 
-	surface.SetTexture(surface.GetTextureID("VGUI/gradient-l"))
-	surface.SetDrawColor(0,0,0,200)
-	surface.DrawTexturedRect( 0,30,squadbox:GetWide(),squadbox:GetTall()-30)
+	//draw.TexturedQuad( {texture = surface.GetTextureID("VGUI/gradient-l"), color = , x = 0, y = 30, w = squadbox:GetWide(), h = squadbox:GetTall() - 30})
+	draw.RoundedBox( 0, 0, 30, squadbox:GetWide(), squadbox:GetTall() - 30, Color( 0, 0, 0, 220 ) )
+	draw.RoundedBox( 0, 2, 32, squadbox:GetWide() - 4, squadbox:GetTall() - 34, Color( 50, 50, 50, 200 ) )
 	
 	draw.DrawText("Squad Members","ObjectiveFontPrimary",squadbox:GetWide()/2,0,color_white,1)
 	
@@ -199,7 +199,7 @@ squadbox.Paint = function()
 		local suffix = ""
 		if v == squad.leader then suffix = "(L)" end
 		
-		draw.DrawText(v:Name() .. " " .. suffix,"MenuLarge",55,35 + (k - 1) * 35,color_white,0)
+		draw.DrawText(v:Name() .. " " .. suffix,"MenuLarge",55,45 + (k - 1) * 35,color_white,0)
 		
 	end end
 	

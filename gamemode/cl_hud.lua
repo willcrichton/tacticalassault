@@ -127,14 +127,14 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 	
 	
 	// Objectives
-	if obj1 != "" and ValidEntity(objectives[1]) and (not objectives[1]:GetNWBool("ObjectiveComplete") || objectives[1]:GetNWInt("HasCapped") != LocalPlayer():Team()) then draw.DrawText(obj1,"ObjectiveFontPrimary",30,20,color_white,0) 
+	if obj1 != "" and ValidEntity(objectives[1]) and (not objectives[1]:GetNWBool("ObjectiveComplete") || objectives[1]:GetNWInt("HasCapped") != LocalPlayer():Team()) then draw.DrawText(obj1,"ObjectiveFontPrimary",50,20,color_white,0) 
 	elseif ValidEntity(objectives[2]) and (not objectives[2]:GetNWBool("ObjectiveComplete") || objectives[2]:GetNWInt("HasCapped") != LocalPlayer():Team()) then
 		objectives[1] = objectives[2]
 		objectives[2] = nil
 		obj1 = obj2
 		obj2 = ""
 	end
-	if obj2 != "" and ValidEntity(objectives[2]) and not objectives[2]:GetNWBool("ObjectiveComplete") then draw.DrawText(obj2,"ObjectiveFontSecondary",30,45,color_white,0) end
+	if obj2 != "" and ValidEntity(objectives[2]) and not objectives[2]:GetNWBool("ObjectiveComplete") then draw.DrawText(obj2,"ObjectiveFontSecondary",50,45,color_white,0) end
 	
 	// Ammo
 	/*if !LocalPlayer():GetActiveWeapon():IsValid() or !LocalPlayer():Health() then return end
@@ -162,6 +162,8 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 	surface.SetTexture( "color/white" )
 	if GetGlobalString("ta_mode") == "capture" then
 		local objs = ents.FindByClass("obj_capture")
+		
+		local x,y,w,h = 60, ScrH() - 73, 150, 30
 		for k,v in ipairs(objs) do
 			/* local xpos = ScrW()/2 + (k - #objs/1.8) * 200 - 200
 			draw.DrawText("Objective "..k,"ScoreboardText", xpos,ScrH() - 80,color_white,1)
@@ -174,7 +176,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 			local plys = v:GetNWInt("ta_players")
 			if plys > 0 then draw.DrawText(plys.."x","ScoreboardText",xpos,ScrH() - 58,color_white,1) end */
 			
-			local xpos = ScrW()/2 + (k - #objs/1.8) * 200 - 125
+			/* local xpos = ScrW()/2 + (k - #objs/1.8) * 200 - 125
 			draw.DrawText("Point "..v:GetNWString("ta-capname"),"ScoreboardText", xpos,ScrH() - 80,color_white,1)
 			local prog = v:GetNWInt("ta_progress")
 			if k%2 == 0 then 
@@ -189,7 +191,31 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 			
 			local plys,text = v:GetNWInt("ta_players"), ""
 			if plys == -1 then text = "Blocked!" elseif plys > 0 then text = plys.."x" elseif plys < -1 then text = "Locked" else  text = "" end
-			draw.DrawText(text,"ScoreboardText",xpos,ScrH() - 57,color_white,1)
+			draw.DrawText(text,"ScoreboardText",xpos,ScrH() - 57,color_white,1) */
+			
+			surface.SetDrawColor( 0, 0, 0, 220 )
+			surface.DrawRect(x-2,y-2,w + 4,h + 4)
+			surface.SetDrawColor( 50, 50, 50, 200 )
+			surface.DrawRect(x,y,w,h)
+			
+			local prog,cooldown = v:GetNWInt("ta_progress"),v:GetNWInt("ta_cooldown")
+			local col = prog > 0 && Color( 255, 0, 0 ) || Color( 0, 0, 255 )
+			surface.SetDrawColor( col )
+			surface.DrawRect( x + 2, y + 2, (w - 4) * math.abs(prog) / 100, h - 4 )
+			
+			local plys, text = v:GetNWInt("ta_players"), ""
+			if cooldown > 0 then text = "WAIT " .. cooldown elseif plys == -1 then text = "BLOCKED" elseif plys > 0 then text = plys.."x" elseif plys < -1 then text = "LOCKED" end
+			draw.DrawText( text, "ScoreboardText", x + w / 2,y + h /2 - 8, color_white, 1 )
+			
+			local letter = string.lower(v:GetNWString("ta-capname"))
+			if letter == "" then letter = "a" end
+			local cap = v:GetNWInt("HasCapped")
+			local suffix = "none"
+			if cap == 1 then suffix = "red" elseif cap == 2 then suffix = "blue" end
+			surface.SetTexture( surface.GetTextureID( "ta/"..letter.."-"..suffix ) )
+			surface.SetDrawColor( color_white )
+			surface.DrawTexturedRect( x + w + 5, y + 3, h - 6, h - 6 )			
+			y = y - h - 1
 			
 		end
 	end
@@ -286,9 +312,13 @@ end)
 
 hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 	
-	local x,y,w,h,diag = ScrW() - 290,ScrH() - 48,170,35,20
+	local xshift,yshift = 40,15
+	
+	local x,y,w,h,diag = ScrW() - 290 + xshift,ScrH() - 48 - yshift,170,35,20
 
-	surface.SetDrawColor( 100, 100, 100, 120 )
+	surface.SetDrawColor( 0, 0, 0, 220 )
+	ta.DrawParallel( x -4,y  + 2,w + 6, h + 4, diag + 2)
+	surface.SetDrawColor( 50,50,50, 200 )
 	ta.DrawParallel(x,y,w,h,diag)
 	
 	// Ammo
@@ -324,8 +354,8 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 		local clip = wep:Clip1()
 		if ammotype == 8 || ammotype == 10 || wep:GetClass() == "weapon_slam" then clip = LocalPlayer():GetAmmoCount( types[math.abs(ammotype)] ) end
 		
-		x = ScrW() - 125
-		y = ScrH() - 53.5
+		x = ScrW() - 125 + xshift
+		y = ScrH() - 53.5 - yshift
 		w = 0.75
 		h = 8
 		diag = 3
@@ -348,13 +378,15 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 	
 	// Timer
 	
-	x = ScrW() - 218
-	y = ScrH() - 87
+	x = ScrW() - 218 + xshift
+	y = ScrH() - 87 - yshift
 	w = 120
 	h = 20
 	diag = 10
 	
-	surface.SetDrawColor( 100, 100, 100, 120 )
+	surface.SetDrawColor( 0, 0, 0, 220 )
+	ta.DrawParallel( x -4,y  + 2,w + 6, h + 4, diag + 2)
+	surface.SetDrawColor( 50,50,50, 200 )
 	ta.DrawParallel(x,y,w,h,diag)
 	
 	local time = ""
@@ -370,12 +402,15 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 	
 	// Game type
 	//local x,y,w,h,diag = ScrW() - 290,ScrH() - 48,170,35,20
-	x = ScrW() - 303
-	y = ScrH() - 24
+	x = ScrW() - 303 + xshift
+	y = ScrH() - 24 - yshift
 	w = 120
 	h = 20
 	diag = 11
 	
+	surface.SetDrawColor( 0, 0, 0, 220 )
+	ta.DrawParallel( x -4,y  + 2,w + 6, h + 4, diag + 2)
+	surface.SetDrawColor( 50,50,50, 200 )
 	ta.DrawParallel(x,y,w,h,diag)
 	draw.DrawText(ta.Capitalize(GetGlobalString("ta_mode")),"ScoreboardText",x + w / 2,y - 19,color_white,1) 
 	
@@ -394,8 +429,8 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 	
 	if !LocalPlayer():Alive() then return end
 	
-	x = ScrW() - 260
-	y = ScrH() - 55
+	x = ScrW() - 260 + xshift
+	y = ScrH() - 55 - yshift
 	
 	draw.TexturedQuad({
 		texture=surface.GetTextureID("ta/hp"),
@@ -421,4 +456,6 @@ end)
 hook.Add("HUDShouldDraw","RemoveAmmo",function(name)
 	if name == "CHudAmmo" or name == "CHudSecondaryAmmo" or name == "CHudHealth" then return false end
 end)
+
+
 
