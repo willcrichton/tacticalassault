@@ -34,20 +34,29 @@ function ENT:Initialize()
 	self.Progress = 0
 	self.HasCapped = 0
 	self.Locked = false
+	self.Cooldown = 0
+	self.CooldownTime = 15
+	
+	self:SetNWInt("ta_cooldown",self.Cooldown)
 
-	self.BaseProp = ents.Create("prop_physics")
+	/*self.BaseProp = ents.Create("prop_physics")
 	self.BaseProp:SetPos(self:GetPos())
 	self.BaseProp:SetModel("models/devin/capturepointglass.mdl")
-	self.BaseProp:SetMoveType(MOVETYPE_NONE)
+	self.BaseProp:PhysicsInit( SOLID_VPHYSICS )
 	self.BaseProp:Spawn()
 	self.BaseProp:Activate()
+	self.BaseProp:SetMoveType(MOVETYPE_NONE)*/
 	
 end
 
 
 function ENT:Think()
 	
-	if !GAMEMODE:InRound() || self.Locked then return end
+	if self.Locked then return end
+	if CurTime() - self.Cooldown < 0 then
+		self:UpdateProgress(0)
+		return
+	end
 	
 	local on_point = {}
 	local old_progress = self.Progress
@@ -101,14 +110,16 @@ function ENT:Think()
 		self.Entity:SetNWInt("HasCapped",1)
 		hook.Call("ta_capwon",nil,self.Entity,1,on_point)
 		self.HasCapped = 1
-		if GetGlobalString("ta_mode") == "bomb" then self.Locked = true end
+		if GetGlobalString("ta_mode") == "bomb" then self.Locked = true
+		elseif GAMEMODE.Mode == "capture" then self.Cooldown = CurTime() + self.CooldownTime end
 	elseif self.Progress == -100 and self.HasCapped != 2 then 
 		self.Entity:SetSkin(2) 
 		for k,v in ipairs(on_point) do if v:Team() != 2 then table.remove(on_point,k) end end
 		self.Entity:SetNWInt("HasCapped",2)
 		hook.Call("ta_capwon",nil,self.Entity,2,on_point)
 		self.HasCapped = 2
-		if GetGlobalString("ta_mode") == "bomb" then self.Locked = true end
+		if GetGlobalString("ta_mode") == "bomb" then self.Locked = true
+		elseif GAMEMODE.Mode == "capture" then self.Cooldown = CurTime() + self.CooldownTime end
 	end
 	
 	self:UpdateProgress(#on_point)
@@ -129,6 +140,7 @@ function ENT:UpdateProgress( numplayers )
 	
 	self.Entity:SetNWInt("ta_progress",self.Progress)
 	self.Entity:SetNWInt("ta_players",numplayers)
+	self.Entity:SetNWInt("ta_cooldown",math.Clamp(math.ceil(self.Cooldown - CurTime()),0,self.CooldownTime))
 	
 end
 
