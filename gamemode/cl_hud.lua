@@ -279,7 +279,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 						key_wait = CurTime()
 						if objectives[1] then objectives[2] = objectives[1] end
 						objectives[1] = v
-						RunConsoleCommand("ta_target",str,k)
+						RunConsoleCommand("ta_target",str,v:GetNWString("ta-capname"))
 					end
 					if table.HasValue(objectives,v) then ta.RoundedBoxOutlined(4,pos.x - mul/2,pos.y - mul/2,mul,mul,Color(0,0,0,0),Color(255,0,0))
 					else ta.RoundedBoxOutlined(4,pos.x - mul/2,pos.y - mul/2,mul,mul,Color(0,0,0,0),color_white) end

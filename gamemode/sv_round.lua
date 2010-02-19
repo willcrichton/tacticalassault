@@ -38,27 +38,31 @@ end
 function CaptureRound(ent,t,cappers)
 	ta.Message(team.GetName(t).." has captured a control point!")
 	local objs = ents.FindByClass("obj_capture")
-		
+	local letter = ent:GetNWString("ta-capname")
+	
+	GAMEMODE.Red.Spawns[letter] = nil
+	GAMEMODE.Blu.Spawns[letter] = nil
+	
 	if t == 1 then
 		local spawns = {}
 		for i = 1,3 do
-			local newspawn = ents.Create("info_player_terrorist")
+			local newspawn = ents.Create("info_target")
 			newspawn:SetPos(ent:GetPos() + Vector(i * 5 - 5, i * 5 - 5,10))
 			newspawn:Spawn()
 			newspawn:Activate()
 			table.insert(spawns,newspawn)
 		end
-		table.insert(GAMEMODE.Red.Spawns,spawns)
+		GAMEMODE.Red.Spawns[ent:GetNWString("ta-capname")]=spawns
 	else
 		local spawns = {}
 		for i = 1,3 do
-			local newspawn = ents.Create("info_player_counterterrorist")
+			local newspawn = ents.Create("info_target")
 			newspawn:SetPos(ent:GetPos() + Vector(i * 5 - 5, i * 5 - 5,10))
 			newspawn:Spawn()
 			newspawn:Activate()
 			table.insert(spawns,newspawn)
 		end
-		table.insert(GAMEMODE.Blu.Spawns,spawns)
+		GAMEMODE.Blu.Spawns[ent:GetNWString("ta-capname")]=spawns
 	end
 	
 	if GAMEMODE.Mode == "capture" then

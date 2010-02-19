@@ -51,12 +51,12 @@ function CLASS:OnSpawn( pl )
 	if pl:Team() == 1 then 
 		pl:SetModel(table.Random(table.Random(redmdls)[2]))
 		
-		if GAMEMODE.Red.Spawns[1] then pl:SetPos(table.Random(table.Random(GAMEMODE.Red.Spawns)):GetPos()) end
+		if table.Count(GAMEMODE.Red.Spawns) > 0 then pl:SetPos(table.Random(table.Random(GAMEMODE.Red.Spawns)):GetPos()) end
 		
 	else 
 		pl:SetModel(table.Random(table.Random(blumdls)[2])) 
 		
-		if GAMEMODE.Blu.Spawns[1] then pl:SetPos(table.Random(table.Random(GAMEMODE.Blu.Spawns)):GetPos()) end
+		if table.Count(GAMEMODE.Blu.Spawns) > 0 then pl:SetPos(table.Random(table.Random(GAMEMODE.Blu.Spawns)):GetPos()) end
 	end
 
 end

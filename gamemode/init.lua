@@ -128,7 +128,7 @@ function SendObjectives(pl,cmd,args)
 	local rp = RecipientFilter()
 	for _,v in ipairs(pl:GetSquad()) do rp:AddPlayer(v) end
 	umsg.Start("ta_objective",rp)
-		umsg.String("Assault "..args[1].." Objective "..math.floor(args[2]))
+		umsg.String("Assault "..args[1].." Objective "..args[2])
 	umsg.End()
 end
 concommand.Add("ta_target",SendObjectives)

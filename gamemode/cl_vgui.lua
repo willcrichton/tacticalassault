@@ -21,6 +21,14 @@ local radar = vgui.Create("DFrame")
 			
 		draw.RoundedBox(0,0,0,radar:GetWide(),radar:GetTall(),Color(0,0,0,220))
 		draw.RoundedBox(0,2,2,radar:GetWide() - 4,radar:GetTall() - 4,Color(50,50,50,2000))
+		/*draw.TexturedQuad({
+			texture=surface.GetTextureID("ta/ta-radar"),
+			color=color_white,
+			x=2,
+			y=2,
+			w=radar:GetWide() - 4,
+			h=radar:GetTall()-4})*/
+			
 		surface.SetTexture(surface.GetTextureID("ta/radar-beacon3"))
 		surface.SetDrawColor(255,255,255,255)
 		surface.DrawTexturedRect(cx -5,cy -5,10,10)
@@ -207,6 +215,5 @@ squadbox.Paint = function()
 	last_squad = squad
 	last_alive=  LocalPlayer():Alive()
 end
-
 
 
