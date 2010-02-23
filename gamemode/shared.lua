@@ -67,4 +67,3 @@ hook.Add("OnPlayerHitGround","SlowEmDown",function( pl )
 		pl:SetWalkSpeed(walk / div + walk * inc * (1 - 1 / div) )
 	end)
 end)
-

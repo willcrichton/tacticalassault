@@ -57,7 +57,7 @@ if SERVER then
 			local name = v:GetName()
 			if name == "obj_capture" then
 				local obj = ents.Create("obj_capture")
-				obj:SetPos(v:GetPos() - Vector(0,0,10))
+				obj:SetPos(v:GetPos() + Vector(60,0,0))
 				obj:Spawn()
 				obj:Activate()
 				obj:SetNWString("ta-capname",capname)

@@ -14,11 +14,13 @@ function ENT:Draw()
 	//if cap == 1 then col = team.GetColor(1) elseif cap == 2 then col = team.GetColor(2) end
 	if cap == 1 then col,str = Color(255,0,0),"Red" elseif cap == 2 then col,str = Color(0,0,255),"Blue" end
 	
-	cam.Start3D2D(self.Entity:GetPos() + Vector(0,0,150),ang , 1)
+	cam.Start3D2D(self.Entity:GetPos() + Vector(-60,0,150),ang , 1)
 		draw.SimpleTextOutlined(str, "TestFont2", 0, 0, col, 1, 1, 2, Color(0,0,0,255))
 	cam.End3D2D()
 	
-	cam.Start3D2D(self.Entity:GetPos() + Vector(0,0,150),Angle(0,180 + ang.yaw,90) , 1)
+	cam.Start3D2D(self.Entity:GetPos() + Vector(-60,0,150),Angle(0,180 + ang.yaw,90) , 1)
 		draw.SimpleTextOutlined(str, "TestFont2", 0, 0, col, 1, 1, 2, Color(0,0,0,255))
 	cam.End3D2D()
 end
+
+

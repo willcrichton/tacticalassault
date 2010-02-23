@@ -266,7 +266,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 	// Target selection
 	local selected = 0
 	for k,v in ipairs(ents.FindByClass("obj_*")) do
-		local pos = v:GetPos():ToScreen()
+		local pos = (v:GetPos() - Vector(60,0,0)):ToScreen()
 		local str = string.Explode("_",v:GetClass())[2]
 		if pos.visible then
 			if squad && squad.leader == LocalPlayer() then
