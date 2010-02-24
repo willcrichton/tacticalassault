@@ -98,10 +98,10 @@ hook.Add("EndOfGame","AddPlays",function()
 	for _,v in ipairs(player.GetAll()) do 
 		DB.AddPlay(v) 
 	end 
-	DB.Save() 
-	
+	DB.Save()
 end)
 
+// Clean up slams
 hook.Add("KeyPress","CheckForSlams",function(pl,k)
 	if !ValidEntity(pl) || !ValidEntity(pl:GetActiveWeapon()) then return end
 	if k == IN_ATTACK and pl:GetActiveWeapon():GetClass() == "weapon_slam" then

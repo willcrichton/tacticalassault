@@ -92,7 +92,7 @@ function ENT:ShootLaser()
 	fx:SetAttachment(1)
 	util.Effect("stridcan_charge",fx)
 	
-	timer.Simple( SoundDuration( self.Primary.Charge ) - 1, function()
+	timer.Simple( SoundDuration( self.Primary.Charge ) - 1.3, function()
 	
 		if !ValidEntity(self.Owner) ||  !ValidEntity(self.Turret) then return end
 	

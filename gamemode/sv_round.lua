@@ -1,10 +1,7 @@
 include( "util.lua" )
 
-function GM:OnPreRoundStart( n )
-	ta.SpawnEntities()
-end
-
 function GM:OnRoundStart( n )
+	ta.SpawnEntities()
 	if not GAMEMODE.Squads.red[1] or not GAMEMODE.Squads.blu[1] then
 		CreateSquads(GAMEMODE.Squads.red,1)
 		CreateSquads(GAMEMODE.Squads.blu,2)
