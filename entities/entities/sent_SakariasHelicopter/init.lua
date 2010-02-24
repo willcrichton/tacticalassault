@@ -322,7 +322,7 @@ end
 function ENT:Use( activator, caller )
 
 
-	if ( activator:IsPlayer() ) and self.RemoveTopPropOnce == 0 and self.ChopperHealth > 0 then	
+	if ( activator:IsPlayer() and activator:Alive()) and self.RemoveTopPropOnce == 0 and self.ChopperHealth > 0 then	
 
 	self.Entity.UseSeatOne = 0
 	self.Entity.UseSeatTwo = 0

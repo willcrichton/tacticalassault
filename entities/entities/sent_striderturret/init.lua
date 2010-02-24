@@ -79,7 +79,7 @@ function ENT:Initialize()
 	self:PhysicsInit( SOLID_VPHYSICS ) 
 	self:SetMoveType(MOVETYPE_NONE )
 	self:SetSolid( SOLID_VPHYSICS )
-	self:SetCollisionBounds( self:OBBMins() * 3,self:OBBMaxs() * 3 )
+	self:SetCollisionBounds( self:OBBMins() * 10,self:OBBMaxs() * 10 )
 	
 end
 
@@ -161,7 +161,11 @@ end
 
 function ENT:OnTakeDamage( dmg )
 	local pl = self.Seat:GetDriver()
-	if ValidEntity( pl ) then pl:SetHealth( math.Clamp( pl:Health() - dmg:GetDamage(), 0, 100) ) end
+	if ValidEntity( pl ) then 
+		dmg:SetDamage( dmg:GetDamage() * 3 )
+		pl:TakeDamageInfo( dmg )
+		if pl:Health() == 0 then pl:Kill() end
+	end
 end
 
 function ENT:OnRemove()
