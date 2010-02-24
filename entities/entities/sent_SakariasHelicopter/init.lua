@@ -291,6 +291,7 @@ self.MinorAlarm = CreateSound(self.Entity,"HelicopterVehicle/MinorAlarm.mp3")
 self.MissileShoot = CreateSound(self.Entity,"HelicopterVehicle/MissileShoot.mp3")
 self.Entity.CanFly = 0
 self.Entity.LaserPos = self.Entity:GetPos()
+	self.UserOne = NULL
 			
 end
 

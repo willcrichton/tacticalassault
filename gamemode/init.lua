@@ -33,7 +33,6 @@ resource.AddFile("resource/fonts/Army.ttf")
 SetGlobalString("ta_ambience","battle")
 SetGlobalString("ta_mode","capture") -- other options: bomb
 GM.Mode = "capture"
-GM.InRound = false
 
 // Load a player's points
 function GM:PlayerDisconnected(pl)

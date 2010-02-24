@@ -67,3 +67,12 @@ hook.Add("OnPlayerHitGround","SlowEmDown",function( pl )
 		pl:SetWalkSpeed(walk / div + walk * inc * (1 - 1 / div) )
 	end)
 end)
+
+local oldduration = SoundDuration
+function SoundDuration(snd)
+	if SERVER then
+		return oldduration("../../hl2/sound/"..snd)
+	else
+		return oldduration(snd)
+	end
+end

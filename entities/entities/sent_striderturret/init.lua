@@ -39,9 +39,12 @@ function ENT:Initialize()
 	self.Cooldown = 0
 	
 	self.Primary = {}
-	self.Primary.Shoot = Sound("NPC_Strider.Shoot")
+	/*self.Primary.Shoot = Sound("NPC_Strider.Shoot")
 	self.Primary.Charge = Sound("NPC_Strider.Charge")
-	self.Primary.Explode = Sound("Weapon_Mortar.Impact")
+	self.Primary.Explode = Sound("Weapon_Mortar.Impact")*/
+	self.Primary.Shoot = Sound("npc/strider/fire.wav")
+	self.Primary.Charge = Sound("npc/strider/charging.wav")
+	self.Primary.Explode = Sound("weapons/mortar/mortar_explode3.wav")
 	self.Primary.Recoil = 10
 	
 	timer.Create("changeAngles"..self:EntIndex(),0.001,0,function()
@@ -62,7 +65,7 @@ function ENT:Initialize()
 				self.Seat:SetAngles( Angle( 0,n, 0 ) )
 			end
 			
-			if pl:KeyPressed( IN_ATTACK ) and self.Cooldown - CurTime() < 0 then
+			if pl:KeyDown( IN_ATTACK ) and pl:KeyDownLast( IN_ATTACK ) and self.Cooldown - CurTime() < 0 then
 				self.Cooldown = CurTime() + 3
 				self:ShootLaser()
 			end
@@ -89,7 +92,7 @@ function ENT:ShootLaser()
 	fx:SetAttachment(1)
 	util.Effect("stridcan_charge",fx)
 	
-	timer.Simple( SoundDuration( self.Primary.Charge ), function()
+	timer.Simple( SoundDuration( self.Primary.Charge ) - 1, function()
 	
 		if !ValidEntity(self.Owner) ||  !ValidEntity(self.Turret) then return end
 	
@@ -106,7 +109,7 @@ function ENT:ShootLaser()
 		util.Effect("stridcan_mzzlflash",fx)
 		
 		timer.Simple( ( tr.HitPos - self.Owner:GetShootPos() ):Length() / 8000, function()
-		
+
 			if !ValidEntity(self.Owner) ||  !ValidEntity(self.Turret) then return end
 			
 			util.BlastDamage(self.Turret, self.Owner, tr.HitPos + tr.HitNormal * 5, 400, 100)
