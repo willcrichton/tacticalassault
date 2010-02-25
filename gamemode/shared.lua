@@ -68,9 +68,10 @@ hook.Add("OnPlayerHitGround","SlowEmDown",function( pl )
 	end)
 end)
 
+
 local oldduration = SoundDuration
 function SoundDuration(snd)
-	if SERVER then
+	if SERVER and not string.find(snd,"../../hl2/sound/") then
 		return oldduration("../../hl2/sound/"..snd)
 	else
 		return oldduration(snd)

@@ -1,8 +1,6 @@
 include('shared.lua')
 
-
-
-function SWEP:Initialize() 
+/*function SWEP:Initialize() 
 	local wep, changing,lastchange,transition,curent,lastent = self.Weapon,false,0,0,LocalPlayer(),LocalPlayer()
 	
 	function DrawViews(ViewOrigin,ViewAngles)
@@ -61,7 +59,7 @@ function SWEP:Initialize()
 	end
 	hook.Add("RenderScene","DrawViews",DrawViews)
 end
-
+*/
 
 
 /*function DrawSquad()

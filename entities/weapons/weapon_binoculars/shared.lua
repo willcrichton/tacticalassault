@@ -22,14 +22,14 @@ end
  SWEP.Author = "Entoros"; 
  SWEP.Contact = ""; 
  SWEP.Purpose = "Check out your surroundings"; 
- SWEP.Instructions = "Primary: Look in\nReload: view squad leaders (general only)\nSecondary: switch persons (general only)";
+ SWEP.Instructions = "Primary: Look in";
  SWEP.Base = "weapon_ta_base";
  
  SWEP.Spawnable = false
  SWEP.AdminSpawnable = true;
    
-SWEP.ViewModel		= "models/weapons/v_binoculars.mdl"
-SWEP.WorldModel		= "models/weapons/w_binoculars.mdl"
+SWEP.ViewModel		= "models/weapons/devin/v_binoculars.mdl"
+SWEP.WorldModel		= "models/weapons/devin/w_binoculars.mdl"
 SWEP.AutoSwitchTo = false
 
  SWEP.Primary.ClipSize = -1; 
@@ -42,7 +42,7 @@ SWEP.AutoSwitchTo = false
  SWEP.ZoomOut = Sound("ta/binoculars/binoculars_zoomout.wav")
  SWEP.ZoomFOV = 10
  SWEP.DefaultFOV = 75
- SWEP.FOVTime = 1.1
+ SWEP.FOVTime = 2
  
  SWEP.RunAng = Angle(30,0,0)
  SWEP.RunPos = Vector(0,0,4)
@@ -53,12 +53,12 @@ SWEP.AutoSwitchTo = false
  
 	if CLIENT then return end
 	
-	self.Weapon:SetNWEntity("ViewEnt",self.Owner)
+	//self.Weapon:SetNWEntity("ViewEnt",self.Owner)
 	self.ZoomedMain = false
-	timer.Simple(0.1,function() if self.Owner and self.Owner:IsValid() then self.DefaultFOV = self.Owner:GetFOV()  end end)
+	timer.Simple(0.1,function() if ValidEntity(self.Owner) then self.DefaultFOV = self.Owner:GetFOV()  end end)
 end
    
-function SWEP:Think()
+/*function SWEP:Think()
 
 	if !self.Owner:GetNWBool("General") then return end
 
@@ -66,6 +66,13 @@ function SWEP:Think()
 	
 	if !bool and self.Owner:KeyDown(IN_RELOAD) then self.Weapon:SetNWBool("IsLooking",true)
 	elseif bool and not self.Owner:KeyDown(IN_RELOAD) then self.Weapon:SetNWBool("IsLooking",false) end
+end*/
+
+function SWEP:Deploy()	
+	self.Owner:ConCommand("pp_mat_overlay 0");
+	self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
+	timer.Simple(0.5,function() if ValidEntity(self.Weapon) then self.Weapon:SendWeaponAnim( ACT_VM_IDLE ) end end )
+	return true
 end
 
 function SWEP:Holster()
@@ -84,31 +91,37 @@ end
 
 function SWEP:PrimaryAttack()
 	
-	if !self:CanPrimaryAttack() then return end
+	self.Owner:ChatPrint("WTF?")
+	if !self:CanPrimaryAttack() || self.Owner:GetActiveWeapon() != self.Weapon then return end
 	
 	self.ZoomedMain = !self.ZoomedMain
 	
-	if self.ZoomedMain && self.Owner:GetActiveWeapon() == self.Weapon then
-	
-		self.Owner:SetFOV(self.ZoomFOV,self.FOVTime)
-		self.Owner:DrawViewModel(false)
+	if self.ZoomedMain then
+		
+		timer.Simple(0.45,function()
+			self.Owner:SetFOV(self.ZoomFOV,0)
+			self.Owner:DrawViewModel(false)
+			self.Owner:ConCommand("pp_mat_overlay_texture effects/combine_binocoverlay.vmt");
+			self.Owner:ConCommand("pp_mat_overlay 1");
+		end)
 		self:EmitSound( self.ZoomIn )
-		self.Owner:ConCommand("pp_mat_overlay_texture effects/combine_binocoverlay.vmt");
-		self.Owner:ConCommand("pp_mat_overlay 1");
+		self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 		
 	else
-	
+		
 		self.Owner:DrawViewModel(true)
-		self.Owner:SetFOV(self.DefaultFOV,self.FOVTime)
+		self.Owner:SetFOV(self.DefaultFOV,0)
 		self:EmitSound( self.ZoomOut )
 		self.Owner:ConCommand("pp_mat_overlay 0");
-		
+		self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
 	end
+	
+	self:SetNextPrimaryFire( CurTime() + 0.5 )
 	
 end
 	
 
-function SWEP:SecondaryAttack()
+/*function SWEP:SecondaryAttack()
 
 	if !self.Owner:GetNWBool("General") || CLIENT then return end
 	
@@ -121,4 +134,4 @@ function SWEP:SecondaryAttack()
 		
 	self.Weapon:SetNWInt("ChangeView",self.Weapon:GetNWInt("ChangeView") + 1)
 
-end
+end*/

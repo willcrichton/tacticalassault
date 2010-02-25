@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/devin/texture/lens"
+	$envmap			env_cubemap
+}
