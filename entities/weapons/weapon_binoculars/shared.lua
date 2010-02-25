@@ -68,12 +68,12 @@ end
 	elseif bool and not self.Owner:KeyDown(IN_RELOAD) then self.Weapon:SetNWBool("IsLooking",false) end
 end*/
 
-function SWEP:Deploy()	
+/*function SWEP:Deploy()	
 	self.Owner:ConCommand("pp_mat_overlay 0");
 	self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
 	timer.Simple(0.5,function() if ValidEntity(self.Weapon) then self.Weapon:SendWeaponAnim( ACT_VM_IDLE ) end end )
 	return true
-end
+end*/
 
 function SWEP:Holster()
 
@@ -121,9 +121,9 @@ function SWEP:PrimaryAttack()
 end
 	
 
-/*function SWEP:SecondaryAttack()
+function SWEP:SecondaryAttack()
 
-	if !self.Owner:GetNWBool("General") || CLIENT then return end
+	/*if !self.Owner:GetNWBool("General") || CLIENT then return end
 	
 	self.CurSquad = self.CurSquad + 1
 	if self.CurSquad > #GAMEMODE.Squads.red then self.CurSquad = 1 end
@@ -132,6 +132,6 @@ end
 	if t == 1 then self.Weapon:SetNWEntity("ViewEnt",GAMEMODE.Squads.red[self.CurSquad].leader)
 	else self.Weapon:SetNWEntity("ViewEnt",GAMEMODE.Squads.blu[self.CurSquad].leader) end
 		
-	self.Weapon:SetNWInt("ChangeView",self.Weapon:GetNWInt("ChangeView") + 1)
+	self.Weapon:SetNWInt("ChangeView",self.Weapon:GetNWInt("ChangeView") + 1)*/
 
-end*/
+end
