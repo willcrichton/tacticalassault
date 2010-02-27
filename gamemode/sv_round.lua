@@ -123,3 +123,22 @@ function GM:SwitchTeams()
 	for _,v in ipairs(t1) do v:SetTeam(2) end
 	for _,v in ipairs(t2) do v:SetTeam(1) end
 end
+
+function GM:OnEndOfGame()
+	self.BaseClass:OnEndOfGame()
+	
+	// MVP Medal
+	local mvp,total = nil,0
+	for _,v in ipairs(player.GetAll()) do
+		if v:Frags() > total then
+			mvp = v
+			total = v:Frags()
+		end
+	end
+	MEDALS:Register("Most Valuable Player","",mvp,total)
+	
+	// medals here
+	for k,v in pairs(MEDALS:GetAll())
+		ta.Message(k..": "..v.winner:Name().." ("..v.winval..")")
+	end
+end

@@ -12,6 +12,9 @@ surface.CreateFont( "Army",  40, 400, true, false, "AmmoFontPrimary" )
 language.Add("sent_sakariashelicopter","Helicopter")
 language.Add("sent_sakariasjet","Fighter")
 language.Add("sent_notargetmissile","Missile")
+language.Add("sent_heli","Helicopter")
+language.Add("sent_humvee","Humvee")
+language.Add("sent_striderturret","Strider Turret")
 
 local Color_Icon = Color( 255, 80, 0, 255 )
 killicon.AddFont( "weapon_mad_mp7",                "HL2MPTypeDeath",       "/",    Color_Icon )
@@ -37,33 +40,22 @@ end
 function GM:UpdateHUD_Alive()
 end
 
-/*function OptionsMenu()
-	local frame = vgui.Create("DFrame")
-	frame:SetSize(150,300)
-	frame:Center()
-	frame:MakePopup()
-	frame:SetTitle("")
-	frame.Paint = function()
-		draw.RoundedBox(4,0,0,frame:GetWide(),frame:GetTall(),Color(0,0,0,200))
-		draw.DrawText("Options Menu","ScoreboardText",frame:GetWide()/2,2,color_white,1)
+local showhints = CreateClientConVar("ta_showhints",1,true,false)
+local hints = {
+	"Set \"ta_showhints\" to 0 to stop these hints",
+	"Squad Leaders: press 't' on white boxes to select a target",
+	"Working with your squad earns you more points",
+	"TA saves your stats for your next visit",
+}
+local hintindex = 1
+timer.Create("showHints",15,0,function()
+	if showhints:GetInt() == 1 then
+		ta.AddHint(hints[hintindex])
+		hintindex = hintindex + 1
+		if hintindex > #hints then hintindex = 1 end
 	end
-end
-concommand.Add("ta_options",OptionsMenu)
-
-function GeneralMenu()
-	if not LocalPlayer():GetNWBool("General") then return end
-	local frame = vgui.Create("DFrame")
-	frame:SetSize(100,300)
-	frame:Center()
-	frame:MakePopup()
-	frame:SetTitle("")
-	frame.Paint = function()
-		draw.RoundedBox(4,0,0,frame:GetWide(),frame:GetTall(),Color(0,0,0,200))
-		draw.DrawText("General's Menu","ScoreboardText",frame:GetWide()/2,2,color_white,1)
-	end
-end
-concommand.Add("ta_general",GeneralMenu)*/
-
+end)
+		
 // Death view
 local bright,cont,col = 0,1,1
 hook.Add("RenderScreenspaceEffects","TestDeath",function()
@@ -110,7 +102,6 @@ usermessage.Hook("ta-death",function(u)
 	if b then ta.StopLowHealth() else ta.LowHealth() end
 end)
 
-// Stole this code from GMDM...
 local LastStrafeRoll = 0
 local WalkTimer = 0
 local VelSmooth = 0
