@@ -1,4 +1,5 @@
 include( "util.lua" )
+include( "sv_medals.lua" )
 
 function GM:OnPreRoundStart( n )
 	self.BaseClass:OnPreRoundStart( n )
@@ -44,7 +45,10 @@ function GM:OnRoundEnd( n )
 	
 	// medals here
 	for k,v in pairs(MEDALS:GetAll()) do
-		ta.Message(k..": "..v.winner:Name().." ("..tostring(v.winval)..")")
+		local winner = v.winner
+		if ValidEntity(winner) then winner = winner:Name()
+		else winner = "Nobody!" end
+		ta.Message(k..": "..winner.." ("..tostring(v.winval)..")")
 	end
 	
 end
@@ -155,6 +159,9 @@ function GM:OnEndOfGame()
 	
 	// medals here
 	for k,v in pairs(MEDALS:GetAll()) do
-		ta.Message(k..": "..v.winner:Name().." ("..tostring(v.winval)..")")
+		local winner = v.winner
+		if ValidEntity(winner) then winner = winner:Name()
+		else winner = "Nobody!" end
+		ta.Message(k..": "..winner.." ("..tostring(v.winval)..")")
 	end
 end

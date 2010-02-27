@@ -68,12 +68,12 @@ function ENT:Think()
 			if v:Team() == 1 and self.Progress < 100 then
 				
 				
-				self.Progress = math.Clamp(self.Progress + 1 + ( (v:GetNWString("Class") == "Runner" && 1) or 0 ) / 2,-100,100)
+				self.Progress = math.Clamp(self.Progress + 0.7 + ( (v:GetNWString("Class") == "Runner" && 0.7) or 0 ) / 2,-100,100)
 			
 			
 			elseif v:Team() == 2 and self.Progress > -100 then
 					
-				self.Progress = math.Clamp(self.Progress - 1 - ( (v:GetNWString("Class") == "Runner" && 1) or 0 ) / 2,-100,100)
+				self.Progress = math.Clamp(self.Progress - 0.7 - ( (v:GetNWString("Class") == "Runner" && 0.7) or 0 ) / 2,-100,100)
 				
 			
 			end

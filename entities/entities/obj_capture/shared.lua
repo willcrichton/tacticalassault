@@ -8,4 +8,4 @@ ENT.Author			= "Entoros"
 ENT.Contact    		= "Don't"
 ENT.Purpose 		= ""
 ENT.Instructions 		= "Spawn" 
-ENT.RenderGroup = RENDERGROUP_BOTH
+ENT.RenderGroup = RENDERGROUP_OPAQUE

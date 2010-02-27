@@ -68,7 +68,7 @@ local obj_tex = {
 local start,finish = 0,0
 
 local hint,hint_start,hint_w,hint_wait = "",0,0,8
-function ta.AddHint(msg)
+function AddHint(msg)
 	hint,hint_start = msg,CurTime()
 end
 
@@ -80,9 +80,9 @@ local hints = {
 	"TA saves your stats for your next visit",
 }
 local hintindex = 1
-timer.Create("showHints",15,0,function()
+timer.Create("showHints",25,0,function()
 	if showhints:GetInt() == 1 then
-		ta.AddHint(hints[hintindex])
+		AddHint(hints[hintindex])
 		hintindex = hintindex + 1
 		if hintindex > #hints then hintindex = 1 end
 	end
