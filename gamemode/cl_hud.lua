@@ -78,6 +78,7 @@ local hints = {
 	"Squad Leaders: press 't' on white boxes to select a target",
 	"Working with your squad earns you more points",
 	"TA saves your stats for your next visit",
+	"Soldiers: watch your screen for directions from your leader",
 }
 local hintindex = 1
 timer.Create("showHints",25,0,function()
@@ -444,10 +445,10 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 		end
 	end
 	
-	if CurTime() - hint_start < hint_wait then
+	if CurTime() - hint_start < hint_wait and LocalPlayer():Alive() then
 		 hint_wait  = string.len(hint) / 6
 		local anim = 30 + string.len(hint) * 8
-		local trans = 150
+		local trans = 130
 		h,diag =25,6
 		if CurTime() - hint_start <  hint_wait  - string.len(hint) / 75 then hint_w = math.Approach( hint_w,anim,10)
 		else  hint_w  = math.Approach( hint_w ,0,10) end
