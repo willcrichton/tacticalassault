@@ -49,11 +49,11 @@ local hints = {
 }
 local hintindex = 1
 timer.Create("showHints",15,0,function()
-	if showhints:GetInt() == 1 then
-		ta.AddHint(hints[hintindex])
+	//if showhints:GetInt() == 1 then
+		GAMEMODE:AddHint(hints[hintindex])
 		hintindex = hintindex + 1
 		if hintindex > #hints then hintindex = 1 end
-	end
+	//end
 end)
 		
 // Death view

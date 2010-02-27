@@ -280,7 +280,7 @@ if CLIENT then
 	end
 	
 	local hint,start,w,wait = "",0,0,7
-	function ta.AddHint(msg)
+	function GM:AddHint(msg)
 		hint,start = msg,CurTime()
 	end
 	hook.Add("HUDPaint","ShowTAHints",function()
