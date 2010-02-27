@@ -44,6 +44,7 @@ function GM:OnRoundEnd( n )
 	MEDALS:Register("Most Valuable Player","",mvp,total)
 	
 	// medals here
+	MEDALS:Check()
 	for k,v in pairs(MEDALS:GetAll()) do
 		local winner = v.winner
 		if ValidEntity(winner) then winner = winner:Name()
@@ -158,6 +159,7 @@ function GM:OnEndOfGame()
 	MEDALS:Register("Most Valuable Player","",mvp,total)
 	
 	// medals here
+	MEDALS:Check()
 	for k,v in pairs(MEDALS:GetAll()) do
 		local winner = v.winner
 		if ValidEntity(winner) then winner = winner:Name()

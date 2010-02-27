@@ -448,11 +448,11 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 		 hint_wait  = string.len(hint) / 6
 		local anim = 30 + string.len(hint) * 8
 		local trans = 150
-		local h,diag =25,6
+		h,diag =25,6
 		if CurTime() - start <  hint_wait  - string.len(hint) / 75 then hint_w = math.Approach( hint_w,anim,10)
 		else  hint_w  = math.Approach( hint_w ,0,10) end
 		
-		local x,y = ScrW()/2-w/2,ScrH() - 45
+		x,y = ScrW()/2-hint_w/2,ScrH() - 45
 		surface.SetDrawColor( 0, 0, 0, trans + 20 )
 		ta.DrawParallel( x -4,y  + 2, hint_w  + 6, h + 4, diag + 2)
 		surface.SetDrawColor( 50,50,50, trans )
