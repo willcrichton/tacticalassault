@@ -33,10 +33,17 @@ end
 
 function MEDALS:GetAll() return self.List end
 
-
 MEDALS:Register("Most Kills","")
 MEDALS:Register("Most Deaths","")
+MEDALS:Register("Most Suicides","")
+MEDALS:Register("Roadkill","")
 hook.Add("PlayerDeath","MedalCheck-Kills",function(vic,inflict,killer)
 	MEDALS:UpdatePlayer("Most Kills",killer,1,true)
 	MEDALS:UpdatePlayer("Most Deaths",vic,1,true)
+	if vic == killer then MEDALS:UpdatePlayer("Most Suicides",vic,1,true) end
+	if table.HasValue({"sent_heli","sent_humvee","sent_sakariashelicopter"},inflict:GetClass()) then MEDALS:UpdatePlayer("Roadkill",vic,1,true) end
 end)
+
+/* MORE IDEAS
+"Gravity's Best Friend": most fall damage
+"Roadkill": most times killed by vehicle

@@ -39,22 +39,6 @@ end
 
 function GM:UpdateHUD_Alive()
 end
-
-local showhints = CreateClientConVar("ta_showhints",1,true,false)
-local hints = {
-	"Set \"ta_showhints\" to 0 to stop these hints",
-	"Squad Leaders: press 't' on white boxes to select a target",
-	"Working with your squad earns you more points",
-	"TA saves your stats for your next visit",
-}
-local hintindex = 1
-timer.Create("showHints",15,0,function()
-	if showhints:GetInt() == 1 then
-		ta.AddHint(hints[hintindex])
-		hintindex = hintindex + 1
-		if hintindex > #hints then hintindex = 1 end
-	end
-end)
 		
 // Death view
 local bright,cont,col = 0,1,1

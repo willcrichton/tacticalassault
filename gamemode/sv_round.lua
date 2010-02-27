@@ -32,10 +32,25 @@ function GM:OnRoundEnd( n )
 		if winner == 2 then umsg.Bool(true) else umsg.Bool(false) end
 	umsg.End()
 	
+	// MVP Medal
+	local mvp,total = nil,0
+	for _,v in ipairs(player.GetAll()) do
+		if v:Frags() > total then
+			mvp = v
+			total = v:Frags()
+		end
+	end
+	MEDALS:Register("Most Valuable Player","",mvp,total)
+	
+	// medals here
+	for k,v in pairs(MEDALS:GetAll()) do
+		ta.Message(k..": "..v.winner:Name().." ("..tostring(v.winval)..")")
+	end
+	
 end
 
 function GM:CanStartRound( n )
-	return true
+	return ta.Players() >= 6
 end
 
 function CaptureRound(ent,t,cappers)
@@ -140,6 +155,6 @@ function GM:OnEndOfGame()
 	
 	// medals here
 	for k,v in pairs(MEDALS:GetAll()) do
-		ta.Message(k..": "..v.winner:Name().." ("..v.winval..")")
+		ta.Message(k..": "..v.winner:Name().." ("..tostring(v.winval)..")")
 	end
 end
