@@ -283,7 +283,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 			ta.DrawChevron(pos.x,pos.y - 30,55,30,15,false,Color(0,120,255,200))
 		end
 	end
-	`\
+	
 	// Target selection
 	local selected = 0
 	for k,v in ipairs(ents.FindByClass("obj_*")) do
