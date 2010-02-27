@@ -78,6 +78,7 @@ if SERVER then
 			elseif name == "sent_striderturret" then
 				local turret = ents.Create("sent_striderturret")
 				turret:SetPos(v:GetPos() + Vector(0,0,5))
+				turret:SetAngles( Angle(0,90,0) )
 				turret:Spawn()
 				turret:Activate()
 			end

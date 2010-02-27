@@ -67,7 +67,7 @@ local obj_tex = {
 
 local start,finish = 0,0
 
-local hint,hint_start,hint_w,hint_wait = "",0,0,8
+local hint,hint_start,hint_w,hint_wait = "",0,0,10
 function AddHint(msg)
 	hint,hint_start = msg,CurTime()
 end
@@ -283,7 +283,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 			ta.DrawChevron(pos.x,pos.y - 30,55,30,15,false,Color(0,120,255,200))
 		end
 	end
-	
+	`\
 	// Target selection
 	local selected = 0
 	for k,v in ipairs(ents.FindByClass("obj_*")) do
@@ -449,7 +449,7 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 		local anim = 30 + string.len(hint) * 8
 		local trans = 150
 		h,diag =25,6
-		if CurTime() - start <  hint_wait  - string.len(hint) / 75 then hint_w = math.Approach( hint_w,anim,10)
+		if CurTime() - hint_start <  hint_wait  - string.len(hint) / 75 then hint_w = math.Approach( hint_w,anim,10)
 		else  hint_w  = math.Approach( hint_w ,0,10) end
 		
 		x,y = ScrW()/2-hint_w/2,ScrH() - 45

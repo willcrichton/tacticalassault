@@ -30,7 +30,7 @@ GM.MinimumDeathLength = 5
 GM.RoundBased = true
 GM.RoundLength = 600
 GM.RoundPreStartTime = 3
-GM.RoundPostLength = 11
+GM.RoundPostLength = 12
 GM.RoundEndsWhenOneTeamAlive = false
 GM.RoundLimit = 3
 
