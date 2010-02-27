@@ -21,6 +21,7 @@ function GM:OnRoundStart( n )
 end
 
 function GM:OnRoundEnd( n )
+	self.BaseClass:OnRoundEnd( n )
 	local winner = GetGlobalInt("RoundResult")
 	local rp1,rp2 = RecipientFilter(),RecipientFilter()
 	for _,v in ipairs(player.GetAll()) do if v:Team() == 1 then rp1:AddPlayer(v) elseif v:Team() == 2 then rp2:AddPlayer(v) end end
@@ -34,7 +35,7 @@ function GM:OnRoundEnd( n )
 end
 
 function GM:CanStartRound( n )
-	return ta.Players() >= 6
+	return true
 end
 
 function CaptureRound(ent,t,cappers)
@@ -138,7 +139,7 @@ function GM:OnEndOfGame()
 	MEDALS:Register("Most Valuable Player","",mvp,total)
 	
 	// medals here
-	for k,v in pairs(MEDALS:GetAll())
+	for k,v in pairs(MEDALS:GetAll()) do
 		ta.Message(k..": "..v.winner:Name().." ("..v.winval..")")
 	end
 end

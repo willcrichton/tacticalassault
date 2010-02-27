@@ -278,28 +278,6 @@ if CLIENT then
 			LocalPlayer():SetDSP(1,false)
 		end
 	end
-	
-	local hint,start,w,wait = "",0,0,7
-	function GM:AddHint(msg)
-		hint,start = msg,CurTime()
-	end
-	hook.Add("HUDPaint","ShowTAHints",function()
-		if CurTime() - start < wait then
-			wait = string.len(hint) / 8
-			local anim = 30 + string.len(hint) * 8
-			local trans = 150
-			local h,diag =25,6
-			if CurTime() - start < wait - string.len(hint) / 75 then w = math.Approach(w,anim,10)
-			else w = math.Approach(w,0,10) end
-			
-			local x,y = ScrW()/2-w/2,ScrH() - 45
-			surface.SetDrawColor( 0, 0, 0, trans + 20 )
-			ta.DrawParallel( x -4,y  + 2,w + 6, h + 4, diag + 2)
-			surface.SetDrawColor( 50,50,50, trans )
-			ta.DrawParallel(x,y,w,h,diag)
-			if w== anim then draw.DrawText(hint,"ScoreboardText",x + anim/2,y-20,Color(255,255,255,trans+50),1) end
-		end
-	end)
 
 end
 

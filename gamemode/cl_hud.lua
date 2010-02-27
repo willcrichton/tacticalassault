@@ -67,6 +67,11 @@ local obj_tex = {
 
 local start,finish = 0,0
 
+local hint,hint_start,hint_w,hint_wait = "",0,0,8
+function ta.AddHint(msg)
+	hint,hint_start = msg,CurTime()
+end
+
 hook.Add("HUDPaint","TA-DrawHudMain",function()
 	
 	if !LocalPlayer():Alive() || !squad[1] then return end
@@ -322,9 +327,7 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 	ta.DrawParallel(x,y,w,h,diag)
 	
 	// Ammo
-	if LocalPlayer():Alive() and LocalPlayer():GetActiveWeapon():IsValid() then
-	
-		
+	if LocalPlayer():Alive() and LocalPlayer():GetActiveWeapon():IsValid() then		
 		
 		// HEALTH
 		surface.SetDrawColor(0,0,0,255)
@@ -423,6 +426,22 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 			ta.DrawParallel(x,y,w,h,diag)
 			draw.DrawText(bomb:GetNWInt("bomb_timer"),"ScoreboardText",x + w/2 + 5,y-19,color_white,1)
 		end
+	end
+	
+	if CurTime() - hint_start < hint_wait then
+		 hint_wait  = string.len(hint) / 6
+		local anim = 30 + string.len(hint) * 8
+		local trans = 150
+		local h,diag =25,6
+		if CurTime() - start <  hint_wait  - string.len(hint) / 75 then hint_w = math.Approach( hint_w,anim,10)
+		else  hint_w  = math.Approach( hint_w ,0,10) end
+		
+		local x,y = ScrW()/2-w/2,ScrH() - 45
+		surface.SetDrawColor( 0, 0, 0, trans + 20 )
+		ta.DrawParallel( x -4,y  + 2, hint_w  + 6, h + 4, diag + 2)
+		surface.SetDrawColor( 50,50,50, trans )
+		ta.DrawParallel(x,y, hint_w ,h,diag)
+		if  hint_w == anim then draw.DrawText(hint,"ScoreboardText",x + anim/2,y-20,Color(255,255,255,trans+50),1) end
 	end
 	
 	// ICONS (they break the drawpoly?)
