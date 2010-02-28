@@ -26,7 +26,8 @@ function MEDALS:UpdatePlayer(name,pl,val,inc)
 	local medal = self.List[name]
 	if not medal then return end
 	local num = 0
-	if inc and medal.people[pl:SteamID()] then num = tonumber(medal.people[pl:SteamID()]) + val
+	local person = medal.people[pl:SteamID()]
+	if inc and person and person[2] and person[2] > 0 then num = tonumber(medal.people[pl:SteamID()][2]) + val
 	else num = val end
 	medal.people[pl:SteamID()] = {pl,num}
 end
@@ -45,7 +46,7 @@ hook.Add("PlayerDeath","MedalCheck-Kills",function(vic,inflict,killer)
 end)
 
 MEDALS:Register("Gravity's Best Friend","")
-hook.Add("ScalePlayerDamage","MedalCheck-Damage",function(pl,dmg,dir,tr)
+hook.Add("ScalePlayerDamage","MedalCheck-Damage",function(pl,hit,dmg)
 	if dmg:IsFallDamage() then MEDALS:UpdatePlayer("Gravity's Best Friend",pl,dmg:GetDamage(),true) end
 end)
 

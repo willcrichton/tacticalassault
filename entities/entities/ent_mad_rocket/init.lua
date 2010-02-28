@@ -81,8 +81,7 @@ function ENT:Explosion()
 	trace.mask  = 16395
 	local Normal = util.TraceLine(trace).HitNormal
 
-	self.Scale = 2
-	self.EffectScale = self.Scale ^ 0.65
+	self.Scale = 0.3
 
 	local effectdata = EffectData()
 		effectdata:SetOrigin(self.Entity:GetPos())
@@ -97,7 +96,7 @@ function ENT:Explosion()
 	local explo = ents.Create("env_explosion")
 		explo:SetOwner(self.Owner)
 		explo:SetPos(self.Entity:GetPos())
-		explo:SetKeyValue("iMagnitude", "200")
+		explo:SetKeyValue("iMagnitude", "100")
 		explo:Spawn()
 		explo:Activate()
 		explo:Fire("Explode", "", 0)
@@ -105,21 +104,21 @@ function ENT:Explosion()
 	local shake = ents.Create("env_shake")
 		shake:SetOwner(self.Owner)
 		shake:SetPos(self.Entity:GetPos())
-		shake:SetKeyValue("amplitude", "2000")	// Power of the shake
-		shake:SetKeyValue("radius", "900")		// Radius of the shake
-		shake:SetKeyValue("duration", "2.5")	// Time of shake
-		shake:SetKeyValue("frequency", "255")	// How har should the screenshake be
+		shake:SetKeyValue("amplitude", "1000")	// Power of the shake
+		shake:SetKeyValue("radius", "600")		// Radius of the shake
+		shake:SetKeyValue("duration", "1.5")	// Time of shake
+		shake:SetKeyValue("frequency", "225")	// How har should the screenshake be
 		shake:SetKeyValue("spawnflags", "4")	// Spawnflags(In Air)
 		shake:Spawn()
 		shake:Activate()
 		shake:Fire("StartShake", "", 0)
 	
-	local ar2Explo = ents.Create("env_ar2explosion")
+	/*local ar2Explo = ents.Create("env_ar2explosion")
 		ar2Explo:SetOwner(self.Owner)
 		ar2Explo:SetPos(self.Entity:GetPos())
 		ar2Explo:Spawn()
 		ar2Explo:Activate()
-		ar2Explo:Fire("Explode", "", 0)
+		ar2Explo:Fire("Explode", "", 0)*/
 
 	local en = ents.FindInSphere(self.Entity:GetPos(), 300)
 
