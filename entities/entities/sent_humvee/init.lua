@@ -88,7 +88,7 @@ function ENT:OnTakeDamage( dmg )
 		self.OnFire = true
 		
 		local fire = ents.Create("env_fire_trail")
-		fire:SetPos( self:GetPos() + Vector(0,-90,50) )
+		fire:SetPos( self:GetPos() + self:GetForward() * 90 + self:GetUp() * 60 )
 		fire:Spawn()
 		fire:SetParent( self.Jeep )
 		self.EngineFire = fire
@@ -101,7 +101,7 @@ function ENT:Use( activator, caller )
 	self.LastUse = CurTime() + 0.4
 	
 	local pos = activator:GetShootPos()
-	local d_pass, d_drive = pos:Distance(self.Seat:GetPos()),pos:Distance( self:GetPos() +  Vector(-15,-37,19) )
+	local d_pass, d_drive = pos:Distance(self.Seat:GetPos()),pos:Distance( self:GetPos() + self:GetForward() * -15 + self:GetRight() * -37 + self:GetUp() *19) 
 	if d_pass < 100 and d_pass < d_drive and not ValidEntity( self.Seat:GetDriver() ) then
 		activator:EnterVehicle( self.Seat )
 	elseif d_drive < 100 and d_drive < d_pass and not ValidEntity( self.Jeep:GetDriver() ) then

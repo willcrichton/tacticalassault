@@ -299,7 +299,9 @@ if CLIENT then
 	local cur_hint = ""
 	usermessage.Hook("ta-hints",function(u)
 		cur_hint = u:ReadString()
-		timer.Create("taHints",GAMEMODE:HintTime(),1,function()
+		local time = GAMEMODE:HintTime()
+		if time <= 0 then time = 0.1 end
+		timer.Create("taHints",time,1,function()
 			GAMEMODE:AddHint(cur_hint)
 		end)
 	end)

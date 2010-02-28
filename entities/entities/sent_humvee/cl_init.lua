@@ -19,9 +19,7 @@ function ENT:Initialize()
 			h=100,
 			})
 	end)
-	/*hook.Add("RenderScreenspaceEffects","fjkdls",function()
-		debugoverlay.Cross(self:GetPos() + Vector(-15,-37,19),15,0.5,color_white,true)
-	end)*/
+
 end
 
 function ENT:OnRemove()
