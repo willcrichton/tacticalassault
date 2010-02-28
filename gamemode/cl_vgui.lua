@@ -188,12 +188,19 @@ squadbox:SetPos(ScrW() - 250,ScrH() - 360)
 squadbox:SetSize(220,200)
 squadbox.Paint = function()
 	
-	if !ValidEntity(LocalPlayer()) || !LocalPlayer():Alive() || !squad[1] then 
+	if !ValidEntity(LocalPlayer()) || !squad[1] then 
 		for k,v in ipairs(avatars) do 
 			v:SetVisible(false) 
 			table.remove(avatars,k)  
 		end
 		return 
+	end
+	
+	if !LocalPlayer():Alive() then
+		for _,v in ipairs(avatars) do v:SetVisible(false) end
+		return
+	else
+		for _,v in ipairs(avatars) do v:SetVisible(true) end
 	end
 
 	//draw.TexturedQuad( {texture = surface.GetTextureID("VGUI/gradient-l"), color = , x = 0, y = 30, w = squadbox:GetWide(), h = squadbox:GetTall() - 30})

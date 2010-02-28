@@ -15,7 +15,7 @@ function GM:OnRoundStart( n )
 	GAMEMODE.Red.Spawns = {}
 	GAMEMODE.Blu.Spawns = {}
 	//for _,v in ipairs(player.GetAll()) do v:ConCommand("ta_printsquads") end
-	for _,v in ipairs(player.GetAll()) do v:ChatPrint("The round has begun! Get going!") v:UnLock() v:Freeze(false) end
+	for _,v in ipairs(player.GetAll()) do v:ChatPrint("The round has begun! Go capture those points!") v:UnLock() v:Freeze(false) end
 	for _,v in ipairs(ents.FindByClass("obj_*")) do v:SetNWBool("ObjectiveComplete",false) end
 	
 	umsg.Start("stopRoundSound") umsg.End()

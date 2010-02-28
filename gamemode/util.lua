@@ -103,7 +103,7 @@ if SERVER then
 	end)
 
 	function ta.AddHint( pl, hint )
-		SendUserMessage("ta-hint",pl,hint)
+		SendUserMessage("ta-hints",pl,hint)
 	end
 	
 	
@@ -296,13 +296,25 @@ if CLIENT then
 		end
 	end
 	
+	ta.hint = ""
+	ta.hint_start = 0
+	ta.hint_w = 0
+	ta.hint_wait = 10
+	function ta.AddHint(msg)
+		ta.hint = msg
+		ta.hint_start = CurTime()
+	end
+	function ta.HintTime()
+		return (ta.hint_start + ta.hint_wait) - CurTime()
+	end
+	
 	local cur_hint = ""
 	usermessage.Hook("ta-hints",function(u)
 		cur_hint = u:ReadString()
-		local time = GAMEMODE:HintTime()
+		local time = ta.HintTime()
 		if time <= 0 then time = 0.1 end
 		timer.Create("taHints",time,1,function()
-			GAMEMODE:AddHint(cur_hint)
+			ta.AddHint(cur_hint)
 		end)
 	end)
 

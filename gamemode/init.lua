@@ -119,21 +119,45 @@ hook.Add("KeyPress","CheckForSlams",function(pl,k)
 	end
 end)
 
+// Fix sitting anims
+// Fix sitting anims
+ local function SetPlyAnimation( pl, anim )
+
+	 if pl:InVehicle( ) then
+	 local Veh = pl:GetVehicle()
+	
+		if string.find(Veh:GetModel(), "models/nova/jeep_seat") || string.find(Veh:GetModel(),"models/nova/airboat_seat") then 
+		
+			local seq = pl:LookupSequence( "sit" )
+				
+			pl:SetAnimation(ACT_GMOD_SIT_ROLLERCOASTER)
+			pl:SetPlaybackRate( 1.0 )
+			pl:ResetSequence( seq )
+			pl:SetCycle( 0 )
+			return true
+
+		end
+	end
+end
+hook.Add( "SetPlayerAnimation", "SetHeliChairAnim", SetPlyAnimation )
+
+
 // Hints!
-hook.Add("PlayerEnterVehicle","TAVehicleHints",function(pl,vehic,role)
+/*hook.Add("PlayerEnteredVehicle","TAVehicleHints",function(pl,vehic,role)
+	print(pl,vehic:GetClass())
 	if math.random(1,2) == 1 then
-		if vehic:GetClass() == "sent_sakariashelicopter" then
+		if string.lower(vehic:GetClass()) == "sent_sakariashelicopter" then
 			local hints = {
 				"Heli Controls: Space=Up,Alt=Down,M2=change weapons",
 				"The heli has a turret, straight missiles, and laser guided missiles",
 				"The heli can seat four people, including a gunner",
 			}
-			ta.AddHint(table.Random(hints))
+			ta.AddHint(pl,table.Random(hints))
 		elseif vehic:GetClass() == "prop_vehicle_jeep" then
-			ta.AddHint("Your armor is good but not invulnerable - watch out")
+			ta.AddHint(pl,"Your armor is good but not invulnerable - watch out")
 		end
 	end
-end)
+end)*/
 			
 			
 

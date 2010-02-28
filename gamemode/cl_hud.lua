@@ -19,40 +19,6 @@ end)
 local options = {squadArrows = true, squadHealth = true}
 local last_use = SysTime()
 
-function DrawProgressBar(x,y,w,h,diag,facing_up,col)
-	if col then surface.SetDrawColor(col) end
-	/* if w - diag < 0 then 
-		LocalPlayer():ChatPrint( w - diag)
-		if facing_up then
-			surface.DrawPoly{
-				{x =x,y = y + h};
-				{x = x +  (diag - w) / diag, y = y+ h};
-				{x = x + (diag - w) / diag , y = y};
-			}
-		else
-			surface.DrawPoly{
-			}
-		end
-	else */
-		if facing_up then	
-			
-			surface.DrawPoly{
-				{ x = x, y = y + h};
-				{ x = x  + w, y = y + h};
-				{ x = x + w - diag, y = y;};
-				{ x = x + diag,y = y};
-			}
-		else
-			surface.DrawPoly{
-				{ x = x, y = y};
-				{ x = x + diag, y = y + h};
-				{ x = x + w - diag, y = y + h;};
-				{ x = x + w,y = y};
-			}
-		end
-	//end
-end
-
 local round_duration = 0
 local round_timer = 0
 local mul = 30
@@ -67,14 +33,6 @@ local obj_tex = {
 
 local start,finish = 0,0
 
-local hint,hint_start,hint_w,hint_wait = "",0,0,10
-function GM:AddHint(msg)
-	hint,hint_start = msg,CurTime()
-end
-function GM:HintTime()
-	return (hint_start + hint_wait) - CurTime()
-end
-
 local showhints = CreateClientConVar("ta_showhints",1,true,false)
 local hints = {
 	"Set \"ta_showhints\" to 0 to stop these hints",
@@ -86,7 +44,7 @@ local hints = {
 local hintindex = 1
 timer.Create("showHints",45,0,function()
 	if showhints:GetInt() == 1 then
-		GAMEMODE:AddHint(hints[hintindex])
+		ta.AddHint(hints[hintindex])
 		hintindex = hintindex + 1
 		if hintindex > #hints then hintindex = 1 end
 	end
@@ -448,20 +406,20 @@ hook.Add("HUDPaintBackground","TA-DrawHudSecondary",function()
 		end
 	end
 	
-	if CurTime() - hint_start < hint_wait and LocalPlayer():Alive() then
-		 hint_wait  = string.len(hint) / 6
-		local anim = 30 + string.len(hint) * 8
+	if (CurTime() - ta.hint_start < ta.hint_wait || math.abs(CurTime() - ta.hint_start) < 0.5) and LocalPlayer():Alive() then
+		ta.hint_wait  = 3 + string.len(ta.hint) / 9
+		local anim = 30 + string.len(ta.hint) * 8
 		local trans = 130
 		h,diag =25,6
-		if CurTime() - hint_start <  hint_wait  - 1 then hint_w = math.Approach( hint_w,anim,10)
-		else  hint_w  = math.Approach( hint_w ,0,10) end
+		if CurTime() - ta.hint_start <  ta.hint_wait  - 1 then ta.hint_w = math.Approach( ta.hint_w,anim,10)
+		else  ta.hint_w  = math.Approach( ta.hint_w ,0,10) end
 		
-		x,y = ScrW()/2-hint_w/2,ScrH() - 45
+		x,y = ScrW()/2-ta.hint_w/2,ScrH() - 45
 		surface.SetDrawColor( 0, 0, 0, trans + 20 )
-		ta.DrawParallel( x -4,y  + 2, hint_w  + 6, h + 4, diag + 2)
+		ta.DrawParallel( x -4,y  + 2, ta.hint_w  + 6, h + 4, diag + 2)
 		surface.SetDrawColor( 50,50,50, trans )
-		ta.DrawParallel(x,y, hint_w ,h,diag)
-		if  hint_w == anim then draw.DrawText(hint,"ScoreboardText",x + anim/2,y-20,Color(255,255,255,trans+50),1) end
+		ta.DrawParallel(x,y, ta.hint_w ,h,diag)
+		if ta.hint_w == anim then draw.DrawText(ta.hint,"ScoreboardText",x + anim/2,y-20,Color(255,255,255,trans+50),1) end
 	end
 	
 	// ICONS (they break the drawpoly?)
