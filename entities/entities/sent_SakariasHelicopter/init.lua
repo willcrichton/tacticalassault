@@ -74,7 +74,6 @@ ENT.PlyUser = NULL
 ENT.Gunner = 1
 ENT.PlyUsers = {}
 ENT.Seats = {}
-ENT.UserOne = NULL
 ENT.OccupiedSeats = {}
 
 
@@ -165,7 +164,7 @@ function ENT:SpawnFunction( ply, tr )
 end
 
 function ENT:Initialize()
-wwwwwww
+
 	self.Entity:SetModel("models/military2/air/air_h500.mdl")
 	--self.Entity:SetMaterial("Glad/BlueEye.vtf")
 	self.Entity:SetOwner(self.Owner)
@@ -390,7 +389,7 @@ end
 -------------------------------------------PHYSICS =D
 function ENT:PhysicsUpdate( physics )
 
-	if not ValidEntity(self.UserOne) then self.UserOne = NULL end
+
 		//Weapons
 			local GunUser = NULL
 			local ValidGunner = 0
@@ -867,9 +866,11 @@ local entphys = self.Entity:GetPhysicsObject()
 								end
 							end
 					end
+--
+
 //Checking if there is a pilot															
 self.Entity.CanFly = 0
-	if self.UserOne and IsValid(self.Entity.UserOne) and self.Entity.UserOne ~= NULL and self.Entity.UseSeatOne == 1 and self.Entity:WaterLevel() <= 0 then
+	if	self.Entity.UserOne ~= NULL and self.Entity.UserOne:IsValid() and self.Entity.UseSeatOne == 1 and self.Entity:WaterLevel() <= 0 then
 		if 	self.Entity.UserOne:InVehicle( ) then
 			local PlyUsedVeh =	self.Entity.UserOne:GetVehicle()	
 		
