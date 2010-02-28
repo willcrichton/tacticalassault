@@ -41,9 +41,13 @@ hook.Add("PlayerDeath","MedalCheck-Kills",function(vic,inflict,killer)
 	MEDALS:UpdatePlayer("Most Kills",killer,1,true)
 	MEDALS:UpdatePlayer("Most Deaths",vic,1,true)
 	if vic == killer then MEDALS:UpdatePlayer("Most Suicides",vic,1,true) end
-	if table.HasValue({"sent_heli","sent_humvee","sent_sakariashelicopter"},inflict:GetClass()) then MEDALS:UpdatePlayer("Roadkill",vic,1,true) end
+	if table.HasValue({"sent_heli","vehicle","sent_humvee","sent_sakariashelicopter"},string.lower(inflict:GetClass())) then MEDALS:UpdatePlayer("Roadkill",vic,1,true) end
+end)
+
+MEDALS:Register("Gravity's Best Friend","")
+hook.Add("ScalePlayerDamage","MedalCheck-Damage",function(pl,dmg,dir,tr)
+	if dmg:IsFallDamage() then MEDALS:UpdatePlayer("Gravity's Best Friend",pl,dmg:GetDamage(),true) end
 end)
 
 /* MORE IDEAS
-"Gravity's Best Friend": most fall damage
-"Roadkill": most times killed by vehicle
+*/

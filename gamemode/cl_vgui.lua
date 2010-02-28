@@ -37,7 +37,7 @@ local radar = vgui.Create("DFrame")
 		
 		for _,v in ipairs(ents.FindByClass("player")) do 
 			
-			if !table.HasValue({1,2},v:Team()) then print("wtf spec") return end
+			if !table.HasValue({1,2},v:Team()) then return end
 			
 			surface.SetTexture(surface.GetTextureID("ta/radar-beacon"..v:Team()))
 			if v:Team() != LocalPlayer():Team() and v:Alive() and v != LocalPlayer() then

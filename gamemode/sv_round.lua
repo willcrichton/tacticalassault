@@ -52,6 +52,9 @@ function GM:OnRoundEnd( n )
 		ta.Message(k..": "..winner.." ("..tostring(v.winval)..")")
 	end
 	
+	GAMEMODE.Red.Spawns = {}
+	GAMEMODE.Blu.Spawns = {}
+	
 end
 
 function GM:CanStartRound( n )

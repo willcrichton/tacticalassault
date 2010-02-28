@@ -15,6 +15,8 @@ language.Add("sent_notargetmissile","Missile")
 language.Add("sent_heli","Helicopter")
 language.Add("sent_humvee","Humvee")
 language.Add("sent_striderturret","Strider Turret")
+language.Add("AirboatGun","Machine Gun")
+language.Add("AirboatGun_ammo","Machine Gun")
 
 local Color_Icon = Color( 255, 80, 0, 255 )
 killicon.AddFont( "weapon_mad_mp7",                "HL2MPTypeDeath",       "/",    Color_Icon )

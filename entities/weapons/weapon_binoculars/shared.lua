@@ -91,7 +91,7 @@ end
 
 function SWEP:PrimaryAttack()
 	
-	self.Owner:ChatPrint("WTF?")
+
 	if !self:CanPrimaryAttack() || self.Owner:GetActiveWeapon() != self.Weapon then return end
 	
 	self.ZoomedMain = !self.ZoomedMain

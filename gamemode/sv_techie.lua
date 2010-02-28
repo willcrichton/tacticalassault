@@ -1,5 +1,6 @@
 local TIME_MANHACKS = 60
 local TIME_TURRET = 120
+local TIME_DISPENSER = 60
 
 local build_sounds = {
 	Sound("ta/build/build1.mp3"),
@@ -17,14 +18,14 @@ end)
 concommand.Add("techie_manhacks",function(pl)
 	if pl:GetPlayerClassName() != "Techie" then return end
 	local last = pl:GetNWInt("ta-lasthack")
-	if CurTime() - last < TIME_MANHACKS && last != 0 then pl:ChatPrint("You have "..math.ceil(tostring(TIME_MANHACKS - (CurTime() - last))).." more seconds til your next manhack strike.") return end
+	if CurTime() - last < TIME_MANHACKS && last != 0 then pl:ChatPrint("You have "..tostring(math.ceil(TIME_MANHACKS - (CurTime() - last))).." more seconds til your next manhack strike.") return end
 	
 	for i = 1,5 do
 		local npc = ents.Create("npc_manhack")
 		local tr = pl:GetEyeTrace()
 		if tr.HitPos:Distance(pl:EyePos()) > 300 then npc:SetPos(pl:EyePos() + pl:GetAimVector() * 1000 + Vector(0,0,i * 15))
 		else npc:SetPos(tr.HitPos + Vector(0,0,i*15)) end
-		npc:SetKeyValue("squad",pl:SteamID())
+		npc:SetKeyValue("squadname",pl:SteamID())
 		
 		for k,_ in pairs(team.GetAllTeams()) do
 			for _,v in ipairs(team.GetPlayers(k)) do
@@ -43,10 +44,27 @@ concommand.Add("techie_manhacks",function(pl)
 	pl:SetNWInt("ta-lasthack",CurTime())
 end)
 
+concommand.Add("techie_spawner",function(pl)
+	if pl:GetPlayerClassName() != "Techie" then return end
+	if CurTime() - pl:GetDispenserTime() < TIME_DISPENSER then pl:ChatPrint("You have "..tostring(math.ceil(TIME_DISPENSER - (CurTime() - pl:GetDispenserTime()))).." more seconds before spawning another item spawner.") end
+	if not pl:GetDispenser() then
+		local tr = pl:GetEyeTrace()
+		local item = ents.Create("sent_weaponspawner")
+		if tr.HitPos:Distance(pl:EyePos()) > 300 then 
+			item:SetPos(pl:EyePos() + pl:GetAimVector() * 300)
+			item:DropToFloor()
+		else item:SetPos(tr.HitPos) end
+		item:Spawn()
+		item:Activate()
+		pl:SetDispenser(item)
+		pl:SetDispenserTime(CurTime())
+	else pl:ChatPrint("You already have a dispenser!") end
+end)
+
 concommand.Add("techie_turret",function(pl)
 	if pl:GetPlayerClassName() != "Techie" then return end
 	local last = pl:GetNWInt("ta-lastturret")
-	if CurTime() - last < TIME_TURRET && last != 0 then pl:ChatPrint("You have "..math.ceil(tostring(TIME_TURRET - (CurTime() - last))).." more seconds before spawning another turret.") return end
+	if CurTime() - last < TIME_TURRET && last != 0 then pl:ChatPrint("You have "..tostring(math.ceil(TIME_TURRET - (CurTime() - last))).." more seconds before spawning another turret.") return end
 
 	local prev_ent = pl:GetNWEntity("ta-turret")
 	if prev_ent and prev_ent:IsValid() and prev_ent:GetClass() == "npc_turret_floor" then pl:ChatPrint("You already have a turret!") return end
