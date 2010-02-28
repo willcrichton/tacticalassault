@@ -32,6 +32,8 @@ killicon.Add( "npc_satchel", "HUD/killicons/slam_killicon", color_white )
 killicon.Add( "npc_tripmine", "HUD/killicons/slam_killicon", color_white )
 killicon.Add( "env_explosion", "HUD/killicons/slam_killicon", color_white )
 
+PrecacheParticleSystem("building_explosion")
+
 function GM:PositionScoreboard( ScoreBoard )
 
 	ScoreBoard:SetSize( 700, ScrH() - 100 )

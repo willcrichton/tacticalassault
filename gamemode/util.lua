@@ -101,6 +101,11 @@ if SERVER then
 			v:SetPos( v:GetPos() + Vector(0,0,20) )
 		end
 	end)
+
+	function ta.AddHint( pl, hint )
+		SendUserMessage("ta-hint",pl,hint)
+	end
+	
 	
 end
 
@@ -290,6 +295,14 @@ if CLIENT then
 			LocalPlayer():SetDSP(1,false)
 		end
 	end
+	
+	local cur_hint = ""
+	usermessage.Hook("ta-hints",function(u)
+		cur_hint = u:ReadString()
+		timer.Create("taHints",GAMEMODE:HintTime(),1,function()
+			GAMEMODE:AddHint(cur_hint)
+		end)
+	end)
 
 end
 

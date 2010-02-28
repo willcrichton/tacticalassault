@@ -68,8 +68,11 @@ local obj_tex = {
 local start,finish = 0,0
 
 local hint,hint_start,hint_w,hint_wait = "",0,0,10
-function AddHint(msg)
+function GM:AddHint(msg)
 	hint,hint_start = msg,CurTime()
+end
+function GM:HintTime()
+	return (hint_start + hint_wait) - CurTime()
 end
 
 local showhints = CreateClientConVar("ta_showhints",1,true,false)
@@ -81,9 +84,9 @@ local hints = {
 	"Soldiers: watch your screen for directions from your leader",
 }
 local hintindex = 1
-timer.Create("showHints",25,0,function()
+timer.Create("showHints",45,0,function()
 	if showhints:GetInt() == 1 then
-		AddHint(hints[hintindex])
+		GAMEMODE:AddHint(hints[hintindex])
 		hintindex = hintindex + 1
 		if hintindex > #hints then hintindex = 1 end
 	end
@@ -332,7 +335,7 @@ hook.Add("HUDPaint","TA-DrawHudMain",function()
 	
 end)
 
-hook.Add("HUDPaint","TA-DrawHudSecondary",function()
+hook.Add("HUDPaintBackground","TA-DrawHudSecondary",function()
 	
 	local xshift,yshift = 40,15
 	
@@ -450,7 +453,7 @@ hook.Add("HUDPaint","TA-DrawHudSecondary",function()
 		local anim = 30 + string.len(hint) * 8
 		local trans = 130
 		h,diag =25,6
-		if CurTime() - hint_start <  hint_wait  - string.len(hint) / 75 then hint_w = math.Approach( hint_w,anim,10)
+		if CurTime() - hint_start <  hint_wait  - 1 then hint_w = math.Approach( hint_w,anim,10)
 		else  hint_w  = math.Approach( hint_w ,0,10) end
 		
 		x,y = ScrW()/2-hint_w/2,ScrH() - 45

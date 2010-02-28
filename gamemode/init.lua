@@ -119,6 +119,24 @@ hook.Add("KeyPress","CheckForSlams",function(pl,k)
 	end
 end)
 
+// Hints!
+hook.Add("PlayerEnterVehicle","TAVehicleHints",function(pl,vehic,role)
+	if math.random(1,2) == 1 then
+		if vehic:GetClass() == "sent_sakariashelicopter" then
+			local hints = {
+				"Heli Controls: Space=Up,Alt=Down,M2=change weapons",
+				"The heli has a turret, straight missiles, and laser guided missiles",
+				"The heli can seat four people, including a gunner",
+			}
+			ta.AddHint(table.Random(hints))
+		elseif vehic:GetClass() == "prop_vehicle_jeep" then
+			ta.AddHint("Your armor is good but not invulnerable - watch out")
+		end
+	end
+end)
+			
+			
+
 
 /*function GM:PlayerJoinClass(pl,class)
 	if class == "Runner" then
