@@ -63,7 +63,7 @@ function ENT:Think()
 	
 	for _,v in ipairs(player.GetAll()) do
 		
-		if v:GetPos():Distance(self.Entity:GetPos()) < 175 and math.abs(v:GetPos().z - self.Entity:GetPos().z) < 50 and v:Alive() then 
+		if v:GetPos():Distance(self.Entity:GetPos()) < 175 and math.abs(v:GetPos().z - self.Entity:GetPos().z) < 100 and v:Alive() then 
 		
 			if v:Team() == 1 and self.Progress < 100 then
 				

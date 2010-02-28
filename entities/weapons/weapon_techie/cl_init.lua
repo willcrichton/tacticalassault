@@ -12,7 +12,7 @@ end
 usermessage.Hook("Techie-ShowMenu",function()
 	
 	local f = vgui.Create("DFrame")
-	f:SetSize(350,150)
+	f:SetSize(450,150)
 	f:Center()
 	f:SetTitle("")
 	f:MakePopup()
@@ -23,16 +23,17 @@ usermessage.Hook("Techie-ShowMenu",function()
 	end
 	
 	local build_list = vgui.Create("DPanelList",f)
-	build_list:SetSize(300, f:GetTall() - 50 )
+	build_list:SetSize(400, f:GetTall() - 50 )
 	build_list:SetPos(f:GetWide()/2 - build_list:GetWide() / 2,30)
 	build_list:EnableHorizontal(true)
 	build_list:SetPadding(10)
 	build_list:SetSpacing(25)
 	
 	local buildings = {
-		{"vgui/swepicon","techie_manhacks","Manhacks"},
-		{"vgui/swepicon","techie_turret","Turret",},
-		{"vgui/swepicon","","Barricades",function() ShowBarriersMenu() end},
+		{"ta/ta-techie-manhacks","techie_manhacks","Manhacks"},
+		{"ta/ta-techie-turret","techie_turret","Turret",},
+		{"ta/ta-techie-barrier","","Barricades",function() ShowBarriersMenu() end},
+		{"ta/ta-techie-spawner","techie_spawner","Item Generator"},
 	}
 	
 	for _,v in ipairs(buildings) do

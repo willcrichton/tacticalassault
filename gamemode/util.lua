@@ -78,7 +78,7 @@ if SERVER then
 			elseif name == "sent_striderturret" then
 				local turret = ents.Create("sent_striderturret")
 				turret:SetPos(v:GetPos() + Vector(0,0,5))
-				turret:SetAngles( Angle(0,90,0) )
+				turret:SetAngles( Angle(0,180,0) )
 				turret:Spawn()
 				turret:Activate()
 			end
@@ -89,7 +89,18 @@ if SERVER then
 		else
 			SetGlobalString("ta_mode","capture")
 		end
+	
+		for _,v in ipairs(ents.FindByClass("sent_humvee")) do
+			v:SetPos( v:GetPos() + Vector(0,0,20) )
+		end
 	end
+	
+	// Fixing jeeps...
+	hook.Add("InitPostEntity","FixJeeps",function()
+		for _,v in ipairs(ents.FindByClass("sent_humvee")) do
+			v:SetPos( v:GetPos() + Vector(0,0,20) )
+		end
+	end)
 	
 end
 

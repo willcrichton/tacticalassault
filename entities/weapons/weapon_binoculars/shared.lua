@@ -68,12 +68,20 @@ end
 	elseif bool and not self.Owner:KeyDown(IN_RELOAD) then self.Weapon:SetNWBool("IsLooking",false) end
 end*/
 
-/*function SWEP:Deploy()	
-	self.Owner:ConCommand("pp_mat_overlay 0");
+function SWEP:Deploy()	
 	self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
 	timer.Simple(0.5,function() if ValidEntity(self.Weapon) then self.Weapon:SendWeaponAnim( ACT_VM_IDLE ) end end )
 	return true
-end*/
+end
+
+// HAAAAAX
+function SWEP:Think()
+	if self.Owner:KeyPressed(IN_ATTACK) then
+		self:PrimaryAttack()
+	end
+	self:NextThink(CurTime())
+	return true
+end
 
 function SWEP:Holster()
 

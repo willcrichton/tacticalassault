@@ -17,7 +17,7 @@ end
 
 function ENT:Initialize()
 
-	self.MaxHealth = 100
+	self.MaxHealth = 1000
 	self.Damage = 0
 	self.OnFire = false
 	self.LastUse = CurTime()
@@ -86,6 +86,10 @@ function ENT:Initialize()
 	self.LowHealth =  CreateSound(self.Entity,"HelicopterVehicle/LowHealth.mp3")
 	self.MinorAlarm = CreateSound(self.Entity,"HelicopterVehicle/MinorAlarm.mp3")
 	self.MissileShoot = CreateSound(self.Entity,"HelicopterVehicle/MissileShoot.mp3")
+	self.SoundLoopDelay = CurTime()
+	self.HeliStartup = 0
+	
+	self:StartMotionController()
 	
 end
 
@@ -116,11 +120,29 @@ function ENT:Think()
 		if driver:KeyDownLast(IN_USE) then
 	
 		end
+		if self.HeliStartup == 0 then
+			self.HeliStartup = CurTime() + 8
+		end
+		self.HeliStart:Play()
+		self.HeliStop:Stop()
 	else
+		self.HeliStartup = 0
+		self.HeliInt:Stop()
+		self.HeliExt:Stop()
+		self.HeliStart:Stop()
+		self.HeliStop:Play()
 		self.CanFly = 0
 		self.PropellerInc = math.Approach(self.PropellerInc,0,0.025)
 	end
 	self:MoveRotor( self.PropellerInc )
+	
+	if self.CanFly == 1 and self.HeliStartup - CurTime() <= 0  and self.SoundLoopDelay < CurTime() then
+		self.HeliExt:Stop()
+		self.HeliInt:Stop()	
+		self.HeliExt:Play()
+		self.HeliInt:Play()
+		self.SoundLoopDelay = CurTime() + 9
+	end
 	
 	for _,v in ipairs(self.Soldiers) do
 		if not v:Alive() then
@@ -197,7 +219,8 @@ hook.Add( "SetPlayerAnimation", "SetHeliChairAnim", SetPlyAnimation )
 function ENT:PhysicsUpdate( physics )
 
 	local entphys = self:GetPhysicsObject()
-	if self.CanFly == 1 then
+	print(self.PropellerInc)
+	if self.CanFly == 1 and self.PropellerInc > 7 then
 	
 		local pl = self.Driver:GetDriver()
 		local PowForce = 0

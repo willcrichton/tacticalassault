@@ -11,7 +11,7 @@ end
 if (CLIENT) then
 
 	SWEP.PrintName = "MEDIGUN"
-	SWEP.Slot = 3
+	SWEP.Slot = 2
 	SWEP.SlotPos = 2
 	if (file.Exists("../materials/weapons/weapon_mad_medic.vmt")) then
 		SWEP.WepSelectIcon	= surface.GetTextureID("weapons/weapon_mad_medic")
@@ -57,7 +57,6 @@ SWEP.ScannerTimer = 0
 SWEP.ScannerDelay = 30
  
  function SWEP:Initialize()
-	timer.Create(self:EntIndex().."scanner",2,0,function() self:UpdateScanner() end)
 	
 	timer.Create(self:EntIndex().."heal",0.2,0,function() 
 		if ValidEntity(self.Scanner) and ValidEntity(self.Target) and self.Scanner:GetPos():Distance(self.Target:GetPos()) < 250 then
@@ -65,6 +64,12 @@ SWEP.ScannerDelay = 30
 		end
 	end)
  end
+ 
+ function SWEP:Think()
+	 self:UpdateScanner()
+	 self:NextThink(CurTime())
+	 return true
+end
  
  function SWEP:Deploy()
 	self.Owner:GetViewModel():SetPlaybackRate(0.7)
@@ -121,34 +126,42 @@ end
 	
 end
 
+function SWEP:MakeScanner()
+	self.Scanner = ents.Create("npc_cscanner")
+	self.Scanner:SetPos(self.Owner:GetShootPos() + Vector(0,0,70))
+	self.Scanner:SetNWInt("Team",self.Owner:Team())
+	self.Scanner:SetKeyValue("OnlyInspectPlayers","1")
+	self.Scanner:SetKeyValue("spotlightlength","1000")
+	self.Scanner:SetKeyValue("spotlightwidth","1000")
+	self.Scanner:Spawn()
+	
+	self.Owner:SetName(self.Owner:SteamID())
+
+	self.Scanner:Fire("StartScripting","",0)
+	self.Scanner:Fire("SetFlightSpeed","400",0)
+	self.Scanner:Fire("SetFollowTarget",self.Owner:SteamID(),0)
+	self.Scanner:Fire("InspectTargetSpotlight",self.Owner:SteamID(),1)
+	
+	self.Target = self.Owner
+	self.ScannerTimer = CurTime()
+	
+	self.Weapon:EmitSound("weapons/physcannon/physcannon_drop.wav")
+	self:SetNWEntity("scanner",self.Scanner)
+end
+
 function SWEP:SecondaryAttack()
 
 	if !self:CanPrimaryAttack() || CLIENT then return end
 	
 	if not self.Scanner and CurTime() - self.ScannerTimer > self.ScannerDelay then
 		
-		self.Scanner = ents.Create("npc_cscanner")
-		self.Scanner:SetPos(self.Owner:GetShootPos() + Vector(0,0,70))
-		self.Scanner:SetNWInt("Team",self.Owner:Team())
-		self.Scanner:SetKeyValue("OnlyInspectPlayers","1")
-		self.Scanner:SetKeyValue("spotlightlength","1000")
-		self.Scanner:SetKeyValue("spotlightwidth","1000")
-		self.Scanner:Spawn()
+		self:MakeScanner()
+		if not self.Scanner:IsInWorld() then
+			self.Owner:ChatPrint("That is not a valid location!")
+			self.Scanner:Remove()
+		end
 		
-		self.Owner:SetName(self.Owner:SteamID())
-	
-		self.Scanner:Fire("StartScripting","",0)
-		self.Scanner:Fire("SetFlightSpeed","400",0)
-		self.Scanner:Fire("SetFollowTarget",self.Owner:SteamID(),0)
-		self.Scanner:Fire("InspectTargetSpotlight",self.Owner:SteamID(),1)
-		
-		self.Target = self.Owner
-		self.ScannerTimer = CurTime()
-		
-		self.Weapon:EmitSound("weapons/physcannon/physcannon_drop.wav")
-		self:SetNWEntity("scanner",self.Scanner)
-		
-	elseif self.Owner:KeyDown(IN_RELOAD) then
+	elseif self.Owner:KeyDown(IN_RELOAD) and ValidEntity(self.Scanner) then
 	
 		self.Scanner:Remove()
 		self.Scanner = nil
@@ -191,6 +204,5 @@ end
 function SWEP:OnRemove()
 	if ValidEntity(self.Scanner) then self.Scanner:Remove() end
 	
-	timer.Destroy(self:EntIndex().."scanner")
 	timer.Destroy(self:EntIndex().."heal")
 end

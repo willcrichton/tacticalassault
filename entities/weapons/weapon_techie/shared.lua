@@ -109,7 +109,7 @@ function SWEP:PrimaryAttack()
 			
 			self.Owner:ChatPrint("You already have four barriers!")
 			
-		elseif dist > 300 || tr.HitNonWorld || math.abs(tr.HitPos.z - self.Owner:GetPos().z) > 30 then
+		elseif not self:ValidTrace() then
 			
 			self.Owner:ChatPrint("That is not a valid location.")
 			
@@ -147,6 +147,23 @@ function SWEP:PrimaryAttack()
 	end
 	
 end
+
+function SWEP:ValidTrace( )
+
+	local tr = self.Owner:GetEyeTrace()
+	local dist =tr.HitPos:Distance(self.Owner:GetPos())
+	local pos = self.GhostEntity:GetPos()
+	local test_points = {
+		pos + self.GhostEntity:OBBMins(),
+		pos + self.GhostEntity:OBBMaxs(),
+		pos + Vector(0,0,100),
+		pos + self.GhostEntity:GetRight() * 50,
+		pos + self.GhostEntity:GetRight() * -50,
+	}
+	for _,v in pairs(test_points) do if not util.IsInWorld(test_points) then return false end end
+	
+	return dist < 300 && !tr.HitNonWorld && math.abs(tr.HitPos.z - self.Owner:GetPos().z) < 50
+end
 	
 function SWEP:SecondaryAttack()
 
@@ -164,6 +181,10 @@ function SWEP:SecondaryAttack()
 			elseif ent == self.Owner:GetNWEntity("ta-turret") then
 				ent:Remove()
 				self.Owner:SetNWEntity("ta-turret",nil)
+			elseif ent == self.Owner:GetDispenser() then
+				ent:Remove()
+				self.Owner:SetDispenser(nil)
+				self.Owner:SetDispenserTime(0)
 			else
 				local bullet = {};
 				bullet.Num = 1
@@ -225,7 +246,7 @@ function SWEP:UpdateGhost()
 	local dist =tr.HitPos:Distance(self.Owner:GetPos())
 	local cent,min,max = self.GhostEntity:OBBCenter(),self.GhostEntity:OBBMins(),self.GhostEntity:OBBMaxs()
 	
-	if dist < 300 && !tr.HitNonWorld && math.abs(tr.HitPos.z - self.Owner:GetPos().z) < 30 then
+	if self:ValidTrace() then
 		self.GhostEntity:SetColor( 50, 255, 50, 200 )
 	else
 		self.GhostEntity:SetColor( 255, 50, 50, 200 )
@@ -238,3 +259,4 @@ function SWEP:UpdateGhost()
 	self.GhostEntity:SetPos( self.Owner:GetEyeTrace().HitPos + Vector(0,0,self.GhostEntity:GetNWInt("RaiseUp")) )
 	
 end
+

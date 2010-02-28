@@ -20,10 +20,12 @@ end
 
 function ENT:Initialize()
 
-	self.MaxHealth = 100
+	self.MaxHealth = 1000
+	self:SetNWInt("ta-health",self.MaxHealth)
 	self.Damage = 0
 	self.OnFire = false
 	self.LastUse = CurTime()
+	self.LastGetIn = CurTime()
 	
 	self:SetUseType(SIMPLE_USE)
 
@@ -63,7 +65,7 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if phys and phys:IsValid() then
 		phys:Wake() 
-		phys:SetMass( 1 )
+		phys:SetMass( 100 )
 	else ErrorNoHalt("Jeep armor has no physics!") end
 	constraint.Weld(self,ent,0,0,false)
 	constraint.NoCollide(ent,self,0,0)
@@ -102,9 +104,9 @@ function ENT:Use( activator, caller )
 	local d_pass, d_drive = pos:Distance(self.Seat:GetPos()),pos:Distance( self:GetPos() +  Vector(-15,-37,19) )
 	if d_pass < 100 and d_pass < d_drive and not ValidEntity( self.Seat:GetDriver() ) then
 		activator:EnterVehicle( self.Seat )
-		activator:SetAnimation( ACT_GMOD_SIT_ROLLERCOASTER )
 	elseif d_drive < 100 and d_drive < d_pass and not ValidEntity( self.Jeep:GetDriver() ) then
 		activator:EnterVehicle( self.Jeep )
+		self.LastGetIn = CurTime()
 	end
 end
 
@@ -130,7 +132,7 @@ hook.Add( "SetPlayerAnimation", "SetHeliChairAnim", SetPlyAnimation )
 function ENT:Think()
 	local driver = self.Jeep:GetDriver()
 	if ValidEntity(driver) then
-		if driver:KeyDownLast(IN_USE) then
+		if driver:KeyDownLast(IN_USE) and CurTime() - self.LastGetIn > 0.4 then
 			driver:ExitVehicle()
 		end
 	end
@@ -185,7 +187,7 @@ function ENT:OnRemove()
 		prop:Activate()
 		local vec = VectorRand() * 100
 		vec.z = math.Clamp(vec.z,-5,1000)
-		prop:SetVelocity( VectorRand() * 100 )
+		prop:GetPhysicsObject():SetVelocity( VectorRand() * 100 )
 		table.insert(props,prop)
 	end
 	
