@@ -20,7 +20,7 @@ concommand.Add("techie_manhacks",function(pl)
 	local last = pl:GetNWInt("ta-lasthack")
 	if CurTime() - last < TIME_MANHACKS && last != 0 then pl:ChatPrint("You have "..tostring(math.ceil(TIME_MANHACKS - (CurTime() - last))).." more seconds til your next manhack strike.") return end
 	
-	for i = 1,5 do
+	for i = 1,4 do
 		local npc = ents.Create("npc_manhack")
 		local tr = pl:GetEyeTrace()
 		if tr.HitPos:Distance(pl:EyePos()) > 300 then npc:SetPos(pl:EyePos() + pl:GetAimVector() * 1000 + Vector(0,0,i * 15))
@@ -54,6 +54,7 @@ concommand.Add("techie_spawner",function(pl)
 			item:SetPos(pl:EyePos() + pl:GetAimVector() * 300)
 			item:DropToFloor()
 		else item:SetPos(tr.HitPos) end
+		item:SetAngles(Angle(0,pl:GetAngles().yaw + 180,0) )
 		item:Spawn()
 		item:Activate()
 		pl:SetDispenser(item)
@@ -92,7 +93,7 @@ end)
 hook.Add("Think","CheckTechies",function()
 	for _,v in ipairs(table.Add(table.Add(ents.FindByClass("npc_manhack"),ents.FindByClass("npc_turret_floor")),ents.FindByClass("ent_barrier"))) do
 		local owner = v:GetNWEntity("ta-owner")
-		if !owner or !owner:IsValid() or !owner:IsConnected() or owner:GetPlayerClassName() != "Techie" then 
+		if !owner or !owner:IsValid() or !owner:IsConnected() or owner:GetPlayerClassName() != "Techie" || (!owner:Alive() && (v:GetClass() == "npc_manhack" || v:GetClass() == "npc_turret_floor")) then 
 			v:Remove()
 		end
 		

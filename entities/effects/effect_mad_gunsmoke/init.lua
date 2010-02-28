@@ -18,6 +18,7 @@ function EFFECT:Init(data)
 
 		if math.random(1, 2) == 1 then
 			local particle = emitter:Add("effects/muzzleflash"..math.random(1, 4), self.Position + 8 * self.Forward)
+			if particle then
 
 				particle:SetVelocity(350 * self.Forward + 1.1 * self.WeaponEnt:GetOwner():GetVelocity())
 				particle:SetAirResistance(160)
@@ -34,10 +35,11 @@ function EFFECT:Init(data)
 				particle:SetRollDelta(math.Rand(-1, 1))
 
 				particle:SetColor(255, 255, 255)	
+			end
 		end
 
 		local particle = emitter:Add("sprites/heatwave", self.Position + 8 * self.Forward)
-
+		if particle then
 			particle:SetVelocity(350 * self.Forward + 1.1 * self.WeaponEnt:GetOwner():GetVelocity())
 			particle:SetAirResistance(160)
 
@@ -53,8 +55,10 @@ function EFFECT:Init(data)
 			particle:SetRollDelta(math.Rand(-1, 1))
 
 			particle:SetColor(255, 255, 255)	
+		end
 
 		local particle = emitter:Add("particle/particle_smokegrenade", self.Position)
+		if particle then
 
 			particle:SetVelocity(100 * self.Forward + 8 * VectorRand()) // + AddVel)
 			particle:SetAirResistance(400)
@@ -72,6 +76,7 @@ function EFFECT:Init(data)
 			particle:SetRollDelta(math.Rand(-0.05, 0.05))
 
 			particle:SetColor(120, 120, 120)
+		end
 
 	emitter:Finish()
 end

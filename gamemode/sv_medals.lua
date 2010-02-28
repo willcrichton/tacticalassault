@@ -24,7 +24,7 @@ end
 
 function MEDALS:UpdatePlayer(name,pl,val,inc)
 	local medal = self.List[name]
-	if not medal then return end
+	if not medal || !ValidEntity(pl) || !pl:SteamID() then return end
 	local num = 0
 	local person = medal.people[pl:SteamID()]
 	if inc and person and person[2] and person[2] > 0 then num = tonumber(medal.people[pl:SteamID()][2]) + val

@@ -11,7 +11,7 @@ SWEP.AdminSpawnable		= false
 
 SWEP.Primary.Sound 		= Sound("Weapon_AWP.Single")
 SWEP.Primary.Recoil		= 8
-SWEP.Primary.Damage		= 95
+SWEP.Primary.Damage		= 75
 SWEP.Primary.NumShots		= 1
 SWEP.Primary.Cone			= 0.0001
 SWEP.Primary.Delay 		= 1

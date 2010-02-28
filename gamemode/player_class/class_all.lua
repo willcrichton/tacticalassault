@@ -3,7 +3,7 @@ local CLASS = {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Runner"
-CLASS.Description = "Run twice as fast! \nPrimary: SMG \nSecondary: Pistol"
+CLASS.Description = "Outrun them! \nPrimary: SMG \nSecondary: Pistol"
 CLASS.WalkSpeed = 300
 CLASS.RunSpeed = 450
 CLASS.MaxHealth = 75
@@ -26,7 +26,7 @@ local CLASS = {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Assault"
-CLASS.Description = "Outlast your enemies! \nPrimary: Heavy Machine Gun \nSecondary: Shotgun \nTertiary: Resupply"
+CLASS.Description = "Live longer! \n1:Machine Gun\n2:Shotgun \nTertiary: Resupply"
 CLASS.WalkSpeed = 150
 CLASS.RunSpeed = 250
 CLASS.MaxHealth = 150
@@ -49,7 +49,7 @@ local CLASS = {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Sniper"
-CLASS.Description = "Get 'em long range!\nPrimary: Sniper\nSecondary: Pistol"
+CLASS.Description = "Long range!\n1: Sniper\n2: Pistol"
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_mad_awp")
@@ -66,7 +66,7 @@ local CLASS = {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Artillery"
-CLASS.Description = "Bring in the big guns.\nPrimary: Bazooka\nSecondary: Shotgun"
+CLASS.Description = "Use big guns!\n1: Bazooka\n2: Shotgun"
 CLASS.WalkSpeed = 130
 CLASS.RunSpeed = 250
 CLASS.MaxHealth = 120
@@ -89,7 +89,7 @@ local CLASS= {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Medic"
-CLASS.Description = "Heal 'em up \nPrimary: AR2\nSecondary: Pistol\Tertiary: Medic Kit"
+CLASS.Description = "Heal 'em up \n1: AR2\n2: Medigun"
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_mad_usp_match")
@@ -108,12 +108,12 @@ local CLASS= {}
 
 CLASS.Base = "BaseClass"
 CLASS.DisplayName = "Techie"
-CLASS.Description = "Build machines, create tech.\nPrimary: Shotgun\nSecondary: Pistol"
+CLASS.Description = "Build machines!\n1: Shotgun\n2: Pistol"
 
 function CLASS:Loadout( pl )
 	pl:Give("weapon_mad_usp_match")
 	pl:Give("weapon_mad_spas")
-	pl:Give("weapon_slam")
+	//pl:Give("weapon_slam")
 	pl:Give("weapon_physcannon")
 	pl:Give("weapon_techie")
 	
