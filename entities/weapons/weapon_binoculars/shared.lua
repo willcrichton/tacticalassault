@@ -71,15 +71,7 @@ end*/
 function SWEP:Deploy()	
 	self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
 	timer.Simple(0.5,function() if ValidEntity(self.Weapon) then self.Weapon:SendWeaponAnim( ACT_VM_IDLE ) end end )
-	return true
-end
-
-// HAAAAAX
-function SWEP:Think()
-	if self.Owner:KeyPressed(IN_ATTACK) then
-		self:PrimaryAttack()
-	end
-	self:NextThink(CurTime())
+	//self:SetNextPrimaryFire(CurTime() + )
 	return true
 end
 
@@ -96,6 +88,10 @@ function SWEP:Holster()
 	
 	return true
 end
+
+/*function SWEP:CanPrimaryAttack()
+	return not ( self.Owner:KeyDown(IN_SPEED) || self:GetNextPrimaryFire() > CurTime() )
+end*/
 
 function SWEP:PrimaryAttack()
 	
