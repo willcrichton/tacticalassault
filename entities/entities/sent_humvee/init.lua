@@ -78,7 +78,7 @@ function ENT:OnTakeDamage( dmg )
 	self.LastAttacker = dmg:GetAttacker()
 	self.Damage = self.Damage + dmg:GetDamage()
 	self:SetNWInt("ta-health",self.MaxHealth - self.Damage)
-	print(self.Damage)
+	
 	if self.Damage >= self.MaxHealth then
 		self:Remove()
 		if ValidEntity(self.Jeep:GetDriver()) then self.Jeep:GetDriver():Kill() end
@@ -101,7 +101,7 @@ function ENT:Use( activator, caller )
 	self.LastUse = CurTime() + 0.4
 	
 	local pos = activator:GetShootPos()
-	local d_pass, d_drive = pos:Distance(self.Seat:GetPos()),pos:Distance( self:GetPos() + self:GetForward() * -15 + self:GetRight() * -37 + self:GetUp() *19) 
+	local d_pass, d_drive = pos:Distance(self.Seat:GetPos()),pos:Distance( self:GetPos() + self:GetForward() * 15 + self:GetRight() * 29+ self:GetUp() *30) 
 	if d_pass < 100 and d_pass < d_drive and not ValidEntity( self.Seat:GetDriver() ) then
 		activator:EnterVehicle( self.Seat )
 	elseif d_drive < 100 and d_drive < d_pass and not ValidEntity( self.Jeep:GetDriver() ) then
@@ -109,25 +109,6 @@ function ENT:Use( activator, caller )
 		self.LastGetIn = CurTime()
 	end
 end
-
- local function SetPlyAnimation( pl, anim )
-
-	 if pl:InVehicle( ) then
-	 local Veh = pl:GetVehicle()
-	
-		if string.find(Veh:GetModel(), "models/nova/jeep_seat") || string.find(Veh:GetModel(),"models/nova/airboat_seat") then 
-		
-			local seq = pl:LookupSequence( "sit" )
-				
-			pl:SetPlaybackRate( 1.0 )
-			pl:ResetSequence( seq )
-			pl:SetCycle( 0 )
-			return true
-
-		end
-	end
-end
-hook.Add( "SetPlayerAnimation", "SetHeliChairAnim", SetPlyAnimation )
 
 function ENT:Think()
 	local driver = self.Jeep:GetDriver()
@@ -157,25 +138,9 @@ function ENT:OnRemove()
 	}
 	local props = {}
 
-	local ta = {}
-	function ta.Explosion(pl,pos,mag)
-		local effectdata = EffectData()
-		effectdata:SetOrigin( pos )
-		effectdata:SetNormal( pos:GetNormalized() )
-		util.Effect( "explosion", effectdata )
-		
-		local explosion = ents.Create( "env_explosion" )
-		explosion:SetPos(pos)
-		explosion:SetKeyValue( "iMagnitude" , tostring(mag) )
-		explosion:SetPhysicsAttacker(pl)
-		explosion:SetOwner(pl)
-		explosion:Spawn()
-		explosion:Fire("explode","",0)
-		explosion:Fire("kill","",0 )
-	end
 	
 	// EXPLOSION HERE
-	ta.Explosion( self, self:GetPos(),250)
+	ta.Explosion( self, self:GetPos(),100)
 	ParticleEffect( "building_explosion", self:GetPos(), Angle(0,0,0), nil )
 	
 	for _,v in ipairs( gibs ) do

@@ -18,8 +18,11 @@ function ENT:Initialize()
 			w = 100,
 			h=100,
 			})
+		
 	end)
-
+	/*hook.Add("RenderScreenspaceEffects","JKLFJKDLS",function()
+		debugoverlay.Cross(self:GetPos() + self:GetForward() * 15 + self:GetRight() * 29+ self:GetUp() *30,15,0.1,color_white,true)
+	end)*/
 end
 
 function ENT:OnRemove()
