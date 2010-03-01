@@ -42,7 +42,7 @@ hook.Add("PlayerDeath","MedalCheck-Kills",function(vic,inflict,killer)
 	MEDALS:UpdatePlayer("Most Kills",killer,1,true)
 	MEDALS:UpdatePlayer("Most Deaths",vic,1,true)
 	if vic == killer then MEDALS:UpdatePlayer("Most Suicides",vic,1,true) end
-	if table.HasValue({"sent_heli","vehicle","sent_humvee","sent_sakariashelicopter","prop_vehicle_prisoner_pod","prop_vehicle_jeep_old"},string.lower(inflict:GetClass())) then MEDALS:UpdatePlayer("Roadkill",vic,1,true) end
+	if table.HasValue({"sent_heli","vehicle","sent_humvee","sent_sakariashelicopter","prop_vehicle_prisoner_pod","prop_vehicle_jeep_old"  },string.lower(inflict:GetClass())) then MEDALS:UpdatePlayer("Roadkill",vic,1,true) end
 end)
 
 MEDALS:Register("Gravity's Best Friend","")
